@@ -144,6 +144,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -163,7 +164,7 @@
   border: 3px solid #281A4760;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 640px) {
   .login-button {
     width: 100px;
     height: 44px;
@@ -198,11 +199,37 @@ h6 {
 }
 
 p {
-  font-size: 18px;
+  font-size: 20px;
   color: #C6C8D0;
 }
 
+@media only screen and (max-width: 768px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 30px;
+  }
+
+  h3 {
+    font-size: 24px;
+  }
+
+  h4 {
+    font-size: 16px;
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 16px;
+  }
+}
+
 .mobile-menu {
-  background-image: url('/assets/home/mobile-munu-bg.png')!important;
+  background-image: url('/assets/home/mobile-munu-bg.png') !important;
   background-size: cover;
 }

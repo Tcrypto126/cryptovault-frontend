@@ -35,7 +35,7 @@ const Footer = () => {
   return (
     <>
       <div className="w-full border ">
-        <div className="max-w-[1440px] m-auto">
+        <div className="max-w-[1440px] m-auto px-2.5 lg:px-20">
           <div className="flex pt-20 pb-14">
             <div className="flex-1 flex flex-col justify-between">
               <div className="flex gap-3 items-center">
