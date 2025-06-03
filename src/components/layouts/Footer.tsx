@@ -36,8 +36,8 @@ const Footer = () => {
     <>
       <div className="w-full border ">
         <div className="max-w-[1440px] m-auto px-2.5 lg:px-20">
-          <div className="flex pt-20 pb-14">
-            <div className="flex-1 flex flex-col justify-between">
+          <div className="flex flex-col md:flex-row gap-5 pt-20 pb-14">
+            <div className="flex-1 flex flex-col gap-5 justify-between">
               <div className="flex gap-3 items-center">
                 <Image
                   src="/assets/logo.png"
@@ -62,7 +62,7 @@ const Footer = () => {
                 />
               </div>
             </div>
-            <div className="flex-2 grid grid-cols-4">
+            <div className="flex-2 grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="flex flex-col gap-5">
                 <h6 className="text-sm font-bold">
                   Company
@@ -106,11 +106,11 @@ const Footer = () => {
             </div>
           </div>
           <Divider />
-          <div className="py-10 flex items-center justify-between">
-            <h6 className="text-text text-[14px]">
+          <div className="py-10 flex flex-col md:flex-row gap-3 items-center justify-between">
+            <h6 className="text-text text-[14px] text-center md:text-start">
               Secure Crypto Wallet Built for Performance & Protection.
             </h6>
-            <h6 className="text-text text-[14px]">
+            <h6 className="text-text text-[14px] text-center md:text-end">
               © 2025 Only-Stay. All rights reserved.
             </h6>
           </div>

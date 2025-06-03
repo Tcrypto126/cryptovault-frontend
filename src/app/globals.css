@@ -150,22 +150,106 @@
   }
 }
 
-.login-button {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.rainbow {
+  position: relative;
+  z-index: 0;
+  width: 200px;
+  height: 50px;
+  border-radius: 50px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    left: 45%;
+    top: -250%;
+    width: 10%;
+    height: 600%;
+    background-color: #ffffff;
+    background-repeat: no-repeat;
+    background-size: 50% 50%;
+    animation: rotate 6s linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 1px;
+    top: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    background-image: url('/assets/button/loginButtonBg.png');
+    background-size: cover;
+    border-radius: 50px;
+  }
+}
+
+
+.login-button,
+.signup-button {
   @apply cursor-pointer text-[12px] text-white transition-all duration-300 bg-[#ffffff08] rounded-full bg-center;
   width: 141px;
   height: 52px;
-  border: 1px solid #ffffff14;
-  background-image: url('/assets/button/loginButtonBg0.png');
+  border: 1px solid #f7f7f714;
+  /* background-image: url('/assets/button/loginButtonBg0.png'); */
   background-repeat: no-repeat;
 }
 
-.login-button:hover {
-  background-image: url('/assets/button/loginButtonBg.png');
-  border: 3px solid #281A4760;
+.login-button {
+  position: relative;
+  z-index: 0;
+  border: 3px solid #2c2c2cc9;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    left: 40%;
+    top: -250%;
+    width: 20%;
+    height: 600%;
+    background-color: #ffffff;
+    background-repeat: no-repeat;
+    animation: rotate 6s linear infinite;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 0.4px;
+    top: 0.5px;
+    width: calc(100% - 0.8px);
+    height: calc(100% - 0.8px);
+    /* border: 1px solid red; */
+    border-radius: 50px;
+    background-image: url('/assets/button/loginButtonBg.png');
+    background-size: 125% 165%;
+    /* or contain, depending on your design */
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
 @media only screen and (max-width: 640px) {
-  .login-button {
+
+  .login-button,
+  .signup-button {
     width: 100px;
     height: 44px;
   }

@@ -88,7 +88,7 @@ const Home = () => {
       </div>
 
       <div className="w-full relative z-20">
-        <div className="max-w-[1440px] m-auto border px-2.5 lg:px-20 py-[92px]">
+        <div className="max-w-[1440px] m-auto px-2.5 lg:px-20 py-[92px]">
           <div className="flex flex-col md:flex-row">
             <div className="flex-1 py-6 md:py-10 md:pl-5 z-20">
               <Button className="border-[#171D45] bg-[#0A0D1F] hover:bg-[#0A0D1F] border-[1px] rounded-full text-[14px] text-white !px-4 !py-2">
@@ -111,7 +111,7 @@ const Home = () => {
                 <Button className="login-button !w-[141px] !h-[52px]">
                   Create Free Account
                 </Button>
-                <Button className="login-button !w-[141px] !h-[52px]">
+                <Button className="signup-button !w-[141px] !h-[52px]">
                   Watch 60s Demo
                 </Button>
               </div>
@@ -148,7 +148,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="relative -mt-[120px]">
+          <div className="relative -mt-[140px]">
             <Image
               src="/assets/home/dashboard.png"
               width={1284}

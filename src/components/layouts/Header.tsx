@@ -122,7 +122,7 @@ const Header = () => {
                 Sign in
               </Button>
               <Button
-                className="login-button"
+                className="signup-button"
                 onClick={() => {
                   router.push("/signup")
                 }}
