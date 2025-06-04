@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useNotification } from "@/providers/notificationProvider";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -54,6 +55,7 @@ const SignUp = () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -83,7 +85,16 @@ const SignUp = () => {
             </h4>
           </div>
           <div className="flex-1 w-full md:max-w-[500px] flex flex-col gap-5 md:gap-10 p-4 md:p-12 bg-[#ffffff1e] rounded-2xl">
-            <Image src="/assets/logo.svg" width={60} height={60} alt="logo" />
+            <Image
+              src="/assets/logo.svg"
+              width={60}
+              height={60}
+              alt="logo"
+              className="cursor-pointer"
+              onClick={() => {
+                router.push("/");
+              }}
+            />
             <div className="flex flex-col gap-2">
               <h3 className="!text-[20px] md:!text-3xl">Create your account</h3>
               <h6>Enter your email and password to sign up.</h6>
@@ -181,7 +192,7 @@ const SignUp = () => {
                 <div className="flex gap-2 justify-center items-center">
                   <h6 className="!text-sm">Already have an account?</h6>
                   <Link
-                    href="/signin"
+                    href="/account/signin"
                     className="text-[#00A6E8] hover:text-[#7cd5f8] text-sm"
                   >
                     Sign In

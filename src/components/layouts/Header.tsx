@@ -114,7 +114,7 @@ const Header = () => {
               <Button
                 className="login-button"
                 onClick={() => {
-                  router.push("/signin")
+                  router.push("/account/signin")
                 }}
               >
                 Sign in
@@ -122,7 +122,7 @@ const Header = () => {
               <Button
                 className="signup-button"
                 onClick={() => {
-                  router.push("/signup")
+                  router.push("/account/signup")
                 }}
               >
                 Sign up

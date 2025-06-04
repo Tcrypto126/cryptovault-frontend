@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useNotification } from "@/providers/notificationProvider";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -50,6 +51,7 @@ const FormSchema = z.object({
 const SignIn = () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -79,7 +81,16 @@ const SignIn = () => {
             </h4>
           </div>
           <div className="flex-1 w-full md:max-w-[500px] flex flex-col gap-5 md:gap-10 p-4 md:p-12 bg-[#ffffff1e] rounded-2xl">
-            <Image src="/assets/logo.svg" width={60} height={60} alt="logo" />
+            <Image
+              src="/assets/logo.svg"
+              width={60}
+              height={60}
+              alt="logo"
+              className="cursor-pointer"
+              onClick={() => {
+                router.push("/");
+              }}
+            />
             <div className="flex flex-col gap-2">
               <h3 className="!text-[20px] md:!text-3xl">
                 Sign in to your account
@@ -138,7 +149,7 @@ const SignIn = () => {
                 />
                 <div className="flex justify-end -mt-4">
                   <Link
-                    href="/forgot-password"
+                    href="/account/forgot-password"
                     className="text-[#00A6E8] hover:text-[#7cd5f8] text-sm"
                   >
                     Forgot Password?
@@ -176,7 +187,7 @@ const SignIn = () => {
                 <div className="flex gap-2 justify-center items-center">
                   <h6 className="!text-sm">Not Registered?</h6>
                   <Link
-                    href="/signup"
+                    href="/account/signup"
                     className="text-[#00A6E8] hover:text-[#7cd5f8] text-sm"
                   >
                     Sign Up
