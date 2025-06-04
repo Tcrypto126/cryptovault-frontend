@@ -13,16 +13,12 @@ const AuthProvider = dynamic(() => import("@/providers/authProvider"), {
   ssr: false,
 });
 
-import { NextUIProvider } from "@nextui-org/react";
-
 const ThemeClient = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <ThemeProvider>
-      <NextUIProvider>
-        <NotificationProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </NotificationProvider>
-      </NextUIProvider>
+      <NotificationProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </NotificationProvider>
     </ThemeProvider>
   );
 };

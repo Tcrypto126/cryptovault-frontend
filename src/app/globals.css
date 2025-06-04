@@ -3,8 +3,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src:
-    url("./fonts/Satoshi-Regular.woff2") format("woff2"),
+  src: url("./fonts/Satoshi-Regular.woff2") format("woff2"),
     url("./fonts/Satoshi-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
@@ -12,8 +11,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src:
-    url("./fonts/Satoshi-Bold.woff2") format("woff2"),
+  src: url("./fonts/Satoshi-Bold.woff2") format("woff2"),
     url("./fonts/Satoshi-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
@@ -106,8 +104,8 @@
   --background: #060015;
   --border: oklch(1 0 0 / 10%);
   --menu-button: #131839;
-  --dark-text: #A1A1AA;
-  --button-p: #6C5DD3;
+  --dark-text: #a1a1aa;
+  --button-p: #6c5dd3;
   --button-pu: #7769d3;
 
   --foreground: oklch(0.985 0 0);
@@ -181,7 +179,7 @@
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     z-index: -2;
     left: 40%;
@@ -202,7 +200,7 @@
     width: calc(100% - 0.8px);
     height: calc(100% - 0.8px);
     border-radius: 50px;
-    background-image: url('/assets/button/loginButtonBg.png');
+    background-image: url("/assets/button/loginButtonBg.png");
     background-size: 125% 165%;
     background-repeat: no-repeat;
     background-position: center;
@@ -217,7 +215,6 @@
 }
 
 @media only screen and (max-width: 640px) {
-
   .login-button,
   .signup-button {
     width: 100px;
@@ -254,7 +251,7 @@ h6 {
 
 p {
   font-size: 20px;
-  color: #C6C8D0;
+  color: #c6c8d0;
 }
 
 @media only screen and (max-width: 768px) {
