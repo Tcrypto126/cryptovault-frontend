@@ -81,7 +81,7 @@ const Header = () => {
                     />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="px-4 py-6 w-full sm:w-[282px] mobile-menu">
+                <SheetContent side="left" className="px-4 py-6 border-none w-full sm:w-[282px] bg-[url('/assets/home/mobile-menu-bg.png')] bg-cover bg-no-repeat">
                   <SheetHeader className="z-20">
                     <SheetTitle className="flex justify-center">
                       <Image

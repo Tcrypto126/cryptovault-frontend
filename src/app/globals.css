@@ -279,7 +279,7 @@ p {
   }
 }
 
-.mobile-menu {
-  background-image: url('/assets/home/mobile-menu-bg.png') !important;
+/* .mobile-menu {
+  background-image: url('/assets/home/mobile-menu-bg.png');
   background-size: cover;
-}
+} */
