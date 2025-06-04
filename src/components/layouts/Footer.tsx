@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Divider, Link } from "@nextui-org/react";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 const footerNavigation = {
   company: [
@@ -27,14 +30,14 @@ const footerNavigation = {
     { name: "AML/KYC Policy", href: "#" },
     { name: "Risk Disclosure", href: "#" },
   ],
-}
+};
 
 const Footer = () => {
   const router = useRouter();
 
   return (
     <>
-      <div className="w-full bg-[#030014] border-t-[1px] border-border">
+      <div className="relative w-full bg-[#030014] border-t-[1px] border-border z-50">
         <div className="max-w-[1440px] m-auto px-2.5 lg:px-20">
           <div className="flex flex-col md:flex-row gap-5 pt-10 md:pt-20 pb-14">
             <div className="flex-1 flex flex-col gap-5 justify-between">
@@ -64,48 +67,56 @@ const Footer = () => {
             </div>
             <div className="flex-2 grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 md:mt-0">
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm text-[#F4F0FF] font-bold">
-                  Company
-                </h6>
+                <h6 className="text-sm text-[#F4F0FF] font-bold">Company</h6>
                 {footerNavigation.company.map((item) => (
-                  <Link key={item.name} className="text-text hover:text-white transition-all duration-200" href={item.href}>
+                  <Link
+                    key={item.name}
+                    className="text-text hover:text-white transition-all duration-200"
+                    href={item.href}
+                  >
                     {item.name}
                   </Link>
                 ))}
               </div>
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm text-[#F4F0FF] font-bold">
-                  Platform
-                </h6>
+                <h6 className="text-sm text-[#F4F0FF] font-bold">Platform</h6>
                 {footerNavigation.platform.map((item) => (
-                  <Link key={item.name} className="text-text hover:text-white transition-all duration-200" href={item.href}>
+                  <Link
+                    key={item.name}
+                    className="text-text hover:text-white transition-all duration-200"
+                    href={item.href}
+                  >
                     {item.name}
                   </Link>
                 ))}
               </div>
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm text-[#F4F0FF] font-bold">
-                  Resources
-                </h6>
+                <h6 className="text-sm text-[#F4F0FF] font-bold">Resources</h6>
                 {footerNavigation.resources.map((item) => (
-                  <Link key={item.name} className="text-text hover:text-white transition-all duration-200" href={item.href}>
+                  <Link
+                    key={item.name}
+                    className="text-text hover:text-white transition-all duration-200"
+                    href={item.href}
+                  >
                     {item.name}
                   </Link>
                 ))}
               </div>
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm text-[#F4F0FF] font-bold">
-                  Legal
-                </h6>
+                <h6 className="text-sm text-[#F4F0FF] font-bold">Legal</h6>
                 {footerNavigation.legal.map((item) => (
-                  <Link key={item.name} className="text-text hover:text-white transition-all duration-200" href={item.href}>
+                  <Link
+                    key={item.name}
+                    className="text-text hover:text-white transition-all duration-200"
+                    href={item.href}
+                  >
                     {item.name}
                   </Link>
                 ))}
               </div>
             </div>
           </div>
-          <Divider className="border-border" />
+          <Separator className="border-border" />
           <div className="py-10 flex flex-col md:flex-row gap-3 items-center justify-between">
             <h6 className="text-text text-[14px] text-center md:text-start">
               Secure Crypto Wallet Built for Performance & Protection.

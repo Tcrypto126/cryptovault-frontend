@@ -26,9 +26,10 @@
   --color-border: var(--border);
   --color-menu: var(--menu-button);
   --color-text: var(--dark-text);
+  --color-button-p: var(--button-p);
+  --color-button-pu: var(--button-pu);
 
   --font-satoshi: "Satoshi";
-
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -67,6 +68,7 @@
 
 :root {
   --radius: 0.625rem;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -105,6 +107,8 @@
   --border: oklch(1 0 0 / 10%);
   --menu-button: #131839;
   --dark-text: #A1A1AA;
+  --button-p: #6C5DD3;
+  --button-pu: #7769d3;
 
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

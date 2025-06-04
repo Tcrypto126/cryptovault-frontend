@@ -7,7 +7,7 @@ import { useNotification } from "@/providers/notificationProvider";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { EmblaOptionsType } from 'embla-carousel'
+import { EmblaOptionsType } from "embla-carousel";
 import { ArrowRightIcon } from "@/components/ui/icon";
 
 import Header from "@/components/layouts/Header";
@@ -15,7 +15,7 @@ import Footer from "@/components/layouts/Footer";
 import EmblaCarousel from "@/components/EmblaCarousel";
 import { AccordionDemo } from "@/components/Faq";
 
-import './css/embla.css'
+import "./css/embla.css";
 
 const Home = () => {
   const { setTheme } = useTheme();
@@ -23,12 +23,12 @@ const Home = () => {
 
   const OPTIONS: EmblaOptionsType = {
     dragFree: true,
-    loop: true
+    loop: true,
   };
   const OPTIONS2: EmblaOptionsType = {
     dragFree: true,
-    direction: 'rtl',
-    loop: true
+    direction: "rtl",
+    loop: true,
   };
   const SLIDE_COUNT = 5;
   const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
@@ -98,16 +98,15 @@ const Home = () => {
                 <ArrowRightIcon width="12" height="9" />
               </Button>
               <h2 className="leading-[1.35em] mt-3">
-                Control {" "}
-                <span
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#cabbf0] to-[#632EE4]"
-                >
+                Control{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#cabbf0] to-[#632EE4]">
                   Your Crypto
                 </span>
                 . Earn Rewards. Stay Secure.
               </h2>
               <p className="mt-6 ">
-                A next-gen custodial crypto wallet built for simplicity, speed, and safety.
+                A next-gen custodial crypto wallet built for simplicity, speed,
+                and safety.
               </p>
               <div className="flex gap-3 mt-8 flex-wrap">
                 <Button className="login-button !w-[141px] !h-[52px]">
@@ -168,9 +167,7 @@ const Home = () => {
           </div>
 
           <div className="py-6 md:py-10">
-            <h3 className="text-center">
-              Empowering the Future of Finance
-            </h3>
+            <h3 className="text-center">Empowering the Future of Finance</h3>
             <div className="grid grid-cols-4 md:grid-cols-6 gap-6 mt-4 md:mt-12">
               <Image
                 src="/assets/home/coin-brand-1.png"
@@ -248,11 +245,10 @@ const Home = () => {
           </div>
 
           <div className="py-6 md:py-10">
-            <h3 className="text-center">
-              Why Choose Our Wallet?
-            </h3>
+            <h3 className="text-center">Why Choose Our Wallet?</h3>
             <p className="mt-3 text-center">
-              Built for real people. Trusted by thousands. Designed for the future.
+              Built for real people. Trusted by thousands. Designed for the
+              future.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4 md:mt-10">
               <Image
@@ -301,11 +297,10 @@ const Home = () => {
           </div>
 
           <div className="py-6 md:py-10">
-            <h3 className="text-center">
-              How It Works
-            </h3>
+            <h3 className="text-center">How It Works</h3>
             <p className="mt-3 text-center">
-              Built for real people. Trusted by thousands. Designed for the future.
+              Built for real people. Trusted by thousands. Designed for the
+              future.
             </p>
             <div>
               <div className="flex flex-col sm:flex-row gap-6 sm:gap-0 justify-between py-6 md:py-10">
@@ -318,8 +313,14 @@ const Home = () => {
                   </h1>
                 </div>
                 <div>
-                  <Separator orientation="vertical" className="!bg-white hidden sm:block" />
-                  <Separator orientation="horizontal" className="!bg-white sm:hidden" />
+                  <Separator
+                    orientation="vertical"
+                    className="!bg-white hidden sm:block"
+                  />
+                  <Separator
+                    orientation="horizontal"
+                    className="!bg-white sm:hidden"
+                  />
                 </div>
                 <div className="w-full sm:w-[45%] space-y-3 sm:space-y-0">
                   <h5 className="text-[#C6C8D0]">
@@ -352,8 +353,14 @@ const Home = () => {
                   </div>
                 </div>
                 <div>
-                  <Separator orientation="vertical" className="!bg-white hidden sm:block" />
-                  <Separator orientation="horizontal" className="!bg-white sm:hidden" />
+                  <Separator
+                    orientation="vertical"
+                    className="!bg-white hidden sm:block"
+                  />
+                  <Separator
+                    orientation="horizontal"
+                    className="!bg-white sm:hidden"
+                  />
                 </div>
                 <div className="w-full sm:w-[45%]">
                   <h3 className="!text-xl md:!text-4xl !font-medium text-[#C6C8D0]">
@@ -374,8 +381,14 @@ const Home = () => {
                   </h1>
                 </div>
                 <div>
-                  <Separator orientation="vertical" className="!bg-white hidden sm:block" />
-                  <Separator orientation="horizontal" className="!bg-white sm:hidden" />
+                  <Separator
+                    orientation="vertical"
+                    className="!bg-white hidden sm:block"
+                  />
+                  <Separator
+                    orientation="horizontal"
+                    className="!bg-white sm:hidden"
+                  />
                 </div>
                 <div className="w-full sm:w-[45%] space-y-3 sm:space-y-0">
                   <h5 className="text-[#C6C8D0]">
@@ -415,9 +428,21 @@ const Home = () => {
                   height={576}
                   className="h-full absolute top-0 -right-[160px] sm:-right-[5px] z-20"
                 />
-                <EmblaCarousel slides={SLIDES} options={OPTIONS} direction="left" />
-                <EmblaCarousel slides={SLIDES} options={OPTIONS2} direction="right" />
-                <EmblaCarousel slides={SLIDES} options={OPTIONS} direction="left" />
+                <EmblaCarousel
+                  slides={SLIDES}
+                  options={OPTIONS}
+                  direction="left"
+                />
+                <EmblaCarousel
+                  slides={SLIDES}
+                  options={OPTIONS2}
+                  direction="right"
+                />
+                <EmblaCarousel
+                  slides={SLIDES}
+                  options={OPTIONS}
+                  direction="left"
+                />
               </div>
             </div>
           </div>
@@ -432,18 +457,12 @@ const Home = () => {
             <h1 className="text-center">
               Deposit $500+ and Get $100 Instantly
             </h1>
-            <h4 className="mt-4 text-center">
-              Hurry — offer ends Sept 30th!
-            </h4>
-            <Button className="login-button mt-7">
-              Deposit Now
-            </Button>
+            <h4 className="mt-4 text-center">Hurry — offer ends Sept 30th!</h4>
+            <Button className="login-button mt-7">Deposit Now</Button>
           </div>
 
           <div className="py-6 md:py-10">
-            <h3 className="text-center">
-              Frequently Asked Questions
-            </h3>
+            <h3 className="text-center">Frequently Asked Questions</h3>
             <div className="flex justify-center mt-10">
               <AccordionDemo />
             </div>
