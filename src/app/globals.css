@@ -29,6 +29,7 @@
 
   --font-satoshi: "Satoshi";
 
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -65,13 +66,8 @@
 }
 
 :root {
-  --background: #060015;
-  --border: #242D6B;
-  --menu-button: #131839;
-  --dark-text: #A1A1AA;
-
   --radius: 0.625rem;
-  /* --background: oklch(1 0 0); */
+  --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -86,7 +82,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  /* --border: oklch(0.922 0 0); */
+  --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -106,8 +102,10 @@
 
 .dark {
   --background: #060015;
+  --border: oklch(1 0 0 / 10%);
+  --menu-button: #131839;
+  --dark-text: #A1A1AA;
 
-  /* --background: oklch(0.145 0 0); */
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -122,7 +120,6 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -140,7 +137,7 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
   }
@@ -148,7 +145,7 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+} */
 
 *,
 *::before,
@@ -162,51 +159,15 @@
   }
 }
 
-.rainbow {
-  position: relative;
-  z-index: 0;
-  width: 200px;
-  height: 50px;
-  border-radius: 50px;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: -2;
-    left: 45%;
-    top: -250%;
-    width: 10%;
-    height: 600%;
-    background-color: #ffffff;
-    background-repeat: no-repeat;
-    background-size: 50% 50%;
-    animation: rotate 6s linear infinite;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    left: 1px;
-    top: 1px;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
-    background-image: url('/assets/button/loginButtonBg.png');
-    background-size: cover;
-    border-radius: 50px;
-  }
-}
-
-
 .login-button,
 .signup-button {
-  @apply cursor-pointer text-[12px] text-white transition-all duration-300 bg-[#ffffff08] rounded-full bg-center;
+  @apply cursor-pointer text-[12px] text-white transition-all duration-300 rounded-full;
   width: 141px;
   height: 52px;
-  border: 1px solid #f7f7f714;
-  /* background-image: url('/assets/button/loginButtonBg0.png'); */
+  border: 1px solid #f7f7f717;
+  background-color: #ffffff0e;
   background-repeat: no-repeat;
+  background-position: center;
 }
 
 .login-button {
@@ -236,14 +197,19 @@
     top: 0.5px;
     width: calc(100% - 0.8px);
     height: calc(100% - 0.8px);
-    /* border: 1px solid red; */
     border-radius: 50px;
     background-image: url('/assets/button/loginButtonBg.png');
     background-size: 125% 165%;
-    /* or contain, depending on your design */
     background-repeat: no-repeat;
     background-position: center;
   }
+}
+
+.login-button:hover,
+.signup-button:hover {
+  box-shadow: 0 0 3px 3px #ffffff91;
+  background-color: #ffffff3a;
+  /* border-color: #ffffff1e; */
 }
 
 @media only screen and (max-width: 640px) {
@@ -314,6 +280,6 @@ p {
 }
 
 .mobile-menu {
-  background-image: url('/assets/home/mobile-munu-bg.png') !important;
+  background-image: url('/assets/home/mobile-menu-bg.png') !important;
   background-size: cover;
 }

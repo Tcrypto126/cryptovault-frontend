@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import dynamic from "next/dynamic";
-// import { SessionProvider } from "next-auth/react";
 
 const ThemeProvider = dynamic(() => import("@/providers/themeProvider"), {
   ssr: false,
@@ -14,16 +13,16 @@ const AuthProvider = dynamic(() => import("@/providers/authProvider"), {
   ssr: false,
 });
 
-// import { NextUIProvider } from "@nextui-org/react";
+import { NextUIProvider } from "@nextui-org/react";
 
 const ThemeClient = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <ThemeProvider>
-      {/* <NextUIProvider> */}
-      <NotificationProvider>
-        <AuthProvider>{children}</AuthProvider>
-      </NotificationProvider>
-      {/* </NextUIProvider> */}
+      <NextUIProvider>
+        <NotificationProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </NotificationProvider>
+      </NextUIProvider>
     </ThemeProvider>
   );
 };

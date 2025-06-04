@@ -42,56 +42,58 @@ const Home = () => {
         alt="stars"
         width={2880}
         height={3105}
-        className=" absolute top-0 left-0 z-10"
+        className="absolute top-0 left-0 lg:w-full z-10"
       />
       <Image
         src="/assets/home/light.svg"
         alt="light"
         width={403}
         height={476}
-        className=" absolute top-0 left-0 z-10"
+        className="absolute top-0 left-0 z-10"
       />
-      <div className="flex justify-center absolute top-0 right-[16%]">
-        <Image
-          src="/assets/home/light-top.png"
-          alt="light-top"
-          width={806}
-          height={434}
-          className=" z-0"
-        />
-      </div>
-      <div className="absolute top-[1300px] left-0">
+      <Image
+        src="/assets/home/light-top.png"
+        alt="light-top"
+        width={806}
+        height={434}
+        className="absolute top-0 right-[16%]"
+      />
+      <div className="absolute top-[1500px] left-0 w-full">
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
-        />
-        <Image
-          src="/assets/home/stars.svg"
-          alt="stars"
-          width={2880}
-          height={3105}
+          className="w-full"
         />
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
+          className="w-full"
         />
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
+          className="w-full"
+        />
+        <Image
+          src="/assets/home/stars.svg"
+          alt="stars"
+          width={2880}
+          height={3105}
+          className="w-full"
         />
       </div>
 
       <div className="w-full relative z-20">
         <div className="max-w-[1440px] m-auto px-2.5 lg:px-20 py-[92px]">
           <div className="flex flex-col md:flex-row">
-            <div className="flex-1 py-6 md:py-10 md:pl-5 z-20">
-              <Button className="border-[#171D45] bg-[#0A0D1F] hover:bg-[#0A0D1F] border-[1px] rounded-full text-[14px] text-white !px-4 !py-2">
+            <div className="flex-1 py-6 md:py-14 md:pl-5 z-20">
+              <Button className="border-border bg-[#0A0D1F] hover:bg-[#0A0D1F] border-[1px] rounded-full text-[14px] text-white !px-4 !py-2">
                 Flexible Plans for You
                 <ArrowRightIcon width="12" height="9" />
               </Button>
@@ -169,81 +171,79 @@ const Home = () => {
             <h3 className="text-center">
               Empowering the Future of Finance
             </h3>
-            <div className="flex flex-col mt-12">
-              <div className="grid grid-cols-4 md:grid-cols-6 gap-6">
-                <Image
-                  src="/assets/home/coin-brand-1.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-2.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-3.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-4.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-5.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-6.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-4.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-6.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-5.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-3.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-2.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-                <Image
-                  src="/assets/home/coin-brand-1.png"
-                  alt="coin"
-                  width={151}
-                  height={47}
-                />
-              </div>
+            <div className="grid grid-cols-4 md:grid-cols-6 gap-6 mt-4 md:mt-12">
+              <Image
+                src="/assets/home/coin-brand-1.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-2.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-3.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-4.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-5.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-6.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-4.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-6.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-5.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-3.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-2.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
+              <Image
+                src="/assets/home/coin-brand-1.png"
+                alt="coin"
+                width={151}
+                height={47}
+              />
             </div>
           </div>
 
@@ -254,7 +254,7 @@ const Home = () => {
             <p className="mt-3 text-center">
               Built for real people. Trusted by thousands. Designed for the future.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 grid- gap-6 mt-4 md:mt-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4 md:mt-10">
               <Image
                 src="/assets/home/card1.png"
                 alt="card"
@@ -307,7 +307,7 @@ const Home = () => {
             <p className="mt-3 text-center">
               Built for real people. Trusted by thousands. Designed for the future.
             </p>
-            <div className="flex flex-col">
+            <div>
               <div className="flex flex-col sm:flex-row gap-6 sm:gap-0 justify-between py-6 md:py-10">
                 <div className="w-full sm:w-[45%]">
                   <h3 className="!text-xl md:!text-4xl !font-medium text-[#C6C8D0]">
@@ -325,7 +325,7 @@ const Home = () => {
                   <h5 className="text-[#C6C8D0]">
                     Just an email and password – no delays.
                   </h5>
-                  <div className=" h-[87%] md:h-[95%] flex justify-center items-center ">
+                  <div className="h-[87%] md:h-[95%] flex justify-center sm:justify-start items-center">
                     <Image
                       src="/assets/home/roadmap1.png"
                       width={544}
@@ -338,10 +338,10 @@ const Home = () => {
               </div>
               <div className="flex flex-col-reverse sm:flex-row gap-6 sm:gap-0 justify-between py-6 md:py-10">
                 <div className="w-full sm:w-[45%] space-y-3 sm:space-y-0">
-                  <h5 className=" text-[#C6C8D0]">
+                  <h5 className="text-[#C6C8D0]">
                     Deposit crypto or fiat and earn up to 5% bonus.
                   </h5>
-                  <div className="h-[87%] md:h-[95%] flex justify-center items-center">
+                  <div className="h-[87%] md:h-[95%] flex justify-center sm:justify-start items-center">
                     <Image
                       src="/assets/home/roadmap2.png"
                       width={544}
@@ -381,7 +381,7 @@ const Home = () => {
                   <h5 className="text-[#C6C8D0]">
                     Just an email and password – no delays.
                   </h5>
-                  <div className="h-[87%] md:h-[95%] flex justify-center items-center">
+                  <div className="h-[87%] md:h-[95%] flex justify-center sm:justify-start items-center">
                     <Image
                       src="/assets/home/roadmap3.png"
                       width={544}

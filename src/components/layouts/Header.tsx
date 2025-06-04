@@ -14,8 +14,6 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
 import { Button } from "../ui/button";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Sheet,
   SheetClose,
@@ -27,7 +25,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-import { ToogleIcon, HomeIcon, DashboardIcon, FeaturesIcon, SecurityIcon, SupportIcon, WorksIcon } from "../ui/icon";
+import { HomeIcon, DashboardIcon, FeaturesIcon, SecurityIcon, SupportIcon, WorksIcon } from "../ui/icon";
 
 const Header = () => {
   const router = useRouter();
@@ -44,8 +42,8 @@ const Header = () => {
   return (
     <>
       <div className="fixed w-full z-50">
-        <div className="max-w-[1440px] h-[92px] m-auto px-2.5 lg:px-20 pt-[17px]">
-          <div className=" w-full flex items-center justify-between gap-2">
+        <div className="max-w-[1440px] h-[92px] m-auto px-2.5 lg:px-20 pt-4">
+          <div className="w-full flex items-center justify-between gap-2">
             <Image
               src="/assets/logo.svg"
               width={54}
@@ -56,7 +54,7 @@ const Header = () => {
             />
             <NavigationMenu className="hidden lg:block">
               <NavigationMenuList
-                className="border-border border-1 rounded-full h-[64px] p-2"
+                className="border-border border-1 rounded-full h-16 p-2"
               >
                 {menuItems.map((item) => (
                   <NavigationMenuItem key={item.title}>
@@ -83,7 +81,7 @@ const Header = () => {
                     />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className=" px-4 py-6 w-full sm:w-[282px] mobile-menu">
+                <SheetContent side="left" className="px-4 py-6 w-full sm:w-[282px] mobile-menu">
                   <SheetHeader className="z-20">
                     <SheetTitle className="flex justify-center">
                       <Image

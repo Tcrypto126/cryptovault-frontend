@@ -34,9 +34,9 @@ const Footer = () => {
 
   return (
     <>
-      <div className="w-full border ">
+      <div className="w-full bg-[#030014] border-t-[1px] border-border">
         <div className="max-w-[1440px] m-auto px-2.5 lg:px-20">
-          <div className="flex flex-col md:flex-row gap-5 pt-20 pb-14">
+          <div className="flex flex-col md:flex-row gap-5 pt-10 md:pt-20 pb-14">
             <div className="flex-1 flex flex-col gap-5 justify-between">
               <div className="flex gap-3 items-center">
                 <Image
@@ -62,9 +62,9 @@ const Footer = () => {
                 />
               </div>
             </div>
-            <div className="flex-2 grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="flex-2 grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 md:mt-0">
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm font-bold">
+                <h6 className="text-sm text-[#F4F0FF] font-bold">
                   Company
                 </h6>
                 {footerNavigation.company.map((item) => (
@@ -74,7 +74,7 @@ const Footer = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm font-bold">
+                <h6 className="text-sm text-[#F4F0FF] font-bold">
                   Platform
                 </h6>
                 {footerNavigation.platform.map((item) => (
@@ -84,7 +84,7 @@ const Footer = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm font-bold">
+                <h6 className="text-sm text-[#F4F0FF] font-bold">
                   Resources
                 </h6>
                 {footerNavigation.resources.map((item) => (
@@ -94,7 +94,7 @@ const Footer = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-5">
-                <h6 className="text-sm font-bold">
+                <h6 className="text-sm text-[#F4F0FF] font-bold">
                   Legal
                 </h6>
                 {footerNavigation.legal.map((item) => (
@@ -105,7 +105,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <Divider />
+          <Divider className="border-border" />
           <div className="py-10 flex flex-col md:flex-row gap-3 items-center justify-between">
             <h6 className="text-text text-[14px] text-center md:text-start">
               Secure Crypto Wallet Built for Performance & Protection.
