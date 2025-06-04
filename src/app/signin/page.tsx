@@ -81,7 +81,9 @@ const SignIn = () => {
           <div className="flex-1 w-full md:max-w-[500px] flex flex-col gap-5 md:gap-10 p-4 md:p-12 bg-[#ffffff1e] rounded-2xl">
             <Image src="/assets/logo.svg" width={60} height={60} alt="logo" />
             <div className="flex flex-col gap-2">
-              <h3 className="!text-[20px] md:!text-3xl">Sign in to your account</h3>
+              <h3 className="!text-[20px] md:!text-3xl">
+                Sign in to your account
+              </h3>
               <h6>Enter your email and password to log in.</h6>
             </div>
             <Form {...form}>
