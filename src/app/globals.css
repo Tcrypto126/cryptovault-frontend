@@ -149,15 +149,14 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* @layer base {
+@layer base {
   * {
     @apply border-border outline-ring/50;
   }
-
   body {
     @apply bg-background text-foreground;
   }
-} */
+}
 
 *,
 *::before,
@@ -221,7 +220,6 @@
 .signup-button:hover {
   box-shadow: 0 0 3px 3px #ffffff91;
   background-color: #ffffff3a;
-  /* border-color: #ffffff1e; */
 }
 
 @media only screen and (max-width: 640px) {
@@ -287,19 +285,5 @@ p {
 
   p {
     font-size: 16px;
-  }
-}
-
-/* .mobile-menu {
-  background-image: url('/assets/home/mobile-menu-bg.png');
-  background-size: cover;
-} */
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
