@@ -26,6 +26,11 @@
   --color-text: var(--dark-text);
   --color-button-p: var(--button-p);
   --color-button-pu: var(--button-pu);
+  --color-dashboard: var(--dash-primary);
+  --color-button-sf: var(--button-sf);
+  --color-button-st: var(--button-st);
+  --color-button-ef: var(--button-ef);
+  --color-button-et: var(--button-et);
 
   --font-satoshi: "Satoshi";
 
@@ -107,6 +112,11 @@
   --dark-text: #a1a1aa;
   --button-p: #6c5dd3;
   --button-pu: #7769d3;
+  --dash-primary: #1f1f2e;
+  --button-sf: #9387e3;
+  --button-st: #6c5dd3;
+  --button-ef: #9b90e4;
+  --button-et: #7667da;
 
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
