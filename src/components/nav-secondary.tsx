@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { type Icon } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import {
   SidebarGroup,
@@ -33,6 +33,7 @@ export function NavSecondary({
   }[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -41,6 +42,7 @@ export function NavSecondary({
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
+                isActive={pathname === item.url}
                 onClick={() => {
                   router.push(item.url);
                 }}

@@ -2,6 +2,7 @@
 
 import { type Icon } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +23,7 @@ export function NavMain({
   }[];
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -31,12 +33,17 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 tooltip={item.title}
+                isActive={pathname === item.url}
                 onClick={() => {
                   router.push(item.url);
                 }}
               >
-                {item.icon && <item.icon className="!w-5 md:!w-6 !h-5 md:!h-6" />}
-                <span className="text-[14px] md:text-[16px] font-[500]">{item.title}</span>
+                {item.icon && (
+                  <item.icon className="!w-5 md:!w-6 !h-5 md:!h-6" />
+                )}
+                <span className="text-[14px] md:text-[16px] font-[500]">
+                  {item.title}
+                </span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
