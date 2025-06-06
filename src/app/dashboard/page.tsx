@@ -140,24 +140,12 @@ const Dashboard = () => {
       </div>
       <div className="flex flex-col gap-4">
         <h5>Transactions</h5>
-        <div className="flex justify-between items-center gap-2">
-          <div className="flex gap-4">
-            <h6>Deposit</h6>
-            <h6>Withdraw</h6>
-            <h6>Send</h6>
-          </div>
-          <div className="relative">
-            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search"
-              className="pl-10 w-36 lg:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
-            />
-          </div>
-        </div>
-        <div>
+        <div className="overflow-hidden">
           <DataTable data={data} />
         </div>
+      </div>
+      <div>
+        sdf
       </div>
     </div>
   );
