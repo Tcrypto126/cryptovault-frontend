@@ -107,9 +107,8 @@ export const schema = z.object({
   header: z.string(),
   type: z.string(),
   status: z.string(),
+  amount: z.string(),
   target: z.string(),
-  limit: z.string(),
-  reviewer: z.string(),
 });
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
@@ -118,7 +117,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "#",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 min-w-[60px]">
+        <div className="flex items-center gap-2 min-w-[40px]">
           <span className="text-muted-foreground">{row.index + 1}</span>
         </div>
       );
@@ -137,10 +136,21 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-start min-w-[90px]">
+          {row.original.amount}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[120px]">
+      <div className="flex items-center justify-start min-w-[90px]">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
           {row.original.status === "Done" ? (
             <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
@@ -154,69 +164,12 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "target",
-    header: "Amount",
+    header: "Sent to/Received by",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[120px]">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-              loading: `Saving ${row.original.header}`,
-              success: "Done",
-              error: "Error",
-            });
-          }}
-        >
-          <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-            Amount
-          </Label>
-          <Input
-            className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-24 border-transparent bg-transparent text-left shadow-none focus-visible:border dark:bg-transparent"
-            defaultValue={row.original.target}
-            id={`${row.original.id}-target`}
-          />
-        </form>
+      <div className="flex items-center justify-start min-w-[140px]">
+        {row.original.target}
       </div>
     ),
-  },
-  {
-    accessorKey: "reviewer",
-    header: "Sent to/Received by",
-    cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer";
-
-      return (
-        <div className="flex items-center justify-start min-w-[200px]">
-          {isAssigned ? (
-            row.original.reviewer
-          ) : (
-            <>
-              <Label
-                htmlFor={`${row.original.id}-reviewer`}
-                className="sr-only"
-              >
-                Sent to/Received by
-              </Label>
-              <Select>
-                <SelectTrigger
-                  className="w-48 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-                  size="sm"
-                  id={`${row.original.id}-reviewer`}
-                >
-                  <SelectValue placeholder="Select recipient/sender" />
-                </SelectTrigger>
-                <SelectContent align="start">
-                  <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                  <SelectItem value="Jamik Tashpulatov">
-                    Jamik Tashpulatov
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </>
-          )}
-        </div>
-      );
-    },
   },
   //   {
   //     id: "actions",
@@ -249,6 +202,7 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
+  const [tabValue, setTabValue] = React.useState("all");
   const [data, setData] = React.useState(() => initialData);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -288,11 +242,20 @@ export function DataTable({
   });
 
   return (
-    <Tabs defaultValue="all" className="w-full flex-col justify-start gap-6">
-      <div className="flex items-center justify-between">
-        <Select defaultValue="all">
+    <Tabs
+      value={tabValue}
+      onValueChange={(value) => setTabValue(value)}
+      className="w-full flex-col justify-start gap-6"
+    >
+      <div className="flex items-center justify-between gap-1 flex-wrap">
+        <Select
+          defaultValue="all"
+          onValueChange={(value) => {
+            setTabValue(value);
+          }}
+        >
           <SelectTrigger
-            className="flex w-fit lg:hidden"
+            className="flex w-fit md:hidden"
             size="sm"
             id="view-selector"
           >
@@ -305,29 +268,29 @@ export function DataTable({
             <SelectItem value="bonus">Bonus</SelectItem>
           </SelectContent>
         </Select>
-        <TabsList className="hidden lg:flex">
+        <TabsList className="hidden md:flex">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="deposit">Deposit</TabsTrigger>
           <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
           <TabsTrigger value="bonus">Bonus</TabsTrigger>
         </TabsList>
         <div className="relative">
-          <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <IconSearch className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search"
             onChange={(e) => {
               console.log(e.target.value);
             }}
-            className="pl-10 w-36 lg:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
+            className="pl-8 w-40 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
           />
         </div>
       </div>
       <TabsContent
         value="all"
-        className="relative flex flex-col gap-4 overflow-auto"
+        className="relative flex flex-col gap-4 border border-amber-200"
       >
-        <div className="overflow-hidden rounded-[5px] border">
+        <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -337,7 +300,7 @@ export function DataTable({
                       <TableHead
                         key={header.id}
                         colSpan={header.colSpan}
-                        className="text-[#838799] text-left h-11 px-6"
+                        className="text-[#838799] text-left h-11 px-4"
                       >
                         {header.isPlaceholder
                           ? null
@@ -360,7 +323,7 @@ export function DataTable({
                     className="h-12"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="px-6 text-left">
+                      <TableCell key={cell.id} className="px-4 text-left">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -628,7 +591,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="reviewer">Reviewer</Label>
-              <Select defaultValue={item.reviewer}>
+              <Select defaultValue={item.amount}>
                 <SelectTrigger id="reviewer" className="w-full">
                   <SelectValue placeholder="Select a reviewer" />
                 </SelectTrigger>

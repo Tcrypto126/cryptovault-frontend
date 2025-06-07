@@ -19,7 +19,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6 border border-amber-400">
-      <div className="flex flex-col lg:flex-row justify-between gap-6">
+      <div className="flex flex-col md:flex-row justify-between gap-6">
         <div className="flex flex-col justify-between gap-4 p-0 lg:p-4">
           <h1 className="max-w-[600px] !text-[28px] lg:!text-[40px] xl:!text-[56px]">
             Welcome to Custodial Crypto Wallet
@@ -29,7 +29,7 @@ const Dashboard = () => {
             request a withdrawal when ready. Stay in control, securely.
           </p>
         </div>
-        <div className="flex flex-col gap-4 p-4 h-auto lg:h-[243px] bg-dashboard rounded-[12px]">
+        <div className="flex flex-col gap-4 p-4 h-auto md:h-[243px] bg-dashboard rounded-[12px]">
           <h5>Spin & Win</h5>
           <div
             className="relative flex flex-col gap-2 p-4 min-w-[100%] sm:min-w-[300px] rounded-[12px] overflow-hidden cursor-pointer bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl"
@@ -54,7 +54,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 justify-between">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 justify-between">
         <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
