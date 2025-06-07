@@ -11,11 +11,14 @@ import { Input } from "@/components/ui/input";
 import { IconSearch } from "@tabler/icons-react";
 import StatusCode from "@/components/status-badge";
 import { DataTable } from "@/components/data-table-user";
+import { useNotification } from "@/providers/notificationProvider";
 
 import data from "@/app/data.json";
 
 const Dashboard = () => {
   const [progress, setProgress] = useState(60);
+  const [spinning, setSpinning] = useState(false);
+  const { toast } = useNotification();
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6 border border-amber-400">
@@ -34,7 +37,11 @@ const Dashboard = () => {
           <div
             className="relative flex flex-col gap-2 p-4 min-w-[100%] sm:min-w-[300px] rounded-[12px] overflow-hidden cursor-pointer bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl"
             onClick={() => {
-              alert("wheel of fortune");
+              if (spinning) {
+                alert("wheel of fortune");
+              } else {
+                toast("You are not available to spin", "Warning");
+              }
             }}
           >
             <Image
@@ -44,7 +51,9 @@ const Dashboard = () => {
               height={135}
               className="absolute bottom-0 right-0"
             />
-            <h3 className="!text-[28px] text-black z-10">Available</h3>
+            <h3 className="!text-[28px] text-black z-10">
+              {spinning ? "Available" : "Not available"}
+            </h3>
             <p className="!text-[14px] !text-black max-w-[130px] z-10">
               Spin the Wheel and Win a Bonus!
             </p>

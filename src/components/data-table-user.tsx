@@ -247,11 +247,23 @@ export function DataTable({
           item.user.email.toLowerCase().includes(searchKey.toLowerCase())
       );
     if (activeTab === "bonus") {
-      return data.filter(
-        (item) => item.type === "BonusSent" || item.type === "BonusReceived"
-      );
+      return data
+        .filter(
+          (item) => item.type === "BonusSent" || item.type === "BonusReceived"
+        )
+        .filter(
+          (item) =>
+            item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+            item.user.email.toLowerCase().includes(searchKey.toLowerCase())
+        );
     }
-    return data.filter((item) => item.type.toLowerCase() === activeTab);
+    return data
+      .filter((item) => item.type.toLowerCase() === activeTab)
+      .filter(
+        (item) =>
+          item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+          item.user.email.toLowerCase().includes(searchKey.toLowerCase())
+      );
   }, [data, activeTab, searchKey]);
 
   const table = useReactTable({
