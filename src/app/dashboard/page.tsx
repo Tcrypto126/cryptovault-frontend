@@ -9,8 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { IconSearch } from "@tabler/icons-react";
-import StatusCode from "@/components/status-code";
-import { DataTable } from "@/components/data-table";
+import StatusCode from "@/components/status-badge";
+import { DataTable } from "@/components/data-table-user";
 
 import data from "@/app/data.json";
 
@@ -143,9 +143,6 @@ const Dashboard = () => {
         <div className="overflow-hidden">
           <DataTable data={data} />
         </div>
-      </div>
-      <div>
-        sdf
       </div>
     </div>
   );

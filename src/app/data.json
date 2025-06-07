@@ -1,106 +1,184 @@
 [
   {
     "id": 1,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Deposit",
+    "amount": "38.25",
+    "status": "Success",
+    "target": "18",
+    "user": {
+      "id": 1,
+      "name": "Kaori Fujio",
+      "email": "kaori19782@gmail.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 2,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Withdraw",
+    "amount": "58.24",
+    "status": "Pending",
+    "target": "18",
+    "user": {
+      "id": 2,
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 3,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "BonusSent",
+    "amount": "85.26",
+    "status": "Failed",
+    "target": "18",
+    "user": {
+      "id": 3,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 4,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "BonusReceived",
+    "amount": "45.21",
+    "status": "Success",
+    "target": "18",
+    "user": {
+      "id": 4,
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 5,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "BonusSent",
+    "amount": "12.25",
+    "status": "Success",
+    "target": "18",
+    "user": {
+      "id": 5,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 6,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "BonusReceived",
+    "amount": "12.25",
+    "status": "Pending",
+    "target": "18",
+    "user": {
+      "id": 6,
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 7,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Withdraw",
+    "amount": "122.25",
+    "status": "Failed",
+    "target": "18",
+    "user": {
+      "id": 7,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 8,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Deposit",
+    "amount": "122.25",
+    "status": "Failed",
+    "target": "18",
+    "user": {
+      "id": 8,
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 9,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "BonusSent",
+    "amount": "122.25",
+    "status": "Success",
+    "target": "18",
+    "user": {
+      "id": 9,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 10,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Deposit",
+    "amount": "1785.26",
+    "status": "Pending",
+    "target": "18",
+    "user": {
+      "id": 10,
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 11,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Withdraw",
+    "amount": "1600",
+    "status": "Failed",
+    "target": "18",
+    "user": {
+      "id": 11,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 12,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "BonusSent",
+    "amount": "56.25",
+    "status": "Success",
+    "target": "18",
+    "user": {
+      "id": 12,
+      "name": "Jane Doe",
+      "email": "jane.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   },
   {
     "id": 13,
-    "header": "Cover page",
-    "type": "Cover page",
-    "amount": "Eddie Lake",
-    "status": "In Process",
-    "target": "18"
+    "header": "No",
+    "type": "Deposit",
+    "amount": "4215.26",
+    "status": "Failed",
+    "target": "18",
+    "user": {
+      "id": 13,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "avatar": "/assets/avatars/avatar-sample.jpg"
+    }
   }
 ]
