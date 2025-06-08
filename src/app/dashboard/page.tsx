@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { IconWallet } from "@tabler/icons-react";
 import Image from "next/image";
-
-import { useNotification } from "@/providers/notificationProvider";
+import { IconWallet, IconLoader2 } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -14,10 +12,14 @@ import StatusCode from "@/components/status-badge";
 import { DataTable } from "@/components/data-table-user";
 import WheelOfFortune from "@/components/wheel-of-fortune";
 import { SendBonusModal } from "@/components/send-bonus-modal";
+import { WithdrawModal } from "@/components/withdraw-modal";
+
+import { useNotification } from "@/providers/notificationProvider";
 
 import data from "@/app/data.json";
 
 const Dashboard = () => {
+  const [isDepositing, setIsDepositing] = useState(false);
   const [progress, setProgress] = useState(60);
   const [spinning, setSpinning] = useState(false);
   const { toast } = useNotification();
@@ -89,8 +91,12 @@ const Dashboard = () => {
               <h5 className="text-[#1FB356] !font-bold">+12.3%</h5>
             </div>
           </div>
-          <Button variant="deposit" className="!h-8">
-            Deposit
+          <Button variant="deposit" className="!h-8" disabled={isDepositing}>
+            {isDepositing ? (
+              <IconLoader2 className="animate-spin" />
+            ) : (
+              <>Deposit</>
+            )}
           </Button>
         </div>
         <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
@@ -118,9 +124,7 @@ const Dashboard = () => {
               <StatusCode status="Success" />
             </div>
           </div>
-          <Button variant="withdraw" className="!h-8">
-            Withdraw
-          </Button>
+          <WithdrawModal />
         </div>
         <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
           <div className="flex items-center justify-between gap-2">
@@ -144,9 +148,7 @@ const Dashboard = () => {
               <h5 className="text-[#1FB356] !font-bold">+$3,234.22</h5>
             </div>
           </div>
-          <Button variant="deposit" className="!h-8">
-            Send
-          </Button>
+          <SendBonusModal />
         </div>
       </div>
       <div className="flex flex-col gap-4">
@@ -158,10 +160,6 @@ const Dashboard = () => {
 
       <div className="hidden">
         <WheelOfFortune />
-      </div>
-
-      <div>
-        <SendBonusModal />
       </div>
     </div>
   );

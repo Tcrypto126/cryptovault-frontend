@@ -45,7 +45,7 @@ const ForgotPassword = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("welcome", "success");
+    toast("welcome", "Success");
     console.log("data: ", data);
     setIsEmail(data.email);
     setIsSent(true);

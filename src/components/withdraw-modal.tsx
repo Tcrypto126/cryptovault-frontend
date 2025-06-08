@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconLoader2 } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogClose,
@@ -30,28 +28,22 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
+import { IconLoader2 } from "@tabler/icons-react";
 
 const FormSchema = z.object({
-  email: z
-    .string()
-    .nonempty({ message: "Email is required" })
-    .email({ message: "Invalid email format" }),
-
-  amount: z.number().min(1, { message: "Amount is required" }),
-
-  description: z.string(),
+  amount: z
+    .number()
+    .min(1500, { message: "Minimum withdrawal amount is $1500" }),
 });
 
-export function SendBonusModal() {
+export function WithdrawModal() {
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
       amount: 0,
-      description: "",
     },
   });
 
@@ -63,14 +55,14 @@ export function SendBonusModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="deposit" className="!h-8 !w-full">
-          Send
+        <Button variant="withdraw" className="!h-8 !w-full">
+          Withdraw
         </Button>
       </DialogTrigger>
-      <DialogContent className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940] ">
+      <DialogContent className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]">
         <DialogHeader>
           <DialogTitle className="!text-[18px] sm:!text-[24px] !font-medium">
-            Send Bonus to Another User
+            Withdraw
           </DialogTitle>
         </DialogHeader>
 
@@ -81,23 +73,6 @@ export function SendBonusModal() {
           >
             <FormField
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Recipient's Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your Recipient's Email"
-                      {...field}
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="amount"
               render={({ field }) => (
                 <FormItem>
@@ -106,26 +81,13 @@ export function SendBonusModal() {
                     <Input
                       type="number"
                       inputMode="decimal"
-                      placeholder="Enter your Amount to Send"
+                      placeholder="Enter your Amount to withdraw"
                       onChange={(e) => field.onChange(Number(e.target.value))}
                       value={field.value}
                     />
                   </FormControl>
-                  {/* <FormMessage /> */}
-                  <span className="text-[14px]">Available balance: $2,500</span>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Note</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Write a note..." {...field} />
-                  </FormControl>
                   <FormMessage />
+                  <span className="text-[14px]">Available balance: $2,700</span>
                 </FormItem>
               )}
             />
@@ -138,7 +100,7 @@ export function SendBonusModal() {
                 {isSendding ? (
                   <IconLoader2 className="animate-spin" />
                 ) : (
-                  <>Send Now</>
+                  <>Send Request</>
                 )}
               </Button>
             </DialogFooter>

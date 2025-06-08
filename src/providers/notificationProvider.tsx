@@ -16,13 +16,13 @@ const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
     if (type == "Success" || type == "Info") {
       toaster.success(type, {
         description: msg,
-        duration: 5000,
+        duration: 3000,
         position: "top-right",
       });
     } else {
       toaster.error(type, {
         description: msg,
-        duration: 5000,
+        duration: 3000,
         position: "top-right",
         // classNames: {
         //   toast: "!bg-[#000] !text-[#fff]",
