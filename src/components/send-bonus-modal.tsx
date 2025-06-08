@@ -56,6 +56,11 @@ export function SendBonusModal() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsSendding(true);
+    setTimeout(() => {
+      setIsSendding(false);
+    }, 3000);
+
     toast("welcome", "Success");
     console.log("data: ", data);
   }

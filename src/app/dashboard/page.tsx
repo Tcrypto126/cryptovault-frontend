@@ -24,6 +24,13 @@ const Dashboard = () => {
   const [spinning, setSpinning] = useState(false);
   const { toast } = useNotification();
 
+  const handleDeposit = () => {
+    setIsDepositing(true);
+    setTimeout(() => {
+      setIsDepositing(false);
+    }, 3000);
+  };
+
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6 border border-amber-400">
       <div className="flex flex-col md:flex-row justify-between gap-6">
@@ -91,7 +98,14 @@ const Dashboard = () => {
               <h5 className="text-[#1FB356] !font-bold">+12.3%</h5>
             </div>
           </div>
-          <Button variant="deposit" className="!h-8" disabled={isDepositing}>
+          <Button
+            variant="deposit"
+            className="!h-8"
+            disabled={isDepositing}
+            onClick={() => {
+              handleDeposit();
+            }}
+          >
             {isDepositing ? (
               <IconLoader2 className="animate-spin" />
             ) : (

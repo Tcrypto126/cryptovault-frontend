@@ -31,9 +31,7 @@ import { useNotification } from "@/providers/notificationProvider";
 import { IconLoader2 } from "@tabler/icons-react";
 
 const FormSchema = z.object({
-  amount: z
-    .number()
-    .min(1500, { message: "Minimum withdrawal amount is $1500" }),
+  amount: z.number(),
 });
 
 export function WithdrawModal() {
@@ -48,6 +46,16 @@ export function WithdrawModal() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsSendding(true);
+    setTimeout(() => {
+      setIsSendding(false);
+    }, 3000);
+
+    if (data.amount < 1500) {
+      toast("Minimum withdrawal amount is $1500", "Error");
+      return;
+    }
+
     toast("welcome", "Success");
     console.log("data: ", data);
   }
