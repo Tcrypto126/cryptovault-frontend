@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Button } from "./ui/button";
+import React, { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface WheelSegment {
@@ -12,14 +11,14 @@ interface WheelSegment {
 }
 
 const segments: WheelSegment[] = [
-  { id: 1, text: "$100", color: "#EE4040", probability: 0.1 },
-  { id: 2, text: "$200", color: "#F0CF50", probability: 0.15 },
-  { id: 3, text: "$300", color: "#815CD1", probability: 0.1 },
-  { id: 4, text: "$400", color: "#3DA5E0", probability: 0.15 },
-  { id: 5, text: "$500", color: "#34A24F", probability: 0.05 },
-  { id: 6, text: "$600", color: "#F9AA1F", probability: 0.15 },
-  { id: 7, text: "$700", color: "#FF9000", probability: 0.1 },
-  { id: 8, text: "$800", color: "#4CB1CF", probability: 0.2 },
+  { id: 1, text: "$10", color: "#3498db", probability: 0.125 },
+  { id: 2, text: "$0", color: "#9b59b6", probability: 0.125 },
+  { id: 3, text: "$2", color: "#95a5a6", probability: 0.125 },
+  { id: 4, text: "$5", color: "#16a085", probability: 0.125 },
+  { id: 5, text: "$2", color: "#f39c12", probability: 0.125 },
+  { id: 6, text: "$0", color: "#c0392b", probability: 0.125 },
+  { id: 7, text: "$4", color: "#27ae60", probability: 0.125 },
+  { id: 8, text: "$5", color: "#e67e22", probability: 0.125 },
 ];
 
 const WheelOfFortune = () => {
@@ -66,25 +65,18 @@ const WheelOfFortune = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 p-8">
-      <div className="relative w-[400px] h-[400px]">
-        {/* Center Point */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full z-20 shadow-lg border-4 border-gray-800" />
-
-        {/* Pointer */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-8 h-8 z-10">
-          <div className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-t-red-600" />
-        </div>
-
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a1f] text-white">
+      <div className="relative w-[400px] h-[400px] mb-8">
         {/* Wheel */}
         <div
           ref={wheelRef}
           className={cn(
-            "w-full h-full rounded-full relative overflow-hidden transition-transform duration-[5000ms] ease-out",
+            "w-full h-full rounded-full relative transition-transform duration-[5000ms] cubic-bezier(0.4, 0, 0.2, 1) border-4 border-black",
             isSpinning && "cursor-not-allowed"
           )}
           style={{
             transform: `rotate(${rotation}deg)`,
+            boxShadow: "0 0 0 8px black",
           }}
         >
           {segments.map((segment, index) => {
@@ -92,26 +84,25 @@ const WheelOfFortune = () => {
             return (
               <div
                 key={segment.id}
-                className="absolute top-0 left-0 w-full h-full origin-bottom-right"
+                className="absolute top-0 left-0 w-full h-full"
                 style={{
                   transform: `rotate(${rotation}deg)`,
                 }}
               >
                 <div
-                  className="absolute top-0 left-0 w-1/2 h-full origin-right flex items-center justify-center transform -translate-y-1/2"
+                  className="absolute top-0 left-0 w-1/2 h-1/2 origin-bottom-right"
                   style={{
                     backgroundColor: segment.color,
-                    transform: `rotate(${180 / segments.length}deg) skew(${
-                      90 - 360 / segments.length
-                    }deg)`,
+                    clipPath: "polygon(0 0, 100% 0, 0 100%)",
                   }}
                 >
                   <span
-                    className="absolute text-white font-bold text-xl whitespace-nowrap transform -rotate-90 translate-x-12"
+                    className="absolute text-white font-bold text-2xl"
                     style={{
-                      transform: `rotate(${
-                        rotation + 360 / segments.length / 2
-                      }deg)`,
+                      left: "20%",
+                      top: "25%",
+                      transform: "rotate(-45deg)",
+                      textShadow: "2px 2px 2px rgba(0,0,0,0.5)",
                     }}
                   >
                     {segment.text}
@@ -120,26 +111,31 @@ const WheelOfFortune = () => {
               </div>
             );
           })}
+
+          {/* Center Point */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-black rounded-full z-20" />
+        </div>
+
+        {/* Pointer */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 w-8 h-8 z-30">
+          <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[30px] border-yellow-400" />
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col items-center gap-4">
-        <Button
-          size="lg"
-          disabled={isSpinning}
-          onClick={spinWheel}
-          className="text-lg px-8 py-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50"
-        >
-          {isSpinning ? "Spinning..." : "SPIN!"}
-        </Button>
+      <button
+        disabled={isSpinning}
+        onClick={spinWheel}
+        className="bg-[#6C5CE7] text-white font-bold py-3 px-12 rounded-lg text-xl disabled:opacity-50 hover:bg-[#5A4ED1] transition-colors"
+      >
+        SPIN!
+      </button>
 
-        {winner && (
-          <div className="text-2xl font-bold text-center animate-bounce">
-            You won {winner.text}! 🎉
-          </div>
-        )}
-      </div>
+      {winner && (
+        <div className="mt-4 text-2xl font-bold text-center">
+          You won {winner.text}! 🎉
+        </div>
+      )}
     </div>
   );
 };

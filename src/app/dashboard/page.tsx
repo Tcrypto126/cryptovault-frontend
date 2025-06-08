@@ -1,17 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { IconWallet } from "@tabler/icons-react";
 import Image from "next/image";
 
+import { useNotification } from "@/providers/notificationProvider";
+
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
-import { Input } from "@/components/ui/input";
-import { IconSearch } from "@tabler/icons-react";
+
 import StatusCode from "@/components/status-badge";
 import { DataTable } from "@/components/data-table-user";
-import { useNotification } from "@/providers/notificationProvider";
+import WheelOfFortune from "@/components/wheel-of-fortune";
+import { SendBonusModal } from "@/components/send-bonus-modal";
 
 import data from "@/app/data.json";
 
@@ -152,6 +154,14 @@ const Dashboard = () => {
         <div className="overflow-hidden">
           <DataTable data={data} />
         </div>
+      </div>
+
+      <div className="hidden">
+        <WheelOfFortune />
+      </div>
+
+      <div>
+        <SendBonusModal />
       </div>
     </div>
   );
