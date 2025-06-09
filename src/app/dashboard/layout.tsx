@@ -8,8 +8,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full">
-        <div className="flex items-center gap-2 h-[56px] md:h-[81px] px-4 md:px-6 bg-dashboard">
+      <main className="w-full relative">
+        <div className="flex items-center gap-2 w-full h-[56px] md:h-[81px] px-4 md:px-6 bg-dashboard">
           <SidebarTrigger className="block lg:hidden" />
           <DataHeader />
         </div>

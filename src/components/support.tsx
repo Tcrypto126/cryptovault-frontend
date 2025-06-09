@@ -37,12 +37,12 @@ const FormSchema = z.object({
     .nonempty({ message: "Email is required" })
     .email({ message: "Invalid email format" }),
 
-  amount: z.number().min(1, { message: "Amount is required" }),
+  subject: z.string().nonempty({ message: "Subject is required" }),
 
-  description: z.string(),
+  message: z.string().nonempty({ message: "Message is required" }),
 });
 
-export function SendBonusModal() {
+export function SupportModal() {
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -51,8 +51,8 @@ export function SendBonusModal() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
-      amount: 0,
-      description: "",
+      subject: "",
+      message: "",
     },
   });
 
@@ -62,6 +62,7 @@ export function SendBonusModal() {
       setIsSendding(false);
       toast("welcome", "Success");
       closeRef.current?.click();
+      form.reset();
     }, 3000);
 
     console.log("data: ", data);
@@ -70,14 +71,14 @@ export function SendBonusModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="deposit" className="!h-8 !w-full">
-          Send
+        <Button variant="deposit" className="!h-8">
+          Need Help?
         </Button>
       </DialogTrigger>
       <DialogContent className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940] ">
         <DialogHeader>
           <DialogTitle className="!text-[18px] sm:!text-[24px] !font-medium">
-            Send Bonus to Another User
+            Open a Support Request
           </DialogTitle>
         </DialogHeader>
 
@@ -91,11 +92,11 @@ export function SendBonusModal() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Recipient's Email</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="Enter your Recipient's Email"
+                      placeholder="Enter your Email"
                       {...field}
                     />
                   </FormControl>
@@ -105,39 +106,41 @@ export function SendBonusModal() {
             />
             <FormField
               control={form.control}
-              name="amount"
+              name="subject"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel>Subject</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
-                      inputMode="decimal"
-                      placeholder="Enter your Amount to Send"
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                      value={field.value}
+                      type="text"
+                      placeholder="Enter your subject"
+                      {...field}
                     />
                   </FormControl>
                   {/* <FormMessage /> */}
-                  <span className="text-[14px]">Available balance: $2,500</span>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Note</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Write a note..." {...field} />
-                  </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
 
-            <DialogFooter className="grid grid-cols-2 gap-4 !mt-6">
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>message</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Write a note..."
+                      className="!min-h-28"
+                      {...field}
+                    />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className="grid grid-cols-2 gap-4 !mt-8">
               <DialogClose ref={closeRef} asChild>
                 <Button variant="withdraw">Cancel</Button>
               </DialogClose>

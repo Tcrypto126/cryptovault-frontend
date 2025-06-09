@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,6 +37,7 @@ const FormSchema = z.object({
 export function WithdrawModal() {
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -47,16 +48,21 @@ export function WithdrawModal() {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsSendding(true);
-    setTimeout(() => {
-      setIsSendding(false);
-    }, 3000);
 
     if (data.amount < 1500) {
       toast("Minimum withdrawal amount is $1500", "Error");
+      setIsSendding(false);
+      closeRef.current?.click();
       return;
     }
 
-    toast("welcome", "Success");
+    setTimeout(() => {
+      setIsSendding(false);
+      toast("welcome", "Success");
+      closeRef.current?.click();
+      form.reset();
+    }, 3000);
+
     console.log("data: ", data);
   }
 
@@ -101,7 +107,7 @@ export function WithdrawModal() {
             />
 
             <DialogFooter className="grid grid-cols-2 gap-4 !mt-6">
-              <DialogClose asChild>
+              <DialogClose ref={closeRef} asChild>
                 <Button variant="withdraw">Cancel</Button>
               </DialogClose>
               <Button variant="deposit" type="submit" disabled={isSendding}>

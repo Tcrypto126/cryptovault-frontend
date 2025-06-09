@@ -38,7 +38,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-6 border border-amber-400">
+    <div className="flex flex-col gap-6 p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between gap-6">
         <div className="flex flex-col justify-between gap-4 p-0 lg:p-4">
           <h1 className="max-w-[600px] !text-[28px] lg:!text-[40px] xl:!text-[56px]">

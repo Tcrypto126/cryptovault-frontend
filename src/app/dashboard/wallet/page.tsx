@@ -31,7 +31,7 @@ const Wallet = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 p-4 md:p-6 border border-amber-400">
+      <div className="flex flex-col gap-4 p-4 md:p-6">
         <h3>Wallet</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 justify-between">
           <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
