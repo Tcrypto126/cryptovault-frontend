@@ -333,7 +333,7 @@ export function DataTable({
               setSearchKey(e.target.value);
               console.log(e.target.value);
             }}
-            className="pl-8 w-40 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
+            className="pl-8 w-44 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
           />
         </div>
       </div>

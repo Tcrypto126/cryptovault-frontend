@@ -13,6 +13,7 @@ import { DataTable } from "@/components/data-table-user";
 import WheelOfFortune from "@/components/wheel-of-fortune";
 import { SendBonusModal } from "@/components/send-bonus-modal";
 import { WithdrawModal } from "@/components/withdraw-modal";
+import DepositModal from "@/components/deposit-modal";
 
 import { useNotification } from "@/providers/notificationProvider";
 
@@ -20,15 +21,20 @@ import data from "@/app/data.json";
 
 const Dashboard = () => {
   const [isDepositing, setIsDepositing] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [progress, setProgress] = useState(60);
   const [spinning, setSpinning] = useState(false);
   const { toast } = useNotification();
 
   const handleDeposit = () => {
     setIsDepositing(true);
+    setIsDepositModalOpen(true);
     setTimeout(() => {
       setIsDepositing(false);
+      setIsDepositModalOpen(false);
     }, 3000);
+
+    toast("Deposit successful", "Success");
   };
 
   return (
@@ -175,6 +181,8 @@ const Dashboard = () => {
       <div className="hidden">
         <WheelOfFortune />
       </div>
+
+      {isDepositModalOpen && <DepositModal />}
     </div>
   );
 };

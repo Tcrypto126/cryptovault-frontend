@@ -9,21 +9,30 @@ import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
 
 import { WithdrawModal } from "@/components/withdraw-modal";
 import StatusCode from "@/components/status-badge";
+import DepositModal from "@/components/deposit-modal";
+import { useNotification } from "@/providers/notificationProvider";
 
 const Wallet = () => {
+  const { toast } = useNotification();
   const [isDepositing, setIsDepositing] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [progress, setProgress] = useState(60);
 
   const handleDeposit = () => {
     setIsDepositing(true);
+    setIsDepositModalOpen(true);
     setTimeout(() => {
       setIsDepositing(false);
+      setIsDepositModalOpen(false);
     }, 3000);
+
+    toast("Deposit successful", "Success");
   };
 
   return (
     <>
-      <div className="flex flex-col gap-6 p-4 md:p-6 border border-amber-400">
+      <div className="flex flex-col gap-4 p-4 md:p-6 border border-amber-400">
+        <h3>Wallet</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 justify-between">
           <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
             <div className="flex items-center justify-between gap-2">
@@ -95,6 +104,7 @@ const Wallet = () => {
             <h6 className="!text-[24px] text-center">Deposit More</h6>
           </div>
         </div>
+        {isDepositModalOpen && <DepositModal />}
       </div>
     </>
   );

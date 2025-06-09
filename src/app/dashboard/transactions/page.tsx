@@ -1,15 +1,16 @@
 "use client";
 
+import { DataTable } from "@/components/data-table-user";
+
+import data from "@/app/data.json";
+
 const Transactions = () => {
-    return (
-        <>
-            <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl font-bold">Transactions</h1>
-                </div>
-            </div>
-        </>
-    )
-}
+  return (
+    <div className="flex flex-col gap-4 p-4 md:p-6 border border-amber-400">
+      <h3>Transactions</h3>
+      <DataTable data={data} />
+    </div>
+  );
+};
 
 export default Transactions;
