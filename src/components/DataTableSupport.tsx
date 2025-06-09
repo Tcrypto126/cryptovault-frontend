@@ -102,8 +102,8 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
-import StatusBadge from "./status-badge";
-import { NavUser } from "./nav-user";
+import StatusBadge from "./StatusBadge";
+import { NavUser } from "./NavUser";
 
 export const schema = z.object({
   id: z.number(),

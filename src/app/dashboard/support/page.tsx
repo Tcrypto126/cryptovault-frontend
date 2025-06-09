@@ -5,7 +5,7 @@
 // import { DataTable } from "@/components/data-table-support";
 // import data from "@/app/data.json";
 
-import { SupportModal } from "@/components/support";
+import { SupportModal } from "@/components/Support";
 
 const Support = () => {
   return (

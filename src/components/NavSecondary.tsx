@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { IconLogout } from "@tabler/icons-react";
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/components/NavUser";
 
 const data = {
   user: {

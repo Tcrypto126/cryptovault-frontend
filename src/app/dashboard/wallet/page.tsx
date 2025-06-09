@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
 
-import { WithdrawModal } from "@/components/withdraw-modal";
-import StatusCode from "@/components/status-badge";
-import DepositModal from "@/components/deposit-modal";
+import { WithdrawModal } from "@/components/WithdrawModal";
+import StatusCode from "@/components/StatusBadge";
+import DepositModal from "@/components/DepositModal";
 import { useNotification } from "@/providers/notificationProvider";
 
 const Wallet = () => {

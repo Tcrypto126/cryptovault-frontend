@@ -1,8 +1,8 @@
 "use client";
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import DataHeader from "@/components/data-header";
+import { AppSidebar } from "@/components/AppSidebar";
+import DataHeader from "@/components/DataHeader";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

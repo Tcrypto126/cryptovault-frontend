@@ -121,8 +121,8 @@
   --button-sst: #6c5dd3;
   --button-sef: #9b90e4;
   --button-set: #7667da;
-  --button-fwf: #E66D6D;
-  --button-fwt: #D43A3A;
+  --button-fwf: #e66d6d;
+  --button-fwt: #d43a3a;
   --button-fef: #e27d7d;
   --button-fet: #d64848;
 
@@ -298,4 +298,13 @@ p {
   p {
     font-size: 16px;
   }
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.firewall canvas:first-child {
+  display: none !important;
 }

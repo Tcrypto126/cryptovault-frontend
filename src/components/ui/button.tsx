@@ -24,6 +24,7 @@ const buttonVariants = cva(
           "bg-gradient-to-b from-button-sf to-button-st cursor-pointer hover:from-button-ef hover:to-button-et !transition-all !duration-200",
         withdraw:
           "bg-gradient-to-b from-button-wf to-button-wt cursor-pointer hover:from-button-qf hover:to-button-qt !transition-all !duration-200",
+        spin: "bg-gradient-to-b from-[#68D368] to-[#44A944] hover:from-[#71db71] hover:to-[#51bd51] cursor-pointer !transition-all !duration-200",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

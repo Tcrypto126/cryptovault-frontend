@@ -1,6 +1,6 @@
 "use client";
 
-import { NavUser } from "./nav-user";
+import { NavUser } from "./NavUser";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";

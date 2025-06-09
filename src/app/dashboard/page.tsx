@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { IconWallet, IconLoader2 } from "@tabler/icons-react";
 
@@ -8,22 +8,30 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
 
-import StatusCode from "@/components/status-badge";
-import { DataTable } from "@/components/data-table-user";
-import WheelOfFortune from "@/components/wheel-of-fortune";
-import { SendBonusModal } from "@/components/send-bonus-modal";
-import { WithdrawModal } from "@/components/withdraw-modal";
-import DepositModal from "@/components/deposit-modal";
+import StatusCode from "@/components/StatusBadge";
+import { DataTable } from "@/components/DataTableUser";
+import WheelOfFortune from "@/components/WheelOfFortune";
+import { SendBonusModal } from "@/components/SendBonusModal";
+import { WithdrawModal } from "@/components/WithdrawModal";
+import DepositModal from "@/components/DepositModal";
+import Firework from "@/components/Firework";
 
 import { useNotification } from "@/providers/notificationProvider";
 
 import data from "@/app/data.json";
 
 const Dashboard = () => {
+  const wheelRef = useRef<HTMLDivElement>(null);
   const [isDepositing, setIsDepositing] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  
+  const [spinningAvailable, setSpinningAvailable] = useState(true);
+  const [spinningModal, setSpinningModal] = useState(false);
+  const [spinningEnd, setSpinningEnd] = useState(false);
+  
+  const [spinValue, setSpinValue] = useState<number | null>(null);
+  
   const [progress, setProgress] = useState(60);
-  const [spinning, setSpinning] = useState(false);
   const { toast } = useNotification();
 
   const handleDeposit = () => {
@@ -35,6 +43,15 @@ const Dashboard = () => {
     }, 3000);
 
     toast("Deposit successful", "Success");
+  };
+
+  const handleSpinOutSideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      wheelRef.current &&
+      !wheelRef.current.contains(e.target as HTMLElement)
+    ) {
+      setSpinningModal(false);
+    }
   };
 
   return (
@@ -54,8 +71,8 @@ const Dashboard = () => {
           <div
             className="relative flex flex-col gap-2 p-4 min-w-[100%] sm:min-w-[300px] rounded-[12px] overflow-hidden cursor-pointer bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl"
             onClick={() => {
-              if (spinning) {
-                alert("wheel of fortune");
+              if (spinningAvailable) {
+                setSpinningModal(true);
               } else {
                 toast("You are not available to spin", "Warning");
               }
@@ -69,7 +86,7 @@ const Dashboard = () => {
               className="absolute bottom-0 right-0"
             />
             <h3 className="!text-[28px] text-black z-10">
-              {spinning ? "Available" : "Not available"}
+              {spinningAvailable ? "Available" : "Not available"}
             </h3>
             <p className="!text-[14px] !text-black max-w-[130px] z-10">
               Spin the Wheel and Win a Bonus!
@@ -165,7 +182,9 @@ const Dashboard = () => {
           <div className="flex flex-col gap-1">
             <h6 className="!text-[14px] text-[#838799]">Last earned bonus</h6>
             <div className="flex justify-between items-center gap-2">
-              <h5 className="text-[#1FB356] !font-bold">+$3,234.22</h5>
+              <h5 className="text-[#1FB356] !font-bold">
+                +${spinValue}
+              </h5>
             </div>
           </div>
           <SendBonusModal />
@@ -178,10 +197,25 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="hidden">
-        <WheelOfFortune />
-      </div>
+      {/* spinning modal */}
+      {spinningModal && (
+        <div
+          className="fixed top-0 left-0 w-full h-full z-50 bg-[#000000c4] flex items-center justify-center"
+          onClick={handleSpinOutSideClick}
+        >
+          {spinningEnd && <Firework />}
+          <div className="max-w-[500px] w-full z-60" ref={wheelRef}>
+            <WheelOfFortune
+              setSpinValue={setSpinValue}
+              spinningEnd={spinningEnd}
+              setSpinningEnd={setSpinningEnd}
+              setSpinningModal={setSpinningModal}
+            />
+          </div>
+        </div>
+      )}
 
+      {/* deposit modal */}
       {isDepositModalOpen && <DepositModal />}
     </div>
   );
