@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const data = {
   user: {
@@ -48,6 +49,38 @@ const data = {
       icon: IconDatabaseDollar,
     },
   ],
+  navMenuAdmin: [
+    {
+      title: "Dashboard",
+      url: "/admin-dashboard",
+      icon: IconLayoutDashboard,
+    },
+    {
+      title: "Users",
+      url: "/admin-dashboard/users",
+      icon: IconWallet,
+    },
+    {
+      title: "Transactions",
+      url: "/admin-dashboard/transactions",
+      icon: IconWallet,
+    },
+    {
+      title: "Withdrawal Requests",
+      url: "/admin-dashboard/withdrawal-requests",
+      icon: IconDatabaseDollar,
+    },
+    {
+      title: "Deposit Incentives",
+      url: "/admin-dashboard/deposit-incentives",
+      icon: IconDatabaseDollar,
+    },
+    {
+      title: "KYC Verification",
+      url: "/admin-dashboard/kyc-verification",
+      icon: IconDatabaseDollar,
+    },
+  ],
   navSecondary: [
     {
       title: "Support",
@@ -60,10 +93,24 @@ const data = {
       icon: IconSettings,
     },
   ],
+  navSecondaryAdmin: [
+    {
+      title: "Support",
+      url: "/admin-dashboard/support",
+      icon: IconTool,
+    },
+    {
+      title: "Settings",
+      url: "/admin-dashboard/settings",
+      icon: IconSettings,
+    },
+  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -90,11 +137,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain
+          items={
+            pathname.includes("/admin-dashboard")
+              ? data.navMenuAdmin
+              : data.navMain
+          }
+        />
       </SidebarContent>
       <SidebarFooter>
         <Separator />
-        <NavSecondary items={data.navSecondary} />
+        <NavSecondary
+          items={
+            pathname.includes("/admin-dashboard")
+              ? data.navSecondaryAdmin
+              : data.navSecondary
+          }
+        />
       </SidebarFooter>
     </Sidebar>
   );

@@ -72,7 +72,7 @@ const FormSchema2 = z
     message: "Passwords do not match",
   });
 
-const Settings = () => {
+const SettingsPage = () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
@@ -335,4 +335,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default SettingsPage;

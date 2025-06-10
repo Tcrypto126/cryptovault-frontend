@@ -12,7 +12,7 @@ import StatusCode from "@/components/StatusBadge";
 import DepositModal from "@/components/DepositModal";
 import { useNotification } from "@/providers/notificationProvider";
 
-const Wallet = () => {
+const WalletPage = () => {
   const { toast } = useNotification();
   const [isDepositing, setIsDepositing] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
@@ -110,4 +110,4 @@ const Wallet = () => {
   );
 };
 
-export default Wallet;
+export default WalletPage;
