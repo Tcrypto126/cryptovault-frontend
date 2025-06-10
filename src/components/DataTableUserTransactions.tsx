@@ -159,31 +159,12 @@ export function DataTable({
   });
 
   const filteredData = React.useMemo(() => {
-    if (activeTab === "all")
-      return data.filter(
-        (item) =>
-          item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-          item.user.email.toLowerCase().includes(searchKey.toLowerCase())
-      );
-    if (activeTab === "bonus") {
-      return data
-        .filter(
-          (item) => item.type === "BonusSent" || item.type === "BonusReceived"
-        )
-        .filter(
-          (item) =>
-            item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-            item.user.email.toLowerCase().includes(searchKey.toLowerCase())
-        );
-    }
-    return data
-      .filter((item) => item.type.toLowerCase() === activeTab)
-      .filter(
-        (item) =>
-          item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-          item.user.email.toLowerCase().includes(searchKey.toLowerCase())
-      );
-  }, [data, activeTab, searchKey]);
+    return data.filter(
+      (item) =>
+        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+        item.user.email.toLowerCase().includes(searchKey.toLowerCase())
+    );
+  }, [data, searchKey]);
 
   const table = useReactTable({
     data: filteredData,
@@ -213,6 +194,7 @@ export function DataTable({
   return (
     <Tabs
       defaultValue="all"
+      value={activeTab}
       onValueChange={setActiveTab}
       className="w-full flex-col justify-start gap-6"
     >

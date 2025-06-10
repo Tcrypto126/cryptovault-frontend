@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -48,7 +47,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
-import { NavUser } from "./NavUser";
 
 export const schema = z.object({
   id: z.number(),
@@ -64,6 +62,10 @@ export const schema = z.object({
     avatar: z.string(),
   }),
 });
+
+const approveRequest = (id: number) => {
+  console.log(id);
+};
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
@@ -92,29 +94,8 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Type",
     cell: ({ row }) => (
       <div className="flex items-center justify-start gap-1 ">
-        {row.original.type === "Deposit" ? (
-          <>
-            <ArrowDownIcon width="24" height="24" />
-            Deposit
-          </>
-        ) : row.original.type === "Withdraw" ? (
-          <>
-            <ArrowUpIcon width="24" height="24" />
-            Withdraw
-          </>
-        ) : row.original.type === "BonusSent" ? (
-          <>
-            <ArrowUpIcon width="24" height="24" />
-            Bonus
-          </>
-        ) : row.original.type === "BonusReceived" ? (
-          <>
-            <ArrowDownIcon width="24" height="24" />
-            Bonus
-          </>
-        ) : (
-          <IconLoader />
-        )}
+        <ArrowUpIcon width="24" height="24" />
+        Withdraw
       </div>
     ),
   },
@@ -139,11 +120,21 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "user",
-    header: "Sent To/ Received by",
+    accessorKey: "active",
+    header: "Active",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[160px]">
-        <NavUser user={row.original.user} type="table" />
+      <div className="flex items-center justify-start">
+        {row.original.status === "Pending" ? (
+          <Button
+            variant="spin"
+            size="sm"
+            onClick={() => {
+              approveRequest(row.original.id);
+            }}
+          >
+            Approve
+          </Button>
+        ) : null}
       </div>
     ),
   },
@@ -223,16 +214,12 @@ export function DataTable({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="deposit">Deposit</SelectItem>
-            <SelectItem value="withdraw">Withdraw</SelectItem>
-            <SelectItem value="bonus">Bonus</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="hidden md:flex">
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="deposit">Deposit</TabsTrigger>
-          <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-          <TabsTrigger value="bonus">Bonus</TabsTrigger>
+          <TabsTrigger value="pending">Pending</TabsTrigger>
         </TabsList>
         <div className="relative pr-1">
           <IconSearch className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -274,281 +261,6 @@ export function DataTable({
             </TableHeader>
             <TableBody className="bg-[#40414933]">
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row, index) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    className="h-14"
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <TableCell key={cell.id} className="px-4 text-left">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            {/* {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected. */}
-          </div>
-          <div className="flex w-full items-center gap-8 lg:w-fit">
-            <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                Rows per page
-              </Label>
-              <Select
-                value={`${table.getState().pagination.pageSize}`}
-                onValueChange={(value) => {
-                  table.setPageSize(Number(value));
-                }}
-              >
-                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
-                  <SelectValue
-                    placeholder={table.getState().pagination.pageSize}
-                  />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
-            <div className="ml-auto flex items-center gap-2 lg:ml-0">
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
-                <IconChevronsLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to previous page</span>
-                <IconChevronLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to next page</span>
-                <IconChevronRight />
-              </Button>
-              <Button
-                variant="outline"
-                className="hidden size-8 lg:flex"
-                size="icon"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
-                <IconChevronsRight />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </TabsContent>
-      <TabsContent value="deposit" className="relative flex flex-col gap-4">
-        <div className="rounded-[5px] overflow-auto">
-          <Table>
-            <TableHeader className="bg-dashboard sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        className="text-[#838799] text-left h-11 px-4"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
-                table
-                  .getRowModel()
-                  .rows.filter((row) => row.original.type === "Deposit")
-                  .map((row, index) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="h-14"
-                    >
-                      {row.getVisibleCells().map((cell) => {
-                        return (
-                          <TableCell key={cell.id} className="px-4 text-left">
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            {/* {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected. */}
-          </div>
-          <div className="flex w-full items-center gap-8 lg:w-fit">
-            <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                Rows per page
-              </Label>
-              <Select
-                value={`${table.getState().pagination.pageSize}`}
-                onValueChange={(value) => {
-                  table.setPageSize(Number(value));
-                }}
-              >
-                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
-                  <SelectValue
-                    placeholder={table.getState().pagination.pageSize}
-                  />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
-            <div className="ml-auto flex items-center gap-2 lg:ml-0">
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
-                <IconChevronsLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to previous page</span>
-                <IconChevronLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to next page</span>
-                <IconChevronRight />
-              </Button>
-              <Button
-                variant="outline"
-                className="hidden size-8 lg:flex"
-                size="icon"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
-                <IconChevronsRight />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </TabsContent>
-      <TabsContent value="withdraw" className="relative flex flex-col gap-4">
-        <div className="rounded-[5px] overflow-auto">
-          <Table>
-            <TableHeader className="bg-dashboard sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        className="text-[#838799] text-left h-11 px-4"
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.type === "Withdraw")
@@ -559,6 +271,20 @@ export function DataTable({
                       className="h-14"
                     >
                       {row.getVisibleCells().map((cell) => {
+                        if (cell.column.id === "header") {
+                          return (
+                            <TableCell key={cell.id} className="px-4 text-left">
+                              <div className="flex items-center gap-2">
+                                <span>
+                                  {table.getState().pagination.pageIndex *
+                                    table.getState().pagination.pageSize +
+                                    index +
+                                    1}
+                                </span>
+                              </div>
+                            </TableCell>
+                          );
+                        }
                         return (
                           <TableCell key={cell.id} className="px-4 text-left">
                             {flexRender(
@@ -661,7 +387,7 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="bonus" className="relative flex flex-col gap-4">
+      <TabsContent value="pending" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
@@ -692,8 +418,8 @@ export function DataTable({
                   .getRowModel()
                   .rows.filter(
                     (row) =>
-                      row.original.type === "BonusSent" ||
-                      row.original.type === "BonusReceived"
+                      row.original.type === "Withdraw" &&
+                      row.original.status === "Pending"
                   )
                   .map((row, index) => (
                     <TableRow

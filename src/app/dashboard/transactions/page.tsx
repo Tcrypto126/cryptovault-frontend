@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/DataTableUserTransactions";
 
-import data from "@/app/data.json";
+import data from "@/app/userTransactionData.json";
 
 const TransactionsPage = () => {
   return (
