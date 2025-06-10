@@ -1,3 +1,5 @@
+"use client";
+
 const SupportPage = () => {
   return <div>SupportPage</div>;
 };

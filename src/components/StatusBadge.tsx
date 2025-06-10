@@ -4,6 +4,7 @@ const StatusBadge = ({ status }: { status: string }) => {
   switch (status) {
     case "Success":
     case "Active":
+    case "Approved":
       return (
         <h6 className="!text-[12px] py-1 text-center bg-[#1FB35690] min-w-[75px] rounded-[6px]">
           {status}
