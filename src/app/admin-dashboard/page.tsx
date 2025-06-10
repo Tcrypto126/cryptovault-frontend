@@ -93,11 +93,10 @@ const Dashboard = () => {
       </div>
       <div className="flex flex-col gap-4">
         <h5>Recent Activity</h5>
-        <div className="overflow-hidden">
+        <div>
           <DataTable data={data} />
         </div>
       </div>
-
     </div>
   );
 };

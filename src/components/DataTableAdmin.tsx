@@ -291,7 +291,7 @@ export function DataTable({
       </div>
       <TabsContent
         value="all"
-        className="relative flex flex-col gap-4 border border-amber-200"
+        className="relative flex flex-col gap-4"
       >
         <div className="rounded-[5px] overflow-auto">
           <Table>
