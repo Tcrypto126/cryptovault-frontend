@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
 
 import StatusCode from "@/components/StatusBadge";
-import { DataTable } from "@/components/DataTableUser";
+import { DataTable } from "@/components/DataTableUserTransactions";
 import WheelOfFortune from "@/components/WheelOfFortune";
 import { SendBonusModal } from "@/components/SendBonusModal";
 import { WithdrawModal } from "@/components/WithdrawModal";
@@ -18,19 +18,19 @@ import Firework from "@/components/Firework";
 
 import { useNotification } from "@/providers/notificationProvider";
 
-import data from "@/app/data.json";
+import data from "@/app/userTransactionData.json";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const [isDepositing, setIsDepositing] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  
+
   const [spinningAvailable, setSpinningAvailable] = useState(true);
   const [spinningModal, setSpinningModal] = useState(false);
   const [spinningEnd, setSpinningEnd] = useState(false);
-  
+
   const [spinValue, setSpinValue] = useState<number | null>(null);
-  
+
   const [progress, setProgress] = useState(60);
   const { toast } = useNotification();
 
@@ -182,14 +182,13 @@ const Dashboard = () => {
           <div className="flex flex-col gap-1">
             <h6 className="!text-[14px] text-[#838799]">Last earned bonus</h6>
             <div className="flex justify-between items-center gap-2">
-              <h5 className="text-[#1FB356] !font-bold">
-                +${spinValue}
-              </h5>
+              <h5 className="text-[#1FB356] !font-bold">+${spinValue}</h5>
             </div>
           </div>
           <SendBonusModal />
         </div>
       </div>
+      
       <div className="flex flex-col gap-4">
         <h5>Transactions</h5>
         <div>

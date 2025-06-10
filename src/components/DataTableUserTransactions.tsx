@@ -53,13 +53,12 @@ export const schema = z.object({
   id: z.number(),
   header: z.string(),
   type: z.string(),
-  status: z.string(),
   amount: z.string(),
-  target: z.string(),
+  status: z.string(),
   user: z.object({
     id: z.number(),
     name: z.string(),
-    email: z.string(),
+    email: z.string().email(),
     avatar: z.string(),
   }),
 });
@@ -71,7 +70,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2 min-w-[40px]">
-          <span className="text-muted-foreground">{row.index + 1}</span>
+          <span>{row.index + 1}</span>
         </div>
       );
     },
@@ -129,7 +128,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "target",
+    accessorKey: "user",
     header: "Sent to/Received by",
     cell: ({ row }) => (
       <div className="flex items-center justify-start min-w-[140px]">
@@ -295,7 +294,7 @@ export function DataTable({
                         return (
                           <TableCell key={cell.id} className="px-6 text-left">
                             <div className="flex items-center gap-2 min-w-[60px]">
-                              <span className="text-muted-foreground">
+                              <span>
                                 {table.getState().pagination.pageIndex *
                                   table.getState().pagination.pageSize +
                                   index +
@@ -448,7 +447,7 @@ export function DataTable({
                           return (
                             <TableCell key={cell.id} className="px-6 text-left">
                               <div className="flex items-center gap-2 min-w-[60px]">
-                                <span className="text-muted-foreground">
+                                <span>
                                   {table.getState().pagination.pageIndex *
                                     table.getState().pagination.pageSize +
                                     index +
@@ -601,7 +600,7 @@ export function DataTable({
                           return (
                             <TableCell key={cell.id} className="px-6 text-left">
                               <div className="flex items-center gap-2 min-w-[60px]">
-                                <span className="text-muted-foreground">
+                                <span>
                                   {table.getState().pagination.pageIndex *
                                     table.getState().pagination.pageSize +
                                     index +
@@ -758,7 +757,7 @@ export function DataTable({
                           return (
                             <TableCell key={cell.id} className="px-6 text-left">
                               <div className="flex items-center gap-2 min-w-[60px]">
-                                <span className="text-muted-foreground">
+                                <span>
                                   {table.getState().pagination.pageIndex *
                                     table.getState().pagination.pageSize +
                                     index +

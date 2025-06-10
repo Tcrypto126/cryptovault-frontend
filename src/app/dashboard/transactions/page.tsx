@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/DataTableUser";
+import { DataTable } from "@/components/DataTableUserTransactions";
 
 import data from "@/app/data.json";
 

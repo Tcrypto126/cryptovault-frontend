@@ -1,64 +1,18 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
-import { IconWallet, IconLoader2 } from "@tabler/icons-react";
-
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import {
-  IconArrowDown,
-  DollarBagIcon,
   UsersIcon,
   TotalBalanceIcon,
   PeddingIcon,
 } from "@/components/ui/icon";
 
-import StatusCode from "@/components/StatusBadge";
-import WheelOfFortune from "@/components/WheelOfFortune";
-import { SendBonusModal } from "@/components/SendBonusModal";
-import { WithdrawModal } from "@/components/WithdrawModal";
-import DepositModal from "@/components/DepositModal";
-import Firework from "@/components/Firework";
-import { DataTable } from "@/components/DataTableAdmin";
+import { DataTable } from "@/components/DataTableAdminTransactions";
 
-import { useNotification } from "@/providers/notificationProvider";
-
-import data from "@/app/data.json";
+import data from "@/app/adminTransactionData.json";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
-  const [isDepositing, setIsDepositing] = useState(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-
-  const [spinningAvailable, setSpinningAvailable] = useState(true);
-  const [spinningModal, setSpinningModal] = useState(false);
-  const [spinningEnd, setSpinningEnd] = useState(false);
-
-  const [spinValue, setSpinValue] = useState<number | null>(null);
-
-  const [progress, setProgress] = useState(60);
-  const { toast } = useNotification();
-
-  const handleDeposit = () => {
-    setIsDepositing(true);
-    setIsDepositModalOpen(true);
-    setTimeout(() => {
-      setIsDepositing(false);
-      setIsDepositModalOpen(false);
-    }, 3000);
-
-    toast("Deposit successful", "Success");
-  };
-
-  const handleSpinOutSideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (
-      wheelRef.current &&
-      !wheelRef.current.contains(e.target as HTMLElement)
-    ) {
-      setSpinningModal(false);
-    }
-  };
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
