@@ -69,7 +69,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "#",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 min-w-[40px]">
+        <div className="flex items-center gap-2">
           <span>{row.index + 1}</span>
         </div>
       );
@@ -80,7 +80,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start gap-1 min-w-[120px]">
+      <div className="flex items-center justify-start gap-1">
         {row.original.type === "Deposit" ? (
           <>
             <ArrowDownIcon width="24" height="24" />
@@ -112,7 +112,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Amount",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-start min-w-[90px]">
+        <div className="flex items-center justify-start">
           ${row.original.amount}
         </div>
       );
@@ -122,7 +122,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[90px]">
+      <div className="flex items-center justify-start">
         <StatusBadge status={row.original.status} />
       </div>
     ),
@@ -131,7 +131,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "user",
     header: "Sent to/Received by",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[140px]">
+      <div className="flex items-center justify-start min-w-[160px]">
         <NavUser user={row.original.user} type="table" />
       </div>
     ),
@@ -292,8 +292,8 @@ export function DataTable({
                     {row.getVisibleCells().map((cell) => {
                       if (cell.column.id === "header") {
                         return (
-                          <TableCell key={cell.id} className="px-6 text-left">
-                            <div className="flex items-center gap-2 min-w-[60px]">
+                          <TableCell key={cell.id} className="px-4 text-left">
+                            <div className="flex items-center gap-2">
                               <span>
                                 {table.getState().pagination.pageIndex *
                                   table.getState().pagination.pageSize +
@@ -445,8 +445,8 @@ export function DataTable({
                       {row.getVisibleCells().map((cell) => {
                         if (cell.column.id === "header") {
                           return (
-                            <TableCell key={cell.id} className="px-6 text-left">
-                              <div className="flex items-center gap-2 min-w-[60px]">
+                            <TableCell key={cell.id} className="px-4 text-left">
+                              <div className="flex items-center gap-2">
                                 <span>
                                   {table.getState().pagination.pageIndex *
                                     table.getState().pagination.pageSize +
@@ -598,8 +598,8 @@ export function DataTable({
                       {row.getVisibleCells().map((cell) => {
                         if (cell.column.id === "header") {
                           return (
-                            <TableCell key={cell.id} className="px-6 text-left">
-                              <div className="flex items-center gap-2 min-w-[60px]">
+                            <TableCell key={cell.id} className="px-4 text-left">
+                              <div className="flex items-center gap-2">
                                 <span>
                                   {table.getState().pagination.pageIndex *
                                     table.getState().pagination.pageSize +
@@ -755,8 +755,8 @@ export function DataTable({
                       {row.getVisibleCells().map((cell) => {
                         if (cell.column.id === "header") {
                           return (
-                            <TableCell key={cell.id} className="px-6 text-left">
-                              <div className="flex items-center gap-2 min-w-[60px]">
+                            <TableCell key={cell.id} className="px-4 text-left">
+                              <div className="flex items-center gap-2">
                                 <span>
                                   {table.getState().pagination.pageIndex *
                                     table.getState().pagination.pageSize +

@@ -71,7 +71,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Timestamp",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 min-w-[160px]">
+        <div className="flex items-center gap-2 ">
           <span>{row.original.timestamp}</span>
         </div>
       );
@@ -82,7 +82,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start gap-1 min-w-[200px]">
+      <div className="flex items-center justify-start gap-1 ">
         {row.original.email}
       </div>
     ),
@@ -91,7 +91,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start gap-1 min-w-[120px]">
+      <div className="flex items-center justify-start gap-1 ">
         {row.original.type === "Deposit" ? (
           <>
             <ArrowDownIcon width="24" height="24" />
@@ -123,7 +123,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Amount",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-start min-w-[90px]">
+        <div className="flex items-center justify-start ">
           ${row.original.amount}
         </div>
       );
@@ -133,7 +133,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[90px]">
+      <div className="flex items-center justify-start ">
         <StatusBadge status={row.original.status} />
       </div>
     ),
@@ -142,7 +142,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "user",
     header: "Sent To/ Received by",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[140px]">
+      <div className="flex items-center justify-start min-w-[160px]">
         <NavUser user={row.original.user} type="table" />
       </div>
     ),

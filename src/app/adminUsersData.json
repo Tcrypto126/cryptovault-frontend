@@ -1,11 +1,10 @@
 [
   {
     "id": 1,
-    "timestamp": "2024-03-20 14:30:25",
-    "type": "Deposit",
-    "status": "Success",
-    "amount": "1,500.00",
-    "email": "john.doe@example.com",
+    "balance": 865.5,
+    "status": "Active",
+    "verify": "Verified",
+    "activity": "10m ago",
     "user": {
       "id": 1,
       "name": "John Doe",
@@ -15,11 +14,10 @@
   },
   {
     "id": 2,
-    "timestamp": "2024-03-20 13:15:10",
-    "type": "Withdraw",
-    "status": "Pending",
-    "amount": "750.00",
-    "email": "jane.smith@example.com",
+    "balance": 2350,
+    "status": "Inactive",
+    "verify": "Unverified",
+    "activity": "30m ago",
     "user": {
       "id": 2,
       "name": "Jane Smith",
@@ -29,11 +27,10 @@
   },
   {
     "id": 3,
-    "timestamp": "2024-03-20 12:45:30",
-    "type": "BonusSent",
-    "status": "Failed",
-    "amount": "100.00",
-    "email": "mike.j@example.com",
+    "balance": 23658,
+    "status": "Freeze",
+    "verify": "Verified",
+    "activity": "1h ago",
     "user": {
       "id": 3,
       "name": "Mike Johnson",
@@ -43,11 +40,10 @@
   },
   {
     "id": 4,
-    "timestamp": "2024-03-20 11:20:15",
-    "type": "BonusReceived",
-    "status": "Success",
-    "amount": "50.00",
-    "email": "sarah.w@example.com",
+    "balance": 125.9,
+    "status": "Suspended",
+    "verify": "Verified",
+    "activity": "1d ago",
     "user": {
       "id": 4,
       "name": "Sarah Wilson",
