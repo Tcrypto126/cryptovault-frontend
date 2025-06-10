@@ -7,6 +7,10 @@ import {
   IconWallet,
   IconTool,
   IconDatabaseDollar,
+  IconUsers,
+  IconTransferIn,
+  IconTransferOut,
+  IconRosetteDiscountCheck
 } from "@tabler/icons-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -58,27 +62,27 @@ const data = {
     {
       title: "Users",
       url: "/admin-dashboard/users",
-      icon: IconWallet,
+      icon: IconUsers,
     },
     {
       title: "Transactions",
       url: "/admin-dashboard/transactions",
-      icon: IconWallet,
+      icon: IconDatabaseDollar,
     },
     {
       title: "Withdrawal Requests",
       url: "/admin-dashboard/withdrawal-requests",
-      icon: IconDatabaseDollar,
+      icon: IconTransferOut,
     },
     {
       title: "Deposit Incentives",
       url: "/admin-dashboard/deposit-incentives",
-      icon: IconDatabaseDollar,
+      icon: IconTransferIn,
     },
     {
       title: "KYC Verification",
       url: "/admin-dashboard/kyc-verification",
-      icon: IconDatabaseDollar,
+      icon: IconRosetteDiscountCheck,
     },
   ],
   navSecondary: [

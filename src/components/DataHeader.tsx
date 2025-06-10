@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { NavUser } from "./NavUser";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -15,6 +16,8 @@ const data = {
 };
 
 const DataHeader = () => {
+  const pathname = usePathname();
+
   return (
     <>
       <div className="flex justify-between items-center gap-2 w-full">
@@ -26,15 +29,17 @@ const DataHeader = () => {
             orientation="vertical"
             className="!w-[1px] !h-5 hidden lg:block"
           />
-          <Button
-            variant="deposit"
-            className="w-24 h-9"
-            onClick={() => {
-              alert("sdf");
-            }}
-          >
-            Deposit
-          </Button>
+          {!pathname.includes("/admin-dashboard") && (
+            <Button
+              variant="deposit"
+              className="w-24 h-9"
+              onClick={() => {
+                alert("Diposited successfully");
+              }}
+            >
+              Deposit
+            </Button>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <div className="relative hidden md:block">
