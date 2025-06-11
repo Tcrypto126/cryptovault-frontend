@@ -1,9 +1,54 @@
 "use client";
 
-// import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/DataTableUserSupport";
 
-// import { DataTable } from "@/components/data-table-support";
-// import data from "@/app/data.json";
+const data = [
+  {
+    id: 1,
+    ticketId: "#T-14352",
+    user: {
+      id: 1,
+      name: "John Doe",
+      email: "john.doe@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    },
+    subject: "Withdrawal Delay",
+    status: "Resolved",
+    lastUpdated: "2025-06-11 14:30:25",
+    message:
+      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
+  },
+  {
+    id: 2,
+    ticketId: "#T-14353",
+    user: {
+      id: 1,
+      name: "kaori Doe",
+      email: "fujio.doe@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    },
+    subject: "Bonus not received",
+    status: "In Progress",
+    lastUpdated: "2025-06-11 14:30:25",
+    message:
+      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
+  },
+  {
+    id: 3,
+    ticketId: "#T-14354",
+    user: {
+      id: 1,
+      name: "maksyme kolesov",
+      email: "fujio.doe@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    },
+    subject: "Bonus not received",
+    status: "Escalated",
+    lastUpdated: "2025-06-11 14:30:25",
+    message:
+      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
+  },
+];
 
 import { SupportModal } from "@/components/Support";
 
@@ -18,7 +63,7 @@ const SupportPage = () => {
         If you're experiencing an issue or have any questions about your
         account, transactions, or bonuses — we're just a message away.
       </h5>
-      {/* <DataTable data={data} /> */}
+      <DataTable data={data} />
     </div>
   );
 };

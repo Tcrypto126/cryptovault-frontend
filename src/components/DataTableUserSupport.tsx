@@ -1,39 +1,15 @@
 "use client";
 
 import * as React from "react";
+
 import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-  type UniqueIdentifier,
-} from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import {
-  IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconCircleCheckFilled,
-  IconDotsVertical,
-  IconGripVertical,
-  IconLayoutColumns,
   IconLoader,
-  IconPlus,
   IconSearch,
-  IconTrendingUp,
+  IconEye,
 } from "@tabler/icons-react";
 import {
   ColumnDef,
@@ -50,38 +26,9 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { toast } from "sonner";
 import { z } from "zod";
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -91,7 +38,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -104,119 +50,82 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
+import { UpdateTicketModal } from "./UpdateTicketModal";
 
 export const schema = z.object({
   id: z.number(),
-  header: z.string(),
-  type: z.string(),
+  ticketId: z.string(),
+  subject: z.string(),
+  lastUpdated: z.string(),
   status: z.string(),
-  amount: z.string(),
-  target: z.string(),
+  message: z.string(),
   user: z.object({
     id: z.number(),
     name: z.string(),
-    email: z.string(),
+    email: z.string().email(),
     avatar: z.string(),
   }),
 });
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
-    accessorKey: "header",
-    header: "#",
+    accessorKey: "ticketId",
+    header: "Ticket ID",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center gap-2 min-w-[40px]">
-          <span className="text-muted-foreground">{row.index + 1}</span>
+        <div className="flex items-center gap-2 ">
+          <span>{row.original.ticketId}</span>
         </div>
       );
     },
     enableHiding: false,
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: "subject",
+    header: "Subject",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start gap-1 min-w-[120px]">
-        {row.original.type === "Deposit" ? (
-          <>
-            <ArrowDownIcon width="24" height="24" />
-            Deposit
-          </>
-        ) : row.original.type === "Withdraw" ? (
-          <>
-            <ArrowUpIcon width="24" height="24" />
-            Withdraw
-          </>
-        ) : row.original.type === "BonusSent" ? (
-          <>
-            <ArrowUpIcon width="24" height="24" />
-            Bonus
-          </>
-        ) : row.original.type === "BonusReceived" ? (
-          <>
-            <ArrowDownIcon width="24" height="24" />
-            Bonus
-          </>
-        ) : (
-          <IconLoader />
-        )}
+      <div className="flex items-center justify-start gap-1 ">
+        <h6>{row.original.subject}</h6>
       </div>
     ),
-  },
-  {
-    accessorKey: "amount",
-    header: "Amount",
-    cell: ({ row }) => {
-      return (
-        <div className="flex items-center justify-start min-w-[90px]">
-          ${row.original.amount}
-        </div>
-      );
-    },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[90px]">
+      <div className="flex items-center justify-start ">
         <StatusBadge status={row.original.status} />
       </div>
     ),
   },
   {
-    accessorKey: "target",
-    header: "Sent to/Received by",
+    accessorKey: "lastUpdated",
+    header: "Last Updated",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start min-w-[140px]">
-        <NavUser user={row.original.user} type="table" />
+      <div className="flex items-center justify-start ">
+        <h6>{row.original.lastUpdated}</h6>
       </div>
     ),
   },
-  //   {
-  //     id: "actions",
-  //     cell: () => (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button
-  //             variant="ghost"
-  //             className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
-  //             size="icon"
-  //           >
-  //             <IconDotsVertical />
-  //             <span className="sr-only">Open menu</span>
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end" className="w-32">
-  //           <DropdownMenuItem>Edit</DropdownMenuItem>
-  //           <DropdownMenuItem>Make a copy</DropdownMenuItem>
-  //           <DropdownMenuItem>Favorite</DropdownMenuItem>
-  //           <DropdownMenuSeparator />
-  //           <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     ),
-  //   },
+  // {
+  //   accessorKey: "action",
+  //   header: "Action",
+  //   cell: ({ row }) => (
+  //     <div className="flex items-center justify-start ">
+  //       {row.original.status === "Resolved" ? (
+  //         <></>
+  //       ) : (
+  //         <UpdateTicketModal
+  //           id={row.original.id}
+  //           ticketId={row.original.ticketId}
+  //           user={row.original.user}
+  //           message={row.original.message}
+  //           lastUpdated={row.original.lastUpdated}
+  //         />
+  //       )}
+  //     </div>
+  //   ),
+  // },
 ];
 
 export function DataTable({
@@ -275,6 +184,7 @@ export function DataTable({
   return (
     <Tabs
       defaultValue="all"
+      value={activeTab}
       onValueChange={setActiveTab}
       className="w-full flex-col justify-start gap-6"
     >
@@ -294,16 +204,16 @@ export function DataTable({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="deposit">Deposit</SelectItem>
-            <SelectItem value="withdraw">Withdraw</SelectItem>
-            <SelectItem value="bonus">Bonus</SelectItem>
+            <SelectItem value="inprogress">In Progress</SelectItem>
+            <SelectItem value="resolved">Resolved</SelectItem>
+            <SelectItem value="escalated">Escalated</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="hidden md:flex">
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="deposit">Deposit</TabsTrigger>
-          <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-          <TabsTrigger value="bonus">Bonus</TabsTrigger>
+          <TabsTrigger value="inprogress">In Progress</TabsTrigger>
+          <TabsTrigger value="resolved">Resolved</TabsTrigger>
+          <TabsTrigger value="escalated">Escalated</TabsTrigger>
         </TabsList>
         <div className="relative pr-1">
           <IconSearch className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -352,20 +262,6 @@ export function DataTable({
                     className="h-14"
                   >
                     {row.getVisibleCells().map((cell) => {
-                      if (cell.column.id === "header") {
-                        return (
-                          <TableCell key={cell.id} className="px-6 text-left">
-                            <div className="flex items-center gap-2 min-w-[60px]">
-                              <span className="text-muted-foreground">
-                                {table.getState().pagination.pageIndex *
-                                  table.getState().pagination.pageSize +
-                                  index +
-                                  1}
-                              </span>
-                            </div>
-                          </TableCell>
-                        );
-                      }
                       return (
                         <TableCell key={cell.id} className="px-4 text-left">
                           {flexRender(
@@ -397,7 +293,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -468,7 +367,7 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="deposit" className="relative flex flex-col gap-4">
+      <TabsContent value="inprogress" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
@@ -497,7 +396,7 @@ export function DataTable({
               {table.getRowModel().rows?.length ? (
                 table
                   .getRowModel()
-                  .rows.filter((row) => row.original.type === "Deposit")
+                  .rows.filter((row) => row.original.status === "In Progress")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}
@@ -505,20 +404,6 @@ export function DataTable({
                       className="h-14"
                     >
                       {row.getVisibleCells().map((cell) => {
-                        if (cell.column.id === "header") {
-                          return (
-                            <TableCell key={cell.id} className="px-6 text-left">
-                              <div className="flex items-center gap-2 min-w-[60px]">
-                                <span className="text-muted-foreground">
-                                  {table.getState().pagination.pageIndex *
-                                    table.getState().pagination.pageSize +
-                                    index +
-                                    1}
-                                </span>
-                              </div>
-                            </TableCell>
-                          );
-                        }
                         return (
                           <TableCell key={cell.id} className="px-4 text-left">
                             {flexRender(
@@ -550,7 +435,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -621,7 +509,7 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="withdraw" className="relative flex flex-col gap-4">
+      <TabsContent value="resolved" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
@@ -650,7 +538,7 @@ export function DataTable({
               {table.getRowModel().rows?.length ? (
                 table
                   .getRowModel()
-                  .rows.filter((row) => row.original.type === "Withdraw")
+                  .rows.filter((row) => row.original.status === "Resolved")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}
@@ -658,20 +546,6 @@ export function DataTable({
                       className="h-14"
                     >
                       {row.getVisibleCells().map((cell) => {
-                        if (cell.column.id === "header") {
-                          return (
-                            <TableCell key={cell.id} className="px-6 text-left">
-                              <div className="flex items-center gap-2 min-w-[60px]">
-                                <span className="text-muted-foreground">
-                                  {table.getState().pagination.pageIndex *
-                                    table.getState().pagination.pageSize +
-                                    index +
-                                    1}
-                                </span>
-                              </div>
-                            </TableCell>
-                          );
-                        }
                         return (
                           <TableCell key={cell.id} className="px-4 text-left">
                             {flexRender(
@@ -703,7 +577,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -774,7 +651,7 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="bonus" className="relative flex flex-col gap-4">
+      <TabsContent value="escalated" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
@@ -803,11 +680,7 @@ export function DataTable({
               {table.getRowModel().rows?.length ? (
                 table
                   .getRowModel()
-                  .rows.filter(
-                    (row) =>
-                      row.original.type === "BonusSent" ||
-                      row.original.type === "BonusReceived"
-                  )
+                  .rows.filter((row) => row.original.status === "Escalated")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}
@@ -815,20 +688,6 @@ export function DataTable({
                       className="h-14"
                     >
                       {row.getVisibleCells().map((cell) => {
-                        if (cell.column.id === "header") {
-                          return (
-                            <TableCell key={cell.id} className="px-6 text-left">
-                              <div className="flex items-center gap-2 min-w-[60px]">
-                                <span className="text-muted-foreground">
-                                  {table.getState().pagination.pageIndex *
-                                    table.getState().pagination.pageSize +
-                                    index +
-                                    1}
-                                </span>
-                              </div>
-                            </TableCell>
-                          );
-                        }
                         return (
                           <TableCell key={cell.id} className="px-4 text-left">
                             {flexRender(
@@ -860,7 +719,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select

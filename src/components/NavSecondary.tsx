@@ -55,7 +55,7 @@ export function NavSecondary({
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
-        <SidebarMenuButton className="mt-1" onClick={() => {}}>
+        <SidebarMenuButton className="mt-2" onClick={() => {}}>
           <IconLogout className="!w-5 md:!w-6 !h-5 md:!h-6" />
           <span className="text-[14px] md:text-[16px] font-[500]">Logout</span>
         </SidebarMenuButton>

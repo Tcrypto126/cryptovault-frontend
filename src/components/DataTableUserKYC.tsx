@@ -2,10 +2,7 @@
 
 import * as React from "react";
 
-import {
-  IconCheck,
-  IconX,
-} from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import {
   ColumnDef,
   ColumnFiltersState,

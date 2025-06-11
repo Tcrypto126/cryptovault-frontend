@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { IconPlus } from "@tabler/icons-react";
-
 import { DataTable } from "@/components/DataTableAdminKYC";
 
 const data = [
@@ -16,6 +13,13 @@ const data = [
     },
     submitted: "2025-06-11 14:30:25",
     status: "Approved",
+    ipAddress: "127.0.0.1",
+    device: "Desktop",
+    documents: [
+      "https://www.google.com",
+      "https://www.google.com",
+      "https://www.google.com",
+    ],
   },
   {
     id: 2,
@@ -27,6 +31,13 @@ const data = [
     },
     submitted: "2025-06-11 14:30:25",
     status: "Pending",
+    ipAddress: "127.0.0.1",
+    device: "Desktop",
+    documents: [
+      "https://www.google.com",
+      "https://www.google.com",
+      "https://www.google.com",
+    ],
   },
   {
     id: 3,
@@ -38,6 +49,13 @@ const data = [
     },
     submitted: "2025-06-11 14:30:25",
     status: "Approved",
+    ipAddress: "127.0.0.1",
+    device: "Desktop",
+    documents: [
+      "https://www.google.com",
+      "https://www.google.com",
+      "https://www.google.com",
+    ],
   },
 ];
 
