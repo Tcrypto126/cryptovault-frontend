@@ -48,6 +48,21 @@ const data = [
     message:
       "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
   },
+  {
+    id: 4,
+    ticketId: "#T-14355",
+    user: {
+      id: 1,
+      name: "maksyme kolesov",
+      email: "fujio.doe@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    },
+    subject: "Bonus not received",
+    status: "Escalated",
+    lastUpdated: "2025-06-11 14:30:25",
+    message:
+      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
+  },
 ];
 
 const SupportPage = () => {

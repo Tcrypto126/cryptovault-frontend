@@ -21,6 +21,7 @@ const StatusBadge = ({ status }: { status: string }) => {
       );
     case "Failed":
     case "Suspended":
+    case "Rejected":
       return (
         <h6 className="!text-[12px] py-1 text-center bg-[#E62E2E90] min-w-[75px] rounded-[6px]">
           {status}

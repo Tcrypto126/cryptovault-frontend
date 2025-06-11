@@ -12,7 +12,7 @@ const data = [
       avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
     },
     submitted: "2025-06-11 14:30:25",
-    status: "Approved",
+    status: "Rejected",
     ipAddress: "127.0.0.1",
     device: "Desktop",
     documents: [
@@ -51,6 +51,24 @@ const data = [
     status: "Approved",
     ipAddress: "127.0.0.1",
     device: "Desktop",
+    documents: [
+      "https://www.google.com",
+      "https://www.google.com",
+      "https://www.google.com",
+    ],
+  },
+  {
+    id: 4,
+    user: {
+      id: 1,
+      name: "reku Doe",
+      email: "john.doe@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
+    },
+    submitted: "2025-06-11 14:30:25",
+    status: "In Progress",
+    ipAddress: "127.0.0.1",
+    device: "web2.3",
     documents: [
       "https://www.google.com",
       "https://www.google.com",

@@ -206,7 +206,7 @@ export function DataTable({
           }}
         >
           <SelectTrigger
-            className="flex w-fit md:hidden"
+            className="flex !w-fit !h-[36px] md:hidden"
             size="sm"
             id="view-selector"
           >
@@ -232,7 +232,6 @@ export function DataTable({
             placeholder="Enter name or email"
             onChange={(e) => {
               setSearchKey(e.target.value);
-              console.log(e.target.value);
             }}
             className="pl-8 w-44 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
           />
@@ -317,7 +316,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -470,7 +472,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -623,7 +628,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -780,7 +788,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select

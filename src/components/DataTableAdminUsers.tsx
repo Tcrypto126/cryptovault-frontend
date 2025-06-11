@@ -248,7 +248,7 @@ export function DataTable({
           }}
         >
           <SelectTrigger
-            className="flex w-fit md:hidden"
+            className="flex !w-fit !h-[36px] md:hidden"
             size="sm"
             id="view-selector"
           >
@@ -276,7 +276,6 @@ export function DataTable({
             placeholder="Enter name or email"
             onChange={(e) => {
               setSearchKey(e.target.value);
-              console.log(e.target.value);
             }}
             className="pl-8 w-44 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
           />
