@@ -30,17 +30,6 @@ const SettingsPage = () => {
         <div className="flex justify-between items-center gap-2">
           <h6>Minimum Withdrawable Balance</h6>
           <h6>$1,500</h6>
-          {/* <Switch
-              checked={isChecked}
-              onCheckedChange={() => {
-                setIsChecked(!isChecked);
-                if (!isChecked) {
-                  toast("Activated successfully", "Success");
-                } else {
-                  toast("Deactivated successfully", "Success");
-                }
-              }}
-            /> */}
         </div>
         <div className="flex justify-between items-center gap-2">
           <h6>Manual Approval</h6>

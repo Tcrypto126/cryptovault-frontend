@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/DataTableWithdraw";
+import { DataTable } from "@/components/DataTableAdminWithdraw";
 
 import data from "@/app/adminTransactionData.json";
 

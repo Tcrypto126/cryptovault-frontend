@@ -5,6 +5,7 @@ const StatusBadge = ({ status }: { status: string }) => {
     case "Success":
     case "Active":
     case "Approved":
+    case "Resolved":
       return (
         <h6 className="!text-[12px] py-1 text-center bg-[#1FB35690] min-w-[75px] rounded-[6px]">
           {status}
@@ -12,6 +13,7 @@ const StatusBadge = ({ status }: { status: string }) => {
       );
     case "Pending":
     case "Freeze":
+    case "Escalated":
       return (
         <h6 className="!text-[12px] py-1 text-center bg-[#E8AD0090] min-w-[75px] rounded-[6px]">
           {status}
@@ -25,6 +27,7 @@ const StatusBadge = ({ status }: { status: string }) => {
         </h6>
       );
     case "Inactive":
+    case "In Progress":
       return (
         <h6 className="!text-[12px] py-1 text-center bg-[#61616190] min-w-[75px] rounded-[6px]">
           {status}
