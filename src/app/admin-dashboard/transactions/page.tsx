@@ -1,3 +1,5 @@
+"use client";
+
 import { DataTable } from "@/components/DataTableAdminTransactions";
 
 import data from "@/app/adminTransactionData.json";
