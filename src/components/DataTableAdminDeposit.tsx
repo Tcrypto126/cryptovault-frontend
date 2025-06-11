@@ -2,16 +2,7 @@
 
 import * as React from "react";
 
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-  IconEdit,
-  IconLoader,
-  IconSearch,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -30,15 +21,6 @@ import {
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -47,16 +29,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
-import { NavUser } from "./NavUser";
+import { EditDepositIncentiveModal } from "./EditDepositIncentiveModal";
 
 export const schema = z.object({
   id: z.number(),
   name: z.string(),
   type: z.string(),
-  bonus: z.number(),
+  bonus: z.string(),
   active: z.string(),
   status: z.string(),
 });
@@ -85,11 +65,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "bonus",
-    header: "Bonus %",
+    header: "Bonus",
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start ">
-          {row.original.bonus}%
+          {row.original.bonus}
         </div>
       );
     },
@@ -116,13 +96,14 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="flex items-center justify-start gap-2">
-        <Button
-          variant="ghost"
-          className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-          size="icon"
-        >
-          <IconEdit color="#00A6E8" />
-        </Button>
+        <EditDepositIncentiveModal
+          id={row.original.id}
+          campaignName={row.original.name}
+          incentiveType={row.original.type}
+          bonusType={row.original.bonus}
+          activePeriodFrom={row.original.active}
+          activePeriodTo={row.original.active}
+        />
         <Button
           variant="ghost"
           className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
