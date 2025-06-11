@@ -45,6 +45,14 @@ export function NavSecondary({
                 isActive={pathname === item.url}
                 onClick={() => {
                   router.push(item.url);
+                  // Close the sidebar only on mobile
+                  if (window.innerWidth < 1024) {
+                    // 1024px is typically lg breakpoint
+                    const sidebarTrigger = document.querySelector(
+                      '[data-sidebar="trigger"]'
+                    ) as HTMLButtonElement;
+                    sidebarTrigger?.click();
+                  }
                 }}
               >
                 <item.icon className="!w-5 md:!w-6 !h-5 md:!h-6" />

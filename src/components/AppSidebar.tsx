@@ -116,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas" {...props} className="z-50">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

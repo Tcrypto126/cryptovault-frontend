@@ -36,6 +36,14 @@ export function NavMain({
                 isActive={pathname === item.url}
                 onClick={() => {
                   router.push(item.url);
+                  // Close the sidebar only on mobile
+                  if (window.innerWidth < 1024) {
+                    // 1024px is typically lg breakpoint
+                    const sidebarTrigger = document.querySelector(
+                      '[data-sidebar="trigger"]'
+                    ) as HTMLButtonElement;
+                    sidebarTrigger?.click();
+                  }
                 }}
               >
                 {item.icon && (
