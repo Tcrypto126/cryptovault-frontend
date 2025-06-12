@@ -32,7 +32,7 @@ import instance from "@/lib/axios";
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const FormSchema1 = z.object({
-  avatar: z.instanceof(File),
+  avatar: z.union([z.instanceof(File), z.string()]),
   email: z
     .string()
     .nonempty({ message: "Email is required" })
@@ -130,11 +130,11 @@ const SettingsPage = () => {
         const res = await instance.get("/api/user/profile");
         if (res.status === 200) {
           const { user } = res.data;
-          console.log("user: ", user);
+          console.log("user: ", SERVER_URL + "/" + user.avatar);
 
           // Update form values when user data is fetched
           form1.reset({
-            // avatar: user.avatar || "/assets/avatars/avatar-sample.jpg",
+            avatar: user.avatar,
             email: user.email,
             firstName: user.full_name.split(" ")[0] || "",
             lastName: user.full_name.split(" ")[1] || "",
@@ -276,11 +276,16 @@ const SettingsPage = () => {
                           >
                             {field.value ? (
                               <Image
-                                src={URL.createObjectURL(field.value)}
+                                src={
+                                  field.value instanceof File
+                                    ? URL.createObjectURL(field.value)
+                                    : `${SERVER_URL}/avatars/${field.value}`
+                                }
                                 alt="Profile avatar"
                                 width={200}
                                 height={200}
                                 className="w-full h-full object-cover"
+                                unoptimized={true}
                               />
                             ) : (
                               <div className="flex flex-col gap-3 items-center justify-center">
@@ -515,7 +520,12 @@ const SettingsPage = () => {
                         >
                           {field.value ? (
                             <Image
-                              src={URL.createObjectURL(field.value)}
+                              src={
+                                field.value instanceof File
+                                  ? URL.createObjectURL(field.value)
+                                  : `${SERVER_URL}/avatars/${field.value}`
+                              }
+                              unoptimized={true}
                               alt="Profile avatar"
                               width={200}
                               height={200}
