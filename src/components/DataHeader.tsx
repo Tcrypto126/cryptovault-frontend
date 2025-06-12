@@ -11,7 +11,7 @@ const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
-    avatar: "/assets/avatars/avatar-sample.jpg",
+    avatar: "/assets/avatars/user-sample.png",
   },
 };
 

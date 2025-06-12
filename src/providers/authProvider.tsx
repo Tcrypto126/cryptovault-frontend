@@ -51,7 +51,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             "/account/forgot-password",
             "/account/reset-password",
           ];
-          if (publicRoutes.includes(pathname)) {
+          if (
+            publicRoutes.includes(pathname) ||
+            pathname.includes("/reset-password")
+          ) {
             return;
           }
 
@@ -71,32 +74,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string,
     isRemember: boolean
   ) => {
-    const res = await instance.post("/api/auth/signin", {
-      email,
-      password,
-      isRemember,
-    });
+    try {
+      const res = await instance.post("/api/auth/signin", {
+        email,
+        password,
+        isRemember,
+      });
 
-    if (res.status === 404) {
-      return { message: "Email not found" };
+      if (!res.data.success) {
+        return { message: res.data.message };
+      }
+
+      const { token, user } = res.data;
+      // Save token to localStorage (or cookies)
+      localStorage.setItem("token", token);
+
+      const role: "ADMIN" | "USER" = user.role;
+
+      if (role === "ADMIN") {
+        router.push("/admin-dashboard");
+      } else {
+        router.push("/dashboard");
+      }
+      return { message: "Logged in successfully" };
+    } catch (error) {
+      console.error("Error logging in:", error);
+      return { message: "Login failed" };
     }
-    if (res.status === 401) {
-      return { message: "Invalid password" };
-    }
-    if (res.status !== 200) throw new Error("Login failed");
-
-    const { token } = res.data;
-    // Save token to localStorage (or cookies)
-    localStorage.setItem("token", token);
-
-    const { role } = res.data.user;
-
-    if (role === "ADMIN") {
-      router.push("/admin-dashboard");
-    } else {
-      router.push("/dashboard");
-    }
-    return { message: "Login successful" };
   };
 
   const logout = () => {

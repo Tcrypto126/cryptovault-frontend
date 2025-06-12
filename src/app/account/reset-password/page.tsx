@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { IconEye, IconEyeOff } from "@/components/ui/icon";
 import { useState } from "react";
 import Link from "next/link";
+import { IconLoader2 } from "@tabler/icons-react";
+import instance from "@/lib/axios";
 
 const FormSchema = z
   .object({
@@ -60,9 +62,28 @@ const ResetPassword = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("welcome", "Success");
-    console.log("data: ", data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const token = urlParams.get("token");
+
+      const newData = {
+        ...data,
+        token,
+      };
+
+      const res = await instance.post("/api/auth/reset-password", newData);
+      if (res.status == 201) {
+        toast("Password reset successfully", "Success");
+        router.push("/account/signin");
+      } else {
+        toast(res.data.message, "Error");
+      }
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      toast("Failed to reset password", "Error");
+    }
   }
 
   return (
@@ -168,8 +189,10 @@ const ResetPassword = () => {
                 <Button
                   type="submit"
                   className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
-                  onClick={() => {}}
                 >
+                  {form.formState.isSubmitting && (
+                    <IconLoader2 className="w-4 h-4 animate-spin" />
+                  )}
                   Update Password
                 </Button>
                 <div className="flex gap-2 justify-center items-center">

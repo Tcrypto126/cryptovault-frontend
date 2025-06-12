@@ -6,10 +6,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useNotification } from "@/providers/notificationProvider";
 import { useRouter } from "next/navigation";
+import { IconLoader2 } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -20,9 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { IconEye, IconEyeOff } from "@/components/ui/icon";
 import { useState } from "react";
 import Link from "next/link";
+import instance from "@/lib/axios";
 
 const FormSchema = z.object({
   email: z
@@ -44,11 +43,23 @@ const ForgotPassword = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("welcome", "Success");
-    console.log("data: ", data);
-    setIsEmail(data.email);
-    setIsSent(true);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const res = await instance.post("/api/auth/forgot-password", data);
+      if (res.status == 201) {
+        toast("Password reset link sent", "Success");
+        console.log("res: ", res.data);
+        setIsEmail(data.email);
+        setIsSent(true);
+      } else {
+        setIsEmail("");
+        setIsSent(false);
+        toast(res.data.message, "Error");
+      }
+    } catch (error) {
+      console.error("Error sending password reset email:", error);
+      toast("Failed to send password reset email", "Error");
+    }
   }
 
   return (
@@ -84,9 +95,9 @@ const ForgotPassword = () => {
                   <>Enter your email to reset your password.</>
                 ) : (
                   <>
-                    We’ve sent a password reset link to {isEmail}. Please
-                    check your inbox and follow the instructions in the email to
-                    reset your password.
+                    We’ve sent a password reset link to {isEmail}. Please check
+                    your inbox and follow the instructions in the email to reset
+                    your password.
                   </>
                 )}
               </h6>
@@ -114,8 +125,10 @@ const ForgotPassword = () => {
                   <Button
                     type="submit"
                     className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
-                    onClick={() => {}}
                   >
+                    {form.formState.isSubmitting && (
+                      <IconLoader2 className="w-4 h-4 animate-spin" />
+                    )}
                     Reset Password
                   </Button>
                   <div className="flex gap-2 justify-center items-center">

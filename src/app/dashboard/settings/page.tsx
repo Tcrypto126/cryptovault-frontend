@@ -160,7 +160,7 @@ const SettingsPage = () => {
 
           // Update form values when user data is fetched
           form1.reset({
-            avatar: user.avatar || "",
+            avatar: user.avatar || "/assets/user-sample.png",
             email: user.email || "",
             firstName: user.full_name?.split(" ")[0] || "",
             lastName: user.full_name?.split(" ")[1] || "",
@@ -168,7 +168,7 @@ const SettingsPage = () => {
           });
 
           form3.reset({
-            avatar: user.avatar || "",
+            avatar: user.avatar || "/assets/user-sample.png",
             email: user.email || "",
             phone: user.phone_number || "",
             address: user.address || "",
