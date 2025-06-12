@@ -96,10 +96,14 @@ const FormSchema2 = z
 
 const FormSchema3 = z.object({
   avatar: z.union([z.instanceof(File), z.string()]),
-  phone: z.string().nonempty({ message: "Phone number is required" }),
+  phone: z
+    .string()
+    .nonempty({ message: "Phone number is required" })
+    .min(10, { message: "Phone number must be at least 10 characters" })
+    .max(15, { message: "Phone number must be less than 15 characters" }),
   address: z.string().nonempty({ message: "Address is required" }),
-  govId: z.string().nonempty({ message: "Government ID is required" }),
-  idCard: z.string().nonempty({ message: "ID Card is required" }),
+  govId: z.union([z.instanceof(File), z.string()]),
+  idCard: z.union([z.instanceof(File), z.string()]),
   firstName: z.string().nonempty({ message: "First name is required" }),
   lastName: z.string().nonempty({ message: "Last name is required" }),
   email: z.string().email().nonempty({ message: "Email is required" }),
@@ -116,7 +120,7 @@ const SettingsPage = () => {
   const form1 = useForm<z.infer<typeof FormSchema1>>({
     resolver: zodResolver(FormSchema1),
     defaultValues: {
-      avatar: undefined,
+      avatar: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -136,7 +140,7 @@ const SettingsPage = () => {
   const form3 = useForm<z.infer<typeof FormSchema3>>({
     resolver: zodResolver(FormSchema3),
     defaultValues: {
-      avatar: undefined,
+      avatar: "",
       phone: "",
       address: "",
       govId: "",
@@ -156,11 +160,22 @@ const SettingsPage = () => {
 
           // Update form values when user data is fetched
           form1.reset({
-            avatar: user.avatar,
-            email: user.email,
-            firstName: user.full_name.split(" ")[0] || "",
-            lastName: user.full_name.split(" ")[1] || "",
+            avatar: user.avatar || "",
+            email: user.email || "",
+            firstName: user.full_name?.split(" ")[0] || "",
+            lastName: user.full_name?.split(" ")[1] || "",
             username: user.username || "",
+          });
+
+          form3.reset({
+            avatar: user.avatar || "",
+            email: user.email || "",
+            phone: user.phone_number || "",
+            address: user.address || "",
+            govId: user.government_id || "",
+            idCard: user.id_card || "",
+            firstName: user.full_name?.split(" ")[0] || "",
+            lastName: user.full_name?.split(" ")[1] || "",
           });
         }
       } catch (error) {
@@ -211,9 +226,30 @@ const SettingsPage = () => {
     }
   }
 
-  function onSubmit3(data: z.infer<typeof FormSchema3>) {
-    toast("Password updated successfully", "Success");
+  async function onSubmit3(data: z.infer<typeof FormSchema3>) {
     console.log("data: ", data);
+    try {
+      const formData = new FormData();
+      formData.append("phone", data.phone);
+      formData.append("address", data.address);
+      formData.append("govId", data.govId);
+      formData.append("idCard", data.idCard);
+
+      const res = await instance.put("/api/user/kyc", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.status === 201) {
+        toast("KYC submitted successfully", "Success");
+      } else {
+        toast(res.data.message, "Error");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast("Failed to update profile", "Error");
+    }
   }
 
   return (
@@ -287,7 +323,7 @@ const SettingsPage = () => {
                                 src={
                                   field.value instanceof File
                                     ? URL.createObjectURL(field.value)
-                                    : `${SERVER_URL}/avatars/${field.value}`
+                                    : `${SERVER_URL}/assets/${field.value}`
                                 }
                                 alt="Profile avatar"
                                 width={200}
@@ -531,7 +567,7 @@ const SettingsPage = () => {
                               src={
                                 field.value instanceof File
                                   ? URL.createObjectURL(field.value)
-                                  : `${SERVER_URL}/avatars/${field.value}`
+                                  : `${SERVER_URL}/assets/${field.value}`
                               }
                               unoptimized={true}
                               alt="Profile avatar"
@@ -552,6 +588,7 @@ const SettingsPage = () => {
                           id="file-input"
                           type="file"
                           accept="image/*"
+                          disabled
                           className="hidden"
                           onChange={(e) => {
                             const file = e.target.files?.[0];
@@ -574,7 +611,11 @@ const SettingsPage = () => {
                     <FormItem>
                       <FormLabel>First Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your first name" {...field} />
+                        <Input
+                          placeholder="Enter your first name"
+                          disabled
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -587,7 +628,11 @@ const SettingsPage = () => {
                     <FormItem>
                       <FormLabel>Last Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your last name" {...field} />
+                        <Input
+                          placeholder="Enter your last name"
+                          disabled
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -600,7 +645,11 @@ const SettingsPage = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
+                        <Input
+                          placeholder="Enter your email"
+                          disabled
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -636,35 +685,130 @@ const SettingsPage = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form3.control}
-                name="govId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Government ID</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter your government id"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form3.control}
-                name="idCard"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ID Card</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your id card" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form3.control}
+                  name="govId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="flex flex-col gap-1">
+                          <h6 className="text-sm font-medium">Government ID</h6>
+                          <div className="flex justify-center sm:justify-start">
+                            <label
+                              htmlFor="govId-input"
+                              style={{
+                                width: "100%",
+                                height: "300px",
+                                borderRadius: "5px",
+                                border: "1px solid #373940",
+                                cursor: "pointer",
+                              }}
+                              className="overflow-hidden flex justify-center items-center bg-[#02050eee]"
+                            >
+                              {field.value ? (
+                                <Image
+                                  src={
+                                    field.value instanceof File
+                                      ? URL.createObjectURL(field.value)
+                                      : `${SERVER_URL}/assets/${field.value}`
+                                  }
+                                  unoptimized={true}
+                                  alt="Government ID"
+                                  width={200}
+                                  height={200}
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <div className="flex flex-col gap-3 items-center justify-center">
+                                  <IconUpload width="20" height="20" />
+                                  <span className="text-[12px]">
+                                    Government ID (.png, .jpg, .jpeg, .webp)
+                                  </span>
+                                </div>
+                              )}
+                            </label>
+                            <Input
+                              id="govId-input"
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  field.onChange(file);
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form3.control}
+                  name="idCard"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="flex flex-col gap-1">
+                          <h6 className="text-sm font-medium">ID Card</h6>
+                          <div className="flex justify-center sm:justify-start">
+                            <label
+                              htmlFor="idCard-input"
+                              style={{
+                                width: "100%",
+                                height: "300px",
+                                borderRadius: "5px",
+                                border: "1px solid #373940",
+                                cursor: "pointer",
+                              }}
+                              className="overflow-hidden flex justify-center items-center bg-[#02050eee]"
+                            >
+                              {field.value ? (
+                                <Image
+                                  src={
+                                    field.value instanceof File
+                                      ? URL.createObjectURL(field.value)
+                                      : `${SERVER_URL}/assets/${field.value}`
+                                  }
+                                  unoptimized={true}
+                                  alt="ID Card"
+                                  width={200}
+                                  height={200}
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <div className="flex flex-col gap-3 items-center justify-center">
+                                  <IconUpload width="20" height="20" />
+                                  <span className="text-[12px]">
+                                    ID Card (.png, .jpg, .jpeg, .webp)
+                                  </span>
+                                </div>
+                              )}
+                            </label>
+                            <Input
+                              id="idCard-input"
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  field.onChange(file);
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <div className="flex justify-between sm:justify-end gap-4">
                 <Button
@@ -683,6 +827,9 @@ const SettingsPage = () => {
                   type="submit"
                   className="w-full max-w-[48%] sm:max-w-34 h-10"
                 >
+                  {form3.formState.isSubmitting && (
+                    <IconLoader2 className="w-4 h-4 animate-spin" />
+                  )}
                   Update KYC
                 </Button>
               </div>
