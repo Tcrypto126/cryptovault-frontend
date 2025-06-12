@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { IconLogout } from "@tabler/icons-react";
 import { NavUser } from "@/components/NavUser";
+import { useAuth } from "@/providers/authProvider";
 
 const data = {
   user: {
@@ -34,6 +35,11 @@ export function NavSecondary({
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const router = useRouter();
   const pathname = usePathname();
+  const { logout } = useAuth();
+
+  const LogOut = () => {
+    logout();
+  };
 
   return (
     <SidebarGroup>
@@ -63,7 +69,12 @@ export function NavSecondary({
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
-        <SidebarMenuButton className="mt-2" onClick={() => {}}>
+        <SidebarMenuButton
+          className="mt-2"
+          onClick={() => {
+            LogOut();
+          }}
+        >
           <IconLogout className="!w-5 md:!w-6 !h-5 md:!h-6" />
           <span className="text-[14px] md:text-[16px] font-[500]">Logout</span>
         </SidebarMenuButton>

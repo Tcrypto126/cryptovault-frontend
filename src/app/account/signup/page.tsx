@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IconEye, IconEyeOff } from "@/components/ui/icon";
+import { IconLoader2 } from "@tabler/icons-react";
 
 import instance from "@/lib/axios";
 
@@ -34,7 +35,7 @@ const FormSchema = z
     password: z
       .string()
       .nonempty({ message: "Password is required" })
-      .min(6, { message: "Password must be at least 6 characters" })
+      .min(8, { message: "Password must be at least 8 characters" })
       .regex(/[a-z]/, {
         message: "Password must contain at least one lowercase letter",
       })
@@ -53,8 +54,9 @@ const FormSchema = z
     message: "Passwords do not match",
   });
 
-const SignUp =   () => {
+const SignUp = () => {
   const { toast } = useNotification();
+  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
   const router = useRouter();
@@ -70,13 +72,17 @@ const SignUp =   () => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
+      setIsLoading(true);
       const response = await instance.post("/api/auth/signup", data);
-      if (response.status === 200) {
-        toast("welcome", "Success");
-        console.log("data: ", data);
+      if (response.status === 201) {
+        toast("Account created successfully", "Success");
+        setIsLoading(false);
+        router.push("/account/signin");
       }
     } catch (error) {
-      console.log("data: ", data);
+      console.error("error: ", error);
+      toast("Something went wrong", "Error");
+      setIsLoading(false);
     }
   }
 
@@ -194,8 +200,8 @@ const SignUp =   () => {
                 <Button
                   type="submit"
                   className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
-                  onClick={() => {}}
                 >
+                  {isLoading && <IconLoader2 className="animate-spin" />}
                   Sign Up
                 </Button>
                 <div className="flex gap-2 justify-center items-center">

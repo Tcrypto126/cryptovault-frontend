@@ -19,20 +19,8 @@ type AuthContextType = {
     email: string,
     password: string,
     isRemember: boolean
-  ) => Promise<void>;
+  ) => Promise<{ message: string }>;
   logout: () => void;
-};
-
-const setSession = (token?: string | null) => {
-  if (token) {
-    localStorage.setItem("token", token);
-    instance.defaults.headers.common.Authorization = `Bearer ${token}`;
-    console.log("token is valid");
-  } else {
-    localStorage.removeItem("token");
-    delete instance.defaults.headers.common.Authorization;
-    console.log("token is invalid1");
-  }
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,12 +33,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const token = window.localStorage.getItem("token");
-        if (await verifyToken(token || "")) {
-          setSession(token);
+        const token: string | null = window.localStorage.getItem("token");
+        const { isTokenValid, role } = await verifyToken(token || "");
+        if (isTokenValid) {
+          if (role === "USER" && pathname === "/admin-dashboard") {
+            router.push("/dashboard");
+          }
         } else {
-          console.log("token is invalid2");
-          console.log("pathname: ", pathname);
+          localStorage.removeItem("token");
+          delete instance.defaults.headers.common.Authorization;
 
           // Allow access to public routes without redirect
           const publicRoutes = [
@@ -80,27 +71,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string,
     isRemember: boolean
   ) => {
-    const res = await instance.post("/api/auth/login", {
+    const res = await instance.post("/api/auth/signin", {
       email,
       password,
       isRemember,
     });
 
+    if (res.status === 404) {
+      return { message: "Email not found" };
+    }
+    if (res.status === 401) {
+      return { message: "Invalid password" };
+    }
     if (res.status !== 200) throw new Error("Login failed");
 
-    const { token } = await res.data();
-
+    const { token } = res.data;
     // Save token to localStorage (or cookies)
     localStorage.setItem("token", token);
 
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    setUser({ id: payload.id, name: payload.name, email: payload.email });
+    const { role } = res.data.user;
 
-    router.push("/"); // redirect to home after login
+    if (role === "ADMIN") {
+      router.push("/admin-dashboard");
+    } else {
+      router.push("/dashboard");
+    }
+    return { message: "Login successful" };
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    delete instance.defaults.headers.common.Authorization;
     setUser(null);
     router.push("/account/signin");
   };

@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useNotification } from "@/providers/notificationProvider";
 import { z } from "zod";
+import { IconLoader2, IconUpload } from "@tabler/icons-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -20,24 +23,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { IconSearch, IconUpload } from "@tabler/icons-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useNotification } from "@/providers/notificationProvider";
+import instance from "@/lib/axios";
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const FormSchema1 = z.object({
   avatar: z.instanceof(File),
-
   email: z
     .string()
     .nonempty({ message: "Email is required" })
     .email({ message: "Invalid email format" }),
-
-  firstName: z.string().nonempty({ message: "First name is required" }),
-  lastName: z.string().nonempty({ message: "Last name is required" }),
-  username: z.string().nonempty({ message: "Username is required" }),
+  firstName: z
+    .string()
+    .min(2, { message: "First name must be at least 2 characters" })
+    .max(50, { message: "First name must be less than 50 characters" }),
+  lastName: z
+    .string()
+    .min(2, { message: "Last name must be at least 2 characters" })
+    .max(50, { message: "Last name must be less than 50 characters" }),
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters" })
+    .max(20, { message: "Username must be less than 20 characters" })
+    .regex(/^[a-zA-Z0-9]+$/, {
+      message: "Username must contain only letters and numbers",
+    }),
 });
 
 const FormSchema2 = z
@@ -56,7 +70,6 @@ const FormSchema2 = z
       .regex(/[^a-zA-Z0-9]/, {
         message: "Password must contain at least one special character",
       }),
-
     newPassword: z
       .string()
       .nonempty({ message: "Password is required" })
@@ -83,35 +96,58 @@ const FormSchema2 = z
 
 const FormSchema3 = z.object({
   avatar: z.instanceof(File),
-
   phone: z.string().nonempty({ message: "Phone number is required" }),
   address: z.string().nonempty({ message: "Address is required" }),
   govId: z.string().nonempty({ message: "Government ID is required" }),
   idCard: z.string().nonempty({ message: "ID Card is required" }),
-
   firstName: z.string().nonempty({ message: "First name is required" }),
   lastName: z.string().nonempty({ message: "Last name is required" }),
   email: z.string().email().nonempty({ message: "Email is required" }),
 });
 
 const SettingsPage = () => {
+  const pathname = usePathname();
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
   const [isVisible3, setIsVisible3] = useState(true);
   const [activeTab, setActiveTab] = useState("userSettings");
-  const [searchKey, setSearchKey] = useState("");
 
   const form1 = useForm<z.infer<typeof FormSchema1>>({
     resolver: zodResolver(FormSchema1),
     defaultValues: {
       avatar: undefined,
-      email: "sdfds@asd.com",
-      firstName: "kaori",
-      lastName: "fujio",
-      username: "kaori125",
+      email: "",
+      firstName: "",
+      lastName: "",
+      username: "",
     },
   });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await instance.get("/api/user/profile");
+        if (res.status === 200) {
+          const { user } = res.data;
+          console.log("user: ", user);
+
+          // Update form values when user data is fetched
+          form1.reset({
+            // avatar: user.avatar || "/assets/avatars/avatar-sample.jpg",
+            email: user.email,
+            firstName: user.full_name.split(" ")[0] || "",
+            lastName: user.full_name.split(" ")[1] || "",
+            username: user.username || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const form2 = useForm<z.infer<typeof FormSchema2>>({
     resolver: zodResolver(FormSchema2),
@@ -136,9 +172,30 @@ const SettingsPage = () => {
     },
   });
 
-  function onSubmit1(data: z.infer<typeof FormSchema1>) {
-    toast("Profile updated successfully", "Success");
-    console.log("data: ", data);
+  async function onSubmit1(data: z.infer<typeof FormSchema1>) {
+    try {
+      const formData = new FormData();
+      formData.append("avatar", data.avatar);
+      formData.append("firstName", data.firstName);
+      formData.append("lastName", data.lastName);
+      formData.append("username", data.username);
+
+      const res = await instance.put("/api/user/profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.status === 201) {
+        console.log("res: ", res.data);
+        toast("Profile updated successfully", "Success");
+      } else {
+        toast(res.data.message, "Error");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast("Failed to update profile", "Error");
+    }
   }
 
   function onSubmit2(data: z.infer<typeof FormSchema2>) {
@@ -292,7 +349,11 @@ const SettingsPage = () => {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your email" {...field} />
+                          <Input
+                            placeholder="Enter your email"
+                            disabled
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -330,6 +391,9 @@ const SettingsPage = () => {
                     type="submit"
                     className="w-full max-w-[48%] sm:max-w-34 h-10"
                   >
+                    {form1.formState.isSubmitting && (
+                      <IconLoader2 className="w-4 h-4 animate-spin" />
+                    )}
                     Update Profile
                   </Button>
                 </div>

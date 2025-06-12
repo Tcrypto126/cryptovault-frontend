@@ -1,19 +1,21 @@
 import instance from "./axios";
 
-const verifyToken = async (token: string): Promise<boolean> => {
+const verifyToken = async (
+  token: string
+): Promise<{ isTokenValid: boolean; role: "ADMIN" | "USER" | null }> => {
   if (!token || token === "") {
-    return false;
+    return { isTokenValid: false, role: null };
   }
   try {
-    const response = await instance.post("/api/auth/verifyToken", { token });
+    const response = await instance.post("/api/auth/verify-token", { token });
     if (response.status === 200) {
-      return true;
+      return { isTokenValid: true, role: response.data.role };
     } else {
-      return false;
+      return { isTokenValid: false, role: null };
     }
   } catch (err) {
     console.error("Invalid token", err);
-    return false;
+    return { isTokenValid: false, role: null };
   }
 };
 

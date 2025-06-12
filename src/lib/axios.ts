@@ -1,7 +1,23 @@
 import axios from "axios";
 
-const baseURL = process.env.SERVER_URL || "https://localhost:5000";
+const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
 
-export const instance = axios.create({ baseURL });
+const instance = axios.create({
+  baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add request interceptor to dynamically set auth header
+instance.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
 
 export default instance;

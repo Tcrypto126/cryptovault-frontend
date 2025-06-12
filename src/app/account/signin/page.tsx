@@ -23,6 +23,10 @@ import { Input } from "@/components/ui/input";
 import { IconEye, IconEyeOff } from "@/components/ui/icon";
 import { useState } from "react";
 import Link from "next/link";
+import { IconLoader2 } from "@tabler/icons-react";
+
+import { useAuth } from "@/providers/authProvider";
+import instance from "@/lib/axios";
 
 const FormSchema = z.object({
   email: z
@@ -33,7 +37,7 @@ const FormSchema = z.object({
   password: z
     .string()
     .nonempty({ message: "Password is required" })
-    .min(6, { message: "Password must be at least 6 characters" })
+    .min(8, { message: "Password must be at least 8 characters" })
     .regex(/[a-z]/, {
       message: "Password must contain at least one lowercase letter",
     })
@@ -51,7 +55,9 @@ const FormSchema = z.object({
 const SignIn = () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAuth();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -62,9 +68,13 @@ const SignIn = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("welcome", "Success");
-    console.log("data: ", data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const res = await login(data.email, data.password, data.rememberme);
+    if (res.message === "Login successful") {
+      toast("Login successful", "Success");
+    } else {
+      toast(res.message, "Error");
+    }
   }
 
   return (
@@ -180,8 +190,8 @@ const SignIn = () => {
                 <Button
                   type="submit"
                   className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
-                  onClick={() => {}}
                 >
+                  {isLoading && <IconLoader2 className="animate-spin" />}
                   Sign In
                 </Button>
                 <div className="flex gap-2 justify-center items-center">
