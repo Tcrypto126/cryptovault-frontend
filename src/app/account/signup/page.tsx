@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useNotification } from "@/providers/notificationProvider";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,8 +21,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IconEye, IconEyeOff } from "@/components/ui/icon";
-import { useState } from "react";
-import Link from "next/link";
+
+import instance from "@/lib/axios";
 
 const FormSchema = z
   .object({
@@ -51,7 +53,7 @@ const FormSchema = z
     message: "Passwords do not match",
   });
 
-const SignUp = () => {
+const SignUp =   () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
@@ -66,9 +68,16 @@ const SignUp = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("welcome", "Success");
-    console.log("data: ", data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const response = await instance.post("/api/auth/signup", data);
+      if (response.status === 200) {
+        toast("welcome", "Success");
+        console.log("data: ", data);
+      }
+    } catch (error) {
+      console.log("data: ", data);
+    }
   }
 
   return (
