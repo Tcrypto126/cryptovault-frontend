@@ -59,7 +59,7 @@ const FormSchema2 = z
     oldPassword: z
       .string()
       .nonempty({ message: "Password is required" })
-      .min(6, { message: "Password must be at least 6 characters" })
+      .min(8, { message: "Password must be at least 8 characters" })
       .regex(/[a-z]/, {
         message: "Password must contain at least one lowercase letter",
       })
@@ -73,7 +73,7 @@ const FormSchema2 = z
     newPassword: z
       .string()
       .nonempty({ message: "Password is required" })
-      .min(6, { message: "Password must be at least 6 characters" })
+      .min(8, { message: "Password must be at least 8 characters" })
       .regex(/[a-z]/, {
         message: "Password must contain at least one lowercase letter",
       })
@@ -95,7 +95,7 @@ const FormSchema2 = z
   });
 
 const FormSchema3 = z.object({
-  avatar: z.instanceof(File),
+  avatar: z.union([z.instanceof(File), z.string()]),
   phone: z.string().nonempty({ message: "Phone number is required" }),
   address: z.string().nonempty({ message: "Address is required" }),
   govId: z.string().nonempty({ message: "Government ID is required" }),
@@ -124,31 +124,6 @@ const SettingsPage = () => {
     },
   });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await instance.get("/api/user/profile");
-        if (res.status === 200) {
-          const { user } = res.data;
-          console.log("user: ", SERVER_URL + "/" + user.avatar);
-
-          // Update form values when user data is fetched
-          form1.reset({
-            avatar: user.avatar,
-            email: user.email,
-            firstName: user.full_name.split(" ")[0] || "",
-            lastName: user.full_name.split(" ")[1] || "",
-            username: user.username || "",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
   const form2 = useForm<z.infer<typeof FormSchema2>>({
     resolver: zodResolver(FormSchema2),
     defaultValues: {
@@ -172,6 +147,30 @@ const SettingsPage = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await instance.get("/api/user/profile");
+        if (res.status === 200) {
+          const { user } = res.data;
+
+          // Update form values when user data is fetched
+          form1.reset({
+            avatar: user.avatar,
+            email: user.email,
+            firstName: user.full_name.split(" ")[0] || "",
+            lastName: user.full_name.split(" ")[1] || "",
+            username: user.username || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   async function onSubmit1(data: z.infer<typeof FormSchema1>) {
     try {
       const formData = new FormData();
@@ -187,7 +186,6 @@ const SettingsPage = () => {
       });
 
       if (res.status === 201) {
-        console.log("res: ", res.data);
         toast("Profile updated successfully", "Success");
       } else {
         toast(res.data.message, "Error");
@@ -198,9 +196,19 @@ const SettingsPage = () => {
     }
   }
 
-  function onSubmit2(data: z.infer<typeof FormSchema2>) {
-    toast("Password updated successfully", "Success");
-    console.log("data: ", data);
+  async function onSubmit2(data: z.infer<typeof FormSchema2>) {
+    try {
+      const res = await instance.put("/api/user/password", data);
+
+      if (res.status === 201) {
+        toast("Password updated successfully", "Success");
+      } else {
+        toast(res.data.message, "Error");
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      toast("Failed to update password", "Error");
+    }
   }
 
   function onSubmit3(data: z.infer<typeof FormSchema3>) {
