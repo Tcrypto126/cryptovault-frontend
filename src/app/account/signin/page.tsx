@@ -70,8 +70,8 @@ const SignIn = () => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const res = await login(data.email, data.password, data.rememberme);
-    if (res.message === "Login successful") {
-      toast("Login successful", "Success");
+    if (res.message === "Logged in successfully") {
+      toast("Logged in successfully", "Success");
     } else {
       toast(res.message, "Error");
     }

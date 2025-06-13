@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import * as React from "react";
 import { type Icon } from "@tabler/icons-react";
 import { useRouter, usePathname } from "next/navigation";
@@ -14,14 +15,10 @@ import {
 import { IconLogout } from "@tabler/icons-react";
 import { NavUser } from "@/components/NavUser";
 import { useAuth } from "@/providers/authProvider";
+import verifyToken from "@/lib/verifyToken";
+import instance from "@/lib/axios";
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/assets/avatars/avatar-sample.jpg",
-  },
-};
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export function NavSecondary({
   items,
@@ -36,6 +33,45 @@ export function NavSecondary({
   const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuth();
+
+  const [role, setRole] = useState<"ADMIN" | "USER">("USER");
+
+  const [data, setData] = useState({
+    user: {
+      name: "",
+      email: "",
+      avatar: "/assets/avatars/user-sample.png",
+    },
+  });
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const token: string | null = window.localStorage.getItem("token");
+        const { isTokenValid, role } = await verifyToken(token || "");
+        if (isTokenValid) {
+          setRole(role as "ADMIN" | "USER");
+
+          const res = await instance.get("/api/user/profile");
+          if (res.status == 200) {
+            setData({
+              user: {
+                name: res.data.user.name,
+                email: res.data.user.email,
+                avatar: `${SERVER_URL}/assets/${res.data.user.avatar}`,
+              },
+            });
+          }
+        } else {
+          localStorage.removeItem("token");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    init();
+  }, []);
 
   const LogOut = () => {
     logout();
