@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import * as React from "react";
-import { type Icon } from "@tabler/icons-react";
+import { IconDotsVertical, type Icon } from "@tabler/icons-react";
 import { useRouter, usePathname } from "next/navigation";
 
 import {
@@ -12,8 +12,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { IconLogout } from "@tabler/icons-react";
-import { NavUser } from "@/components/NavUser";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { IconLogout, IconDashboard } from "@tabler/icons-react";
 import { useAuth } from "@/providers/authProvider";
 import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
@@ -80,7 +88,7 @@ export function NavSecondary({
   return (
     <SidebarGroup>
       <SidebarGroupContent>
-        <SidebarMenu className="gap-2">
+        <SidebarMenu className="gap-2 hidden lg:flex ">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
@@ -106,7 +114,7 @@ export function NavSecondary({
           ))}
         </SidebarMenu>
         <SidebarMenuButton
-          className="mt-2"
+          className="items-center gap-2 mt-2 hidden lg:flex"
           onClick={() => {
             LogOut();
           }}
@@ -114,8 +122,59 @@ export function NavSecondary({
           <IconLogout className="!w-5 md:!w-6 !h-5 md:!h-6" />
           <span className="text-[14px] md:text-[16px] font-[500]">Logout</span>
         </SidebarMenuButton>
+
         <div className="mt-1 p-4 block lg:hidden">
-          <NavUser user={data.user} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-2 cursor-pointer hover:bg-[#272431ad] rounded-md p-2">
+                <Avatar className="h-10 w-10 rounded-full cursor-pointer">
+                  <AvatarImage src={data.user.avatar} alt="avatar" />
+                  <AvatarFallback className="rounded-full">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{data.user.name}</span>
+                  <span className="text-muted-foreground truncate text-xs">
+                    {data.user.email}
+                  </span>
+                </div>
+                <IconDotsVertical className="ml-auto size-4" />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-(--radix-dropdown-menu-trigger-width) min-w-46 rounded-lg"
+              // side={window.innerWidth < 640 ? "top" : "right"}
+              side="top"
+              align="end"
+              sideOffset={4}
+            >
+              <DropdownMenuGroup>
+                {items.map((item) => (
+                  <DropdownMenuItem
+                    key={item.title}
+                    onClick={() => {
+                      router.push(item.url);
+                      const sidebarTrigger = document.querySelector(
+                        '[data-sidebar="trigger"]'
+                      ) as HTMLButtonElement;
+                      sidebarTrigger?.click();
+                    }}
+                  >
+                    <item.icon />
+                    {item.title}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <IconLogout />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </SidebarGroupContent>
     </SidebarGroup>

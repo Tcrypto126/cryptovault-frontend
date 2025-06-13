@@ -126,11 +126,10 @@ const Header = () => {
                 {menuItems.map((item) => (
                   <NavigationMenuItem key={item.title}>
                     <NavigationMenuLink
-                      onClick={() => {
-                        router.push(`${item.link}`);
-                      }}
+                      href={item.link}
                       className="cursor-pointer rounded-full px-4 py-3 font-medium text-[16px] text-[#A7ADBE] hover:bg-menu hover:text-white"
                     >
+
                       {item.title}
                     </NavigationMenuLink>
                   </NavigationMenuItem>

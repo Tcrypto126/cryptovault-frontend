@@ -65,16 +65,28 @@ const DataHeader = () => {
             orientation="vertical"
             className="!w-[1px] !h-5 hidden lg:block"
           />
-          {!pathname.includes("/admin-dashboard") && (
+          {role === "ADMIN" && pathname.includes("/admin-dashboard") ? (
             <Button
               variant="deposit"
-              className="w-24 h-9"
+              className="h-9"
               onClick={() => {
-                alert("Diposited successfully");
+                router.push("/dashboard");
               }}
             >
-              Deposit
+              Dashboard
             </Button>
+          ) : role === "ADMIN" && !pathname.includes("/admin-dashboard") ? (
+            <Button
+              variant="deposit"
+              className="h-9"
+              onClick={() => {
+                router.push("/admin-dashboard");
+              }}
+            >
+              Admin Dashboard
+            </Button>
+          ) : (
+            <></>
           )}
         </div>
         <div className="flex items-center gap-3">

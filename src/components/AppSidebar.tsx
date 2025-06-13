@@ -150,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         />
       </SidebarContent>
       <SidebarFooter>
-        <Separator />
+        <Separator className="hidden lg:block" />
         <NavSecondary
           items={
             pathname.includes("/admin-dashboard")
