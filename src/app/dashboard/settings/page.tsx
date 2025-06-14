@@ -6,7 +6,6 @@ import { z } from "zod";
 import { IconLoader2, IconUpload } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -26,8 +25,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { useUserStore } from "@/store";
 import { useNotification } from "@/providers/notificationProvider";
 import instance from "@/lib/axios";
+import { updateProfile } from "@/api";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -37,11 +38,11 @@ const FormSchema1 = z.object({
     .string()
     .nonempty({ message: "Email is required" })
     .email({ message: "Invalid email format" }),
-  firstName: z
+  first_name: z
     .string()
     .min(2, { message: "First name must be at least 2 characters" })
     .max(50, { message: "First name must be less than 50 characters" }),
-  lastName: z
+  last_name: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters" })
     .max(50, { message: "Last name must be less than 50 characters" }),
@@ -96,34 +97,31 @@ const FormSchema2 = z
 
 const FormSchema3 = z.object({
   avatar: z.union([z.instanceof(File), z.string()]),
-  phone: z
+  phone_number: z
     .string()
     .nonempty({ message: "Phone number is required" })
     .min(10, { message: "Phone number must be at least 10 characters" })
     .max(15, { message: "Phone number must be less than 15 characters" }),
   address: z.string().nonempty({ message: "Address is required" }),
-  govId: z.union([z.instanceof(File), z.string()]),
-  idCard: z.union([z.instanceof(File), z.string()]),
-  firstName: z.string().nonempty({ message: "First name is required" }),
-  lastName: z.string().nonempty({ message: "Last name is required" }),
+  government_id: z.union([z.instanceof(File), z.string()]),
+  id_card: z.union([z.instanceof(File), z.string()]),
+  first_name: z.string().nonempty({ message: "First name is required" }),
+  last_name: z.string().nonempty({ message: "Last name is required" }),
   email: z.string().email().nonempty({ message: "Email is required" }),
 });
 
 const SettingsPage = () => {
-  const pathname = usePathname();
   const { toast } = useNotification();
-  const [isVisible, setIsVisible] = useState(true);
-  const [isVisible2, setIsVisible2] = useState(true);
-  const [isVisible3, setIsVisible3] = useState(true);
   const [activeTab, setActiveTab] = useState("userSettings");
+  const { user } = useUserStore();
 
   const form1 = useForm<z.infer<typeof FormSchema1>>({
     resolver: zodResolver(FormSchema1),
     defaultValues: {
       avatar: "",
       email: "",
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       username: "",
     },
   });
@@ -141,74 +139,46 @@ const SettingsPage = () => {
     resolver: zodResolver(FormSchema3),
     defaultValues: {
       avatar: "",
-      phone: "",
-      address: "",
-      govId: "",
-      idCard: "",
-      firstName: "",
-      lastName: "",
       email: "",
+      phone_number: "",
+      address: "",
+      government_id: "",
+      id_card: "",
+      first_name: "",
+      last_name: "",
     },
   });
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await instance.get("/api/user/profile");
-        if (res.status === 200) {
-          const { user } = res.data;
-
-          // Update form values when user data is fetched
-          form1.reset({
-            avatar: user.avatar || "/assets/user-sample.png",
-            email: user.email || "",
-            firstName: user.full_name?.split(" ")[0] || "",
-            lastName: user.full_name?.split(" ")[1] || "",
-            username: user.username || "",
-          });
-
-          form3.reset({
-            avatar: user.avatar || "/assets/user-sample.png",
-            email: user.email || "",
-            phone: user.phone_number || "",
-            address: user.address || "",
-            govId: user.government_id || "",
-            idCard: user.id_card || "",
-            firstName: user.full_name?.split(" ")[0] || "",
-            lastName: user.full_name?.split(" ")[1] || "",
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+    form1.reset({
+      avatar: user?.avatar || "user-sample.png",
+      email: user?.email || "",
+      first_name: user?.full_name?.split(" ")[0] || "",
+      last_name: user?.full_name?.split(" ")[1] || "",
+      username: user?.username || "",
+    });
+    form3.reset({
+      avatar: user?.avatar || "user-sample.png",
+      email: user?.email || "",
+      phone_number: user?.phone_number || "",
+      address: user?.address || "",
+      government_id: user?.government_id || "",
+      id_card: user?.id_card || "",
+      first_name: user?.full_name?.split(" ")[0] || "",
+      last_name: user?.full_name?.split(" ")[1] || "",
+    });
+  }, [user]);
 
   async function onSubmit1(data: z.infer<typeof FormSchema1>) {
-    try {
-      const formData = new FormData();
-      formData.append("avatar", data.avatar);
-      formData.append("firstName", data.firstName);
-      formData.append("lastName", data.lastName);
-      formData.append("username", data.username);
-
-      const res = await instance.put("/api/user/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (res.status === 201) {
+    await updateProfile(
+      data,
+      () => {
         toast("Profile updated successfully", "Success");
-      } else {
-        toast(res.data.message, "Error");
+      },
+      (message: string) => {
+        toast(message, "Error");
       }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast("Failed to update profile", "Error");
-    }
+    );
   }
 
   async function onSubmit2(data: z.infer<typeof FormSchema2>) {
@@ -227,13 +197,12 @@ const SettingsPage = () => {
   }
 
   async function onSubmit3(data: z.infer<typeof FormSchema3>) {
-    console.log("data: ", data);
     try {
       const formData = new FormData();
-      formData.append("phone", data.phone);
+      formData.append("phone_number", data.phone_number);
       formData.append("address", data.address);
-      formData.append("govId", data.govId);
-      formData.append("idCard", data.idCard);
+      formData.append("government_id", data.government_id);
+      formData.append("id_card", data.id_card);
 
       const res = await instance.put("/api/user/kyc", formData, {
         headers: {
@@ -330,6 +299,7 @@ const SettingsPage = () => {
                                 height={200}
                                 className="w-full h-full object-cover"
                                 unoptimized={true}
+                                priority={true}
                               />
                             ) : (
                               <div className="flex flex-col gap-3 items-center justify-center">
@@ -361,7 +331,7 @@ const SettingsPage = () => {
                 <div className="w-full grid grid-cols-2 gap-4 gap-y-6">
                   <FormField
                     control={form1.control}
-                    name="firstName"
+                    name="first_name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>First Name</FormLabel>
@@ -377,7 +347,7 @@ const SettingsPage = () => {
                   />
                   <FormField
                     control={form1.control}
-                    name="lastName"
+                    name="last_name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Last Name</FormLabel>
@@ -463,7 +433,7 @@ const SettingsPage = () => {
                       <FormControl>
                         <div className="relative">
                           <Input
-                            type={`${isVisible ? "password" : "text"}`}
+                            type="password"
                             placeholder="Enter your old password"
                             {...field}
                           />
@@ -482,7 +452,7 @@ const SettingsPage = () => {
                       <FormControl>
                         <div className="relative">
                           <Input
-                            type={`${isVisible2 ? "password" : "text"}`}
+                            type="password"
                             placeholder="Enter your new password"
                             {...field}
                           />
@@ -501,7 +471,7 @@ const SettingsPage = () => {
                       <FormControl>
                         <div className="relative">
                           <Input
-                            type={`${isVisible3 ? "password" : "text"}`}
+                            type="password"
                             placeholder="Enter your confirm password"
                             {...field}
                           />
@@ -570,6 +540,7 @@ const SettingsPage = () => {
                                   : `${SERVER_URL}/assets/${field.value}`
                               }
                               unoptimized={true}
+                              priority={true}
                               alt="Profile avatar"
                               width={200}
                               height={200}
@@ -606,7 +577,7 @@ const SettingsPage = () => {
               <div className="w-full grid grid-cols-2 gap-4 gap-y-6">
                 <FormField
                   control={form3.control}
-                  name="firstName"
+                  name="first_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>First Name</FormLabel>
@@ -623,7 +594,7 @@ const SettingsPage = () => {
                 />
                 <FormField
                   control={form3.control}
-                  name="lastName"
+                  name="last_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Last Name</FormLabel>
@@ -657,13 +628,13 @@ const SettingsPage = () => {
                 />
                 <FormField
                   control={form3.control}
-                  name="phone"
+                  name="phone_number"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter your phone number"
+                          placeholder="Enter your phone_number number"
                           {...field}
                         />
                       </FormControl>
@@ -688,7 +659,7 @@ const SettingsPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form3.control}
-                  name="govId"
+                  name="government_id"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -696,7 +667,7 @@ const SettingsPage = () => {
                           <h6 className="text-sm font-medium">Government ID</h6>
                           <div className="flex justify-center sm:justify-start">
                             <label
-                              htmlFor="govId-input"
+                              htmlFor="government_id-input"
                               style={{
                                 width: "100%",
                                 height: "300px",
@@ -714,6 +685,7 @@ const SettingsPage = () => {
                                       : `${SERVER_URL}/assets/${field.value}`
                                   }
                                   unoptimized={true}
+                                  priority={true}
                                   alt="Government ID"
                                   width={200}
                                   height={200}
@@ -729,7 +701,7 @@ const SettingsPage = () => {
                               )}
                             </label>
                             <Input
-                              id="govId-input"
+                              id="government_id-input"
                               type="file"
                               accept="image/*"
                               className="hidden"
@@ -749,7 +721,7 @@ const SettingsPage = () => {
                 />
                 <FormField
                   control={form3.control}
-                  name="idCard"
+                  name="id_card"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
@@ -757,7 +729,7 @@ const SettingsPage = () => {
                           <h6 className="text-sm font-medium">ID Card</h6>
                           <div className="flex justify-center sm:justify-start">
                             <label
-                              htmlFor="idCard-input"
+                              htmlFor="id_card-input"
                               style={{
                                 width: "100%",
                                 height: "300px",
@@ -775,6 +747,7 @@ const SettingsPage = () => {
                                       : `${SERVER_URL}/assets/${field.value}`
                                   }
                                   unoptimized={true}
+                                  priority={true}
                                   alt="ID Card"
                                   width={200}
                                   height={200}
@@ -790,7 +763,7 @@ const SettingsPage = () => {
                               )}
                             </label>
                             <Input
-                              id="idCard-input"
+                              id="id_card-input"
                               type="file"
                               accept="image/*"
                               className="hidden"

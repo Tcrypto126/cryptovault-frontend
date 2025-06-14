@@ -73,9 +73,9 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-nextjs-portal {
+/* nextjs-portal {
   display: none !important;
-}
+} */
 
 :root {
   --radius: 0.625rem;

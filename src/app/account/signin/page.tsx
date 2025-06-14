@@ -55,7 +55,6 @@ const FormSchema = z.object({
 const SignIn = () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
 
@@ -68,8 +67,8 @@ const SignIn = () => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    login(data.email, data.password, data.rememberme);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    await login(data.email, data.password, data.rememberme);
   }
 
   return (
@@ -186,7 +185,9 @@ const SignIn = () => {
                   type="submit"
                   className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
                 >
-                  {isLoading && <IconLoader2 className="animate-spin" />}
+                  {form.formState.isSubmitting && (
+                    <IconLoader2 className="animate-spin" />
+                  )}
                   Sign In
                 </Button>
                 <div className="flex gap-2 justify-center items-center">

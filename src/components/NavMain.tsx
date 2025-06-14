@@ -13,14 +13,28 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+interface DataProps {
+  user: {
+    name: string,
+    email: string,
+    avatar: string,
+  },
+  navMain: {
+    title: string,
+    url: string,
+    icon: Icon,
+  }[],
+  navSecondary: {
+    title: string,
+    url: string,
+    icon: Icon,
+  }[],
+}
+
 export function NavMain({
-  items,
+  data,
 }: {
-  items: {
-    title: string;
-    url: string;
-    icon?: Icon;
-  }[];
+  data: DataProps
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -29,7 +43,7 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu className="gap-2">
-          {items.map((item) => (
+          {data.navMain.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 tooltip={item.title}

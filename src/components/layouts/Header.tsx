@@ -39,9 +39,7 @@ import {
 } from "../ui/icon";
 
 import { useAuth } from "@/providers/authProvider";
-import verifyToken from "@/lib/verifyToken";
-
-import instance from "@/lib/axios";
+import { useUserStore } from "@/store";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -49,33 +47,7 @@ const Header = () => {
   const router = useRouter();
   const { logout } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const token = localStorage.getItem("token");
-  const [role, setRole] = useState<"ADMIN" | "USER">("USER");
-  const [avatar, setAvatar] = useState("/assets/avatars/user-sample.png");
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, role } = await verifyToken(token || "");
-        if (isTokenValid) {
-          setIsLoggedIn(true);
-          setRole(role as "ADMIN" | "USER");
-
-          const res = await instance.get("/api/user/profile");
-          if (res.status == 200) {
-            setAvatar(`${SERVER_URL}/assets/${res.data.user.avatar}`);
-          }
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        setIsLoggedIn(false);
-      }
-    };
-
-    init();
-  }, []);
+  const { user } = useUserStore();
 
   const menuItems = [
     { title: "Home", link: "/", icon: <HomeIcon width="20" height="20" /> },
@@ -129,7 +101,6 @@ const Header = () => {
                       href={item.link}
                       className="cursor-pointer rounded-full px-4 py-3 font-medium text-[16px] text-[#A7ADBE] hover:bg-menu hover:text-white"
                     >
-
                       {item.title}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -182,11 +153,11 @@ const Header = () => {
               </Sheet>
             </div>
 
-            {isLoggedIn ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-10 w-10 rounded-full cursor-pointer">
-                    <AvatarImage src={avatar} alt="avatar" />
+                    <AvatarImage src={user?.avatar || "/assets/avatars/avatar-default.png"} alt="avatar" />
                     <AvatarFallback className="rounded-full">CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -199,7 +170,7 @@ const Header = () => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem
                       onClick={() => {
-                        if (role === "ADMIN") {
+                        if (user?.role === "ADMIN") {
                           router.push("/admin-dashboard");
                         } else {
                           router.push("/dashboard");
@@ -207,7 +178,7 @@ const Header = () => {
                       }}
                     >
                       <IconDashboard />
-                      {role === "ADMIN" ? "Admin Dashboard" : "Dashboard"}
+                      {user?.role === "ADMIN" ? "Admin Dashboard" : "Dashboard"}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />

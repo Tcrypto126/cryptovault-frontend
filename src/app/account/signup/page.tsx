@@ -24,6 +24,7 @@ import { IconEye, IconEyeOff } from "@/components/ui/icon";
 import { IconLoader2 } from "@tabler/icons-react";
 
 import instance from "@/lib/axios";
+import { signup } from "@/api";
 
 const FormSchema = z
   .object({
@@ -56,7 +57,6 @@ const FormSchema = z
 
 const SignUp = () => {
   const { toast } = useNotification();
-  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
   const router = useRouter();
@@ -71,19 +71,17 @@ const SignUp = () => {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-      setIsLoading(true);
-      const response = await instance.post("/api/auth/signup", data);
-      if (response.status === 201) {
+    await signup(
+      data.email,
+      data.password,
+      () => {
         toast("Account created successfully", "Success");
-        setIsLoading(false);
         router.push("/account/signin");
+      },
+      (message) => {
+        toast(message, "Error");
       }
-    } catch (error) {
-      console.error("error: ", error);
-      toast("Something went wrong", "Error");
-      setIsLoading(false);
-    }
+    );
   }
 
   return (
@@ -201,7 +199,9 @@ const SignUp = () => {
                   type="submit"
                   className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
                 >
-                  {isLoading && <IconLoader2 className="animate-spin" />}
+                  {form.formState.isSubmitting && (
+                    <IconLoader2 className="animate-spin" />
+                  )}
                   Sign Up
                 </Button>
                 <div className="flex gap-2 justify-center items-center">

@@ -23,73 +23,41 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IconLogout, IconDashboard } from "@tabler/icons-react";
 import { useAuth } from "@/providers/authProvider";
-import verifyToken from "@/lib/verifyToken";
-import instance from "@/lib/axios";
 
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-
-export function NavSecondary({
-  items,
-  ...props
-}: {
-  items: {
+interface DataProps {
+  user: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+  navMain: {
     title: string;
     url: string;
     icon: Icon;
   }[];
+  navSecondary: {
+    title: string;
+    url: string;
+    icon: Icon;
+  }[];
+}
+
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+
+export function NavSecondary({
+  data,
+}: {
+  data: DataProps;
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuth();
 
-  const [role, setRole] = useState<"ADMIN" | "USER">("USER");
-
-  const [data, setData] = useState({
-    user: {
-      name: "",
-      email: "",
-      avatar: "/assets/avatars/user-sample.png",
-    },
-  });
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, role } = await verifyToken(token || "");
-        if (isTokenValid) {
-          setRole(role as "ADMIN" | "USER");
-
-          const res = await instance.get("/api/user/profile");
-          if (res.status == 200) {
-            setData({
-              user: {
-                name: res.data.user.name,
-                email: res.data.user.email,
-                avatar: `${SERVER_URL}/assets/${res.data.user.avatar}`,
-              },
-            });
-          }
-        } else {
-          localStorage.removeItem("token");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    init();
-  }, []);
-
-  const LogOut = () => {
-    logout();
-  };
-
   return (
     <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu className="gap-2 hidden lg:flex ">
-          {items.map((item) => (
+          {data.navSecondary.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 isActive={pathname === item.url}
@@ -116,7 +84,7 @@ export function NavSecondary({
         <SidebarMenuButton
           className="items-center gap-2 mt-2 hidden lg:flex"
           onClick={() => {
-            LogOut();
+            logout();
           }}
         >
           <IconLogout className="!w-5 md:!w-6 !h-5 md:!h-6" />
@@ -148,7 +116,7 @@ export function NavSecondary({
               sideOffset={4}
             >
               <DropdownMenuGroup>
-                {items.map((item) => (
+                {data.navSecondary.map((item) => (
                   <DropdownMenuItem
                     key={item.title}
                     onClick={() => {

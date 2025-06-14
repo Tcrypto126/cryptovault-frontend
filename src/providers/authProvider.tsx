@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useUserStore } from "@/store";
 
 import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
@@ -14,7 +15,7 @@ type User = {
 };
 
 type AuthContextType = {
-  user: User | null;
+  user: User | undefined;
   isAuthenticated: boolean;
   login: (email: string, password: string, isRemember: boolean) => void;
   logout: () => void;
@@ -23,18 +24,20 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const { signout, setUserData, user } = useUserStore();
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useNotification();
 
   useEffect(() => {
     const init = async () => {
+      console.log("user: ", user);
       try {
         const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, role } = await verifyToken(token || "");
+        const { isTokenValid, user } = await verifyToken(token || "");
         if (isTokenValid) {
-          if (role === "USER" && pathname === "/admin-dashboard") {
+          setUserData(user);
+          if (user.role === "USER" && pathname.includes("/admin-dashboard")) {
             router.push("/dashboard");
           }
         } else {
@@ -47,7 +50,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             "/account/signin",
             "/account/signup",
             "/account/forgot-password",
-            "/account/reset-password",
           ];
           if (
             publicRoutes.includes(pathname) ||
@@ -82,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
-
+        setUserData(user);
         toast("Logged in successfully", "Success");
 
         const role: "ADMIN" | "USER" = user.role;
@@ -103,14 +105,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
-    delete instance.defaults.headers.common.Authorization;
-    setUser(null);
+    signout();
     router.push("/account/signin");
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated: !!user, login, logout }}
+      value={{ user: user as User, isAuthenticated: !!user, login, logout }}
     >
       {children}
     </AuthContext.Provider>

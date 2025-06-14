@@ -1,58 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { NavUser } from "./NavUser";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { IconSearch, IconBell, IconSettings } from "@tabler/icons-react";
-import verifyToken from "@/lib/verifyToken";
-import instance from "@/lib/axios";
-
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+import { useUserStore } from "@/store";
 
 const DataHeader = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const [role, setRole] = useState<"ADMIN" | "USER">("USER");
+  const { user } = useUserStore();
 
-  const [data, setData] = useState({
+  const data = {
     user: {
-      name: "",
-      email: "",
-      avatar: "/assets/avatars/user-sample.png",
+      name: user?.full_name || "",
+      email: user?.email || "",
+      avatar: user?.avatar || "/assets/avatars/avatar-default.png",
     },
-  });
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, role } = await verifyToken(token || "");
-        if (isTokenValid) {
-          setRole(role as "ADMIN" | "USER");
-
-          const res = await instance.get("/api/user/profile");
-          if (res.status == 200) {
-            setData({
-              user: {
-                name: res.data.user.name,
-                email: res.data.user.email,
-                avatar: `${SERVER_URL}/assets/${res.data.user.avatar}`,
-              },
-            });
-          }
-        } else {
-          localStorage.removeItem("token");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    init();
-  }, []);
+  };
 
   return (
     <>
@@ -65,7 +32,7 @@ const DataHeader = () => {
             orientation="vertical"
             className="!w-[1px] !h-5 hidden lg:block"
           />
-          {role === "ADMIN" && pathname.includes("/admin-dashboard") ? (
+          {user?.role === "ADMIN" && pathname.includes("/admin-dashboard") ? (
             <Button
               variant="deposit"
               className="h-9"
@@ -75,7 +42,7 @@ const DataHeader = () => {
             >
               Dashboard
             </Button>
-          ) : role === "ADMIN" && !pathname.includes("/admin-dashboard") ? (
+          ) : user?.role === "ADMIN" && !pathname.includes("/admin-dashboard") ? (
             <Button
               variant="deposit"
               className="h-9"
@@ -109,7 +76,7 @@ const DataHeader = () => {
             variant="outline"
             className="w-9 h-9 cursor-pointer !bg-transparent hover:!bg-[#ffffff13]"
             onClick={() => {
-              if (role === "ADMIN") {
+              if (user?.role === "ADMIN") {
                 router.push("/admin-dashboard/settings");
               } else {
                 router.push("/dashboard/settings");
