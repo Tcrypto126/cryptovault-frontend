@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
+import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
 
@@ -15,11 +16,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
-  login: (
-    email: string,
-    password: string,
-    isRemember: boolean
-  ) => Promise<{ message: string }>;
+  login: (email: string, password: string, isRemember: boolean) => void;
   logout: () => void;
 };
 
@@ -29,6 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const pathname = usePathname();
+  const { toast } = useNotification();
 
   useEffect(() => {
     const init = async () => {
@@ -75,31 +73,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isRemember: boolean
   ) => {
     try {
-      const res = await instance.post("/api/auth/signin", {
+      const res = await instance.post("api/auth/signin", {
         email,
         password,
         isRemember,
       });
 
-      if (!res.data.success) {
-        return { message: res.data.message };
-      }
+      if (res.status === 200) {
+        const { token, user } = res.data;
+        localStorage.setItem("token", token);
 
-      const { token, user } = res.data;
-      // Save token to localStorage (or cookies)
-      localStorage.setItem("token", token);
+        toast("Logged in successfully", "Success");
 
-      const role: "ADMIN" | "USER" = user.role;
+        const role: "ADMIN" | "USER" = user.role;
 
-      if (role === "ADMIN") {
-        router.push("/admin-dashboard");
+        if (role === "ADMIN") {
+          router.push("/admin-dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
-        router.push("/dashboard");
+        toast(res.data.message, "Error");
       }
-      return { message: "Logged in successfully" };
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error logging in:", error);
-      return { message: "Login failed" };
+      toast(error.response.data.message, "Error");
     }
   };
 
