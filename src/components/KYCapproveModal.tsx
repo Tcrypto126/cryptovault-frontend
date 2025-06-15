@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconEye, IconLoader2 } from "@tabler/icons-react";
+import { IconEye } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -13,33 +13,18 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 import { useNotification } from "@/providers/notificationProvider";
 

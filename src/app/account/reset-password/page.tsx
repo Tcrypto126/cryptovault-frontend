@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,7 +21,7 @@ import { IconEye, IconEyeOff } from "@/components/ui/icon";
 import { useState } from "react";
 import Link from "next/link";
 import { IconLoader2 } from "@tabler/icons-react";
-import instance from "@/lib/axios";
+import { resetPassword } from "@/api";
 
 const FormSchema = z
   .object({
@@ -63,27 +62,24 @@ const ResetPassword = () => {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const token = urlParams.get("token");
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token") || "";
 
-      const newData = {
-        ...data,
-        token,
-      };
+    const newData = {
+      ...data,
+      token,
+    };
 
-      const res = await instance.post("/api/auth/reset-password", newData);
-      if (res.status == 201) {
+    await resetPassword(
+      newData,
+      () => {
         toast("Password reset successfully", "Success");
         router.push("/account/signin");
-      } else {
-        toast(res.data.message, "Error");
+      },
+      (message: string) => {
+        toast(message, "Error");
       }
-    } catch (error) {
-      console.error("Error resetting password:", error);
-      toast("Failed to reset password", "Error");
-    }
+    );
   }
 
   return (

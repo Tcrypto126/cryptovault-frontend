@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store";
 import { useNotification } from "@/providers/notificationProvider";
 import instance from "@/lib/axios";
-import { updateProfile } from "@/api";
+import { updateKYC, updatePassword, updateProfile } from "@/api";
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -182,43 +182,27 @@ const SettingsPage = () => {
   }
 
   async function onSubmit2(data: z.infer<typeof FormSchema2>) {
-    try {
-      const res = await instance.put("/api/user/password", data);
-
-      if (res.status === 201) {
+    await updatePassword(
+      data,
+      () => {
         toast("Password updated successfully", "Success");
-      } else {
-        toast(res.data.message, "Error");
+      },
+      (message: string) => {
+        toast(message, "Error");
       }
-    } catch (error) {
-      console.error("Error updating password:", error);
-      toast("Failed to update password", "Error");
-    }
+    );
   }
 
   async function onSubmit3(data: z.infer<typeof FormSchema3>) {
-    try {
-      const formData = new FormData();
-      formData.append("phone_number", data.phone_number);
-      formData.append("address", data.address);
-      formData.append("government_id", data.government_id);
-      formData.append("id_card", data.id_card);
-
-      const res = await instance.put("/api/user/kyc", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (res.status === 201) {
+    await updateKYC(
+      data,
+      () => {
         toast("KYC submitted successfully", "Success");
-      } else {
-        toast(res.data.message, "Error");
+      },
+      (message: string) => {
+        toast(message, "Error");
       }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      toast("Failed to update profile", "Error");
-    }
+    );
   }
 
   return (
@@ -498,6 +482,9 @@ const SettingsPage = () => {
                     type="submit"
                     className="w-full max-w-[48%] sm:max-w-34 h-10"
                   >
+                    {form2.formState.isSubmitting && (
+                      <IconLoader2 className="w-4 h-4 animate-spin" />
+                    )}
                     Update Password
                   </Button>
                 </div>
@@ -744,7 +731,7 @@ const SettingsPage = () => {
                                   src={
                                     field.value instanceof File
                                       ? URL.createObjectURL(field.value)
-                                      : `${SERVER_URL}/assets/${field.value}`
+                                      : `${field.value}`
                                   }
                                   unoptimized={true}
                                   priority={true}

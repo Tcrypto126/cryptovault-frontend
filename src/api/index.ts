@@ -51,3 +51,101 @@ export const updateProfile = async (
     onError(error.response.data.message);
   }
 };
+
+export const updatePassword = async (
+  data: {
+    oldPassword: string;
+    newPassword: string;
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.put("/api/user/password", data);
+
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error updating password:", error);
+    onError(error.response.data.message);
+  }
+};
+
+export const updateKYC = async (
+  data: {
+    phone_number: string;
+    address: string;
+    government_id: File | string;
+    id_card: File | string;
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const formData = new FormData();
+    formData.append("phone_number", data.phone_number);
+    formData.append("address", data.address);
+    formData.append("government_id", data.government_id);
+    formData.append("id_card", data.id_card);
+
+    const res = await instance.put("/api/user/kyc", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error updating KYC:", error);
+    onError(error.response.data.message);
+  }
+};
+
+export const forgotPassword = async (
+  data: {
+    email: string;
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post("/api/auth/forgot-password", data);
+
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error sending forgot password email:", error);
+    onError(error.response.data.message);
+  }
+};
+
+export const resetPassword = async (
+  data: {
+    password: string;
+    token: string;
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post("/api/auth/reset-password", data);
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error resetting password:", error);
+    onError(error.response.data.message);
+  }
+};

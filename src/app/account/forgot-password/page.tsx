@@ -4,15 +4,14 @@ import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useNotification } from "@/providers/notificationProvider";
 import { useRouter } from "next/navigation";
 import { IconLoader2 } from "@tabler/icons-react";
+import { useNotification } from "@/providers/notificationProvider";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Link from "next/link";
-import instance from "@/lib/axios";
+import { forgotPassword } from "@/api";
 
 const FormSchema = z.object({
   email: z
@@ -34,7 +33,7 @@ const ForgotPassword = () => {
   const { toast } = useNotification();
   const router = useRouter();
   const [isSent, setIsSent] = useState(false);
-  const [isEmail, setIsEmail] = useState("a@a.com");
+  const [isEmail, setIsEmail] = useState("");
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -44,22 +43,17 @@ const ForgotPassword = () => {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    try {
-      const res = await instance.post("/api/auth/forgot-password", data);
-      if (res.status == 201) {
-        toast("Password reset link sent", "Success");
-        console.log("res: ", res.data);
+    await forgotPassword(
+      data,
+      () => {
         setIsEmail(data.email);
         setIsSent(true);
-      } else {
-        setIsEmail("");
-        setIsSent(false);
-        toast(res.data.message, "Error");
+        toast("Password reset link sent", "Success");
+      },
+      (message: string) => {
+        toast(message, "Error");
       }
-    } catch (error) {
-      console.error("Error sending password reset email:", error);
-      toast("Failed to send password reset email", "Error");
-    }
+    );
   }
 
   return (
