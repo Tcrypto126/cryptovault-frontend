@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     init();
-  }, [pathname, router]);
+  }, [pathname, router, setUserData]);
 
   const login = async (
     email: string,

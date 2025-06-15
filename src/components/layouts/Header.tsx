@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -27,11 +26,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { IconDashboard, IconLogout } from "@tabler/icons-react";
+import {
+  IconDashboard,
+  IconLogout,
+  IconLayoutDashboard,
+} from "@tabler/icons-react";
 
 import {
   HomeIcon,
-  DashboardIcon,
   FeaturesIcon,
   SecurityIcon,
   SupportIcon,
@@ -41,20 +43,17 @@ import {
 import { useAuth } from "@/providers/authProvider";
 import { useUserStore } from "@/store";
 
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-
 const Header = () => {
   const router = useRouter();
   const { logout } = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { user } = useUserStore();
 
   const menuItems = [
     { title: "Home", link: "/", icon: <HomeIcon width="20" height="20" /> },
     {
       title: "Dashboard",
-      link: "/admin-dashboard",
-      icon: <DashboardIcon width="20" height="20" />,
+      link: user?.role === "ADMIN" ? "/admin-dashboard" : "/dashboard",
+      icon: <IconLayoutDashboard width="20" height="20" />,
     },
     {
       title: "Features",
@@ -157,7 +156,7 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-10 w-10 rounded-full cursor-pointer">
-                    <AvatarImage src={user?.avatar || "/assets/avatars/avatar-default.png"} alt="avatar" />
+                    <AvatarImage src={user?.avatar} alt="avatar" />
                     <AvatarFallback className="rounded-full">CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -177,7 +176,7 @@ const Header = () => {
                         }
                       }}
                     >
-                      <IconDashboard />
+                      <IconLayoutDashboard />
                       {user?.role === "ADMIN" ? "Admin Dashboard" : "Dashboard"}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>

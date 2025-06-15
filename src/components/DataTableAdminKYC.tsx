@@ -69,7 +69,7 @@ export const schema = z.object({
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "user",
-    header: "Sent to/Received by",
+    header: "User",
     cell: ({ row }) => (
       <div className="flex items-center justify-start min-w-[160px]">
         <NavUser user={row.original.user} type="table" />

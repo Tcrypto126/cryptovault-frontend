@@ -17,7 +17,7 @@ const DataHeader = () => {
     user: {
       name: user?.full_name || "",
       email: user?.email || "",
-      avatar: user?.avatar || "/assets/avatars/avatar-default.png",
+      avatar: user?.avatar || "",
     },
   };
 

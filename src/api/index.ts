@@ -12,7 +12,6 @@ export const signup = async (
       email,
       password,
     });
-    console.log("response: ", "sdfsdfsdf");
     if (response.status === 201) {
       onSuccess();
     } else {
@@ -42,15 +41,13 @@ export const updateProfile = async (
       },
     });
 
-    console.log("res: ", res);
-
     if (res.status === 201) {
       onSuccess();
     } else {
       onError(res.data.message);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating profile:", error);
-    onError("Failed to update profile");
+    onError(error.response.data.message);
   }
 };

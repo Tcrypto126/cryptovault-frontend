@@ -28,7 +28,7 @@ interface DataProps {
   user: {
     name: string;
     email: string;
-    avatar: string;
+    avatar: string | null;
   };
   navMain: {
     title: string;
@@ -94,9 +94,9 @@ export function NavSecondary({
         <div className="mt-1 p-4 block lg:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center gap-2 cursor-pointer hover:bg-[#272431ad] rounded-md p-2">
-                <Avatar className="h-10 w-10 rounded-full cursor-pointer">
-                  <AvatarImage src={data.user.avatar} alt="avatar" />
+              <div className="flex items-center gap-2 cursor-pointer hover:bg-[#4b4770d3] rounded-md p-2">
+                <Avatar className="h-10 w-10 rounded-full cursor-pointer border-[1px] border-[#beb6b6]">
+                  <AvatarImage src={data.user.avatar || ''} alt="avatar" />
                   <AvatarFallback className="rounded-full">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">

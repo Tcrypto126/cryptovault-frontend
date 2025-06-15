@@ -151,14 +151,14 @@ const SettingsPage = () => {
 
   useEffect(() => {
     form1.reset({
-      avatar: user?.avatar || "user-sample.png",
+      avatar: user?.avatar || "",
       email: user?.email || "",
       first_name: user?.full_name?.split(" ")[0] || "",
       last_name: user?.full_name?.split(" ")[1] || "",
       username: user?.username || "",
     });
     form3.reset({
-      avatar: user?.avatar || "user-sample.png",
+      avatar: user?.avatar || "",
       email: user?.email || "",
       phone_number: user?.phone_number || "",
       address: user?.address || "",
@@ -292,7 +292,7 @@ const SettingsPage = () => {
                                 src={
                                   field.value instanceof File
                                     ? URL.createObjectURL(field.value)
-                                    : `${SERVER_URL}/assets/${field.value}`
+                                    : `${field.value}`
                                 }
                                 alt="Profile avatar"
                                 width={200}
@@ -537,7 +537,7 @@ const SettingsPage = () => {
                               src={
                                 field.value instanceof File
                                   ? URL.createObjectURL(field.value)
-                                  : `${SERVER_URL}/assets/${field.value}`
+                                  : `${field.value}`
                               }
                               unoptimized={true}
                               priority={true}
@@ -682,7 +682,7 @@ const SettingsPage = () => {
                                   src={
                                     field.value instanceof File
                                       ? URL.createObjectURL(field.value)
-                                      : `${SERVER_URL}/assets/${field.value}`
+                                      : `${field.value}`
                                   }
                                   unoptimized={true}
                                   priority={true}

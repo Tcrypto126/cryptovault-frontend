@@ -155,6 +155,7 @@ const Home = () => {
               height={783}
               alt="dashboard"
               className="w-full hidden md:block"
+              priority={true}
             />
             <Image
               src="/assets/home/dashboard-mobile.png"
@@ -162,6 +163,7 @@ const Home = () => {
               height={516}
               alt="dashboard"
               className="w-full block md:hidden"
+              priority={true}
             />
           </div>
 
@@ -262,7 +264,7 @@ const Home = () => {
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto"
+                className="m-auto w-auto h-auto"
               />
               <Image
                 src="/assets/home/card3.png"
@@ -283,7 +285,7 @@ const Home = () => {
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto"
+                className="m-auto w-auto h-auto"
               />
               <Image
                 src="/assets/home/card6.png"

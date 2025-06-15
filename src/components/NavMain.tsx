@@ -17,7 +17,7 @@ interface DataProps {
   user: {
     name: string,
     email: string,
-    avatar: string,
+    avatar: string | null,
   },
   navMain: {
     title: string,

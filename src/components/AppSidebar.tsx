@@ -38,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     user: {
       name: user?.full_name || "",
       email: user?.email || "",
-      avatar: user?.avatar || "/assets/avatars/avatar-default.png",
+      avatar: user?.avatar || null,
     },
     navMain: [
       {
@@ -75,7 +75,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     user: {
       name: user?.full_name || "",
       email: user?.email || "",
-      avatar: user?.avatar || "/assets/avatars/avatar-default.png",
+      avatar: user?.avatar || null,
     },
     navMain: [
       {
@@ -146,11 +146,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain data={user?.role === "ADMIN" ? dataAdmin : dataUser} />
+        <NavMain data={pathname.includes("/admin-dashboard") ? dataAdmin : dataUser} />
       </SidebarContent>
       <SidebarFooter>
         <Separator className="hidden lg:block" />
-        <NavSecondary data={user?.role === "ADMIN" ? dataAdmin : dataUser} />
+        <NavSecondary data={pathname.includes("/admin-dashboard") ? dataAdmin : dataUser} />
       </SidebarFooter>
     </Sidebar>
   );
