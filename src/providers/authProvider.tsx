@@ -31,12 +31,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const init = async () => {
-      console.log("user: ", user);
       try {
         const token: string | null = window.localStorage.getItem("token");
         const { isTokenValid, user } = await verifyToken(token || "");
         if (isTokenValid) {
-          setUserData(user);
+          const newUser = {
+            ...user,
+            transactions: [
+              ...user.sentTransactions,
+              ...user.receivedTransactions,
+            ].sort(
+              (a, b) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            ),
+            recentDeposit: user.receivedTransactions
+              ?.filter((transaction: any) => transaction.type === "DEPOSIT")
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              )[0]?.amount,
+            recentWithdrawal: user.sentTransactions
+              ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              )[0]?.amount,
+            recentBonus: user.receivedTransactions
+              ?.filter((transaction: any) => transaction.type === "BONUS")
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              )[0]?.amount,
+            recentWithdrawStatus: user.sentTransactions
+              ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              )[0]?.status,
+          };
+          setUserData(newUser);
+          console.log("user: ", newUser);
           if (user.role === "USER" && pathname.includes("/admin-dashboard")) {
             router.push("/dashboard");
           }
@@ -84,7 +123,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
-        setUserData(user);
         toast("Logged in successfully", "Success");
 
         const role: "ADMIN" | "USER" = user.role;

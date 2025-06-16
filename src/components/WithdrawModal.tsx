@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { IconLoader2 } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -20,7 +20,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,15 +27,16 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { IconLoader2 } from "@tabler/icons-react";
+import { useUserStore } from "@/store/userStore";
+import { withdraw } from "@/api";
 
 const FormSchema = z.object({
-  amount: z.number(),
+  amount: z.number().min(1500, "Minimum withdrawal amount is $1500"),
 });
 
 export function WithdrawModal() {
+  const { user, setUserData } = useUserStore();
   const { toast } = useNotification();
-  const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -46,24 +46,29 @@ export function WithdrawModal() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    setIsSendding(true);
-
-    if (data.amount < 1500) {
-      toast("Minimum withdrawal amount is $1500", "Error");
-      setIsSendding(false);
-      closeRef.current?.click();
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    if (data.amount > (user?.balance || 0)) {
+      toast("Insufficient balance", "Error");
       return;
     }
 
-    setTimeout(() => {
-      setIsSendding(false);
-      toast("welcome", "Success");
-      closeRef.current?.click();
-      form.reset();
-    }, 3000);
-
-    console.log("data: ", data);
+    await withdraw(
+      { ...data, type: "WITHDRAWAL" },
+      () => {
+        setUserData({
+          ...user,
+          balance: (user?.balance || 0) - data.amount,
+          recentWithdrawal: data.amount,
+          recentWithdrawStatus: "PENDING",
+        });
+        toast("Withdrawal request sent successfully", "Success");
+        closeRef.current?.click();
+        form.reset();
+      },
+      (message) => {
+        toast(message, "Error");
+      }
+    );
   }
 
   return (
@@ -101,7 +106,10 @@ export function WithdrawModal() {
                     />
                   </FormControl>
                   <FormMessage />
-                  <span className="text-[14px]">Available balance: $2,700</span>
+                  <span className="text-[14px]">
+                    Available balance: $
+                    {(user?.balance || 0) > 1500 ? user?.balance || 0 : 0}
+                  </span>
                 </FormItem>
               )}
             />
@@ -110,8 +118,12 @@ export function WithdrawModal() {
               <DialogClose ref={closeRef} asChild>
                 <Button variant="withdraw">Cancel</Button>
               </DialogClose>
-              <Button variant="deposit" type="submit" disabled={isSendding}>
-                {isSendding ? (
+              <Button
+                variant="deposit"
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? (
                   <IconLoader2 className="animate-spin" />
                 ) : (
                   <>Send Request</>

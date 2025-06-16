@@ -1,2 +1,2 @@
 export * from "./userStore";
-export * from "./settingStore";
+export * from "./transactionStore";

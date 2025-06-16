@@ -1,6 +1,18 @@
 import { create } from "zustand";
 import { persist } from 'zustand/middleware';
 
+interface Transaction {
+  id?: string;
+  amount?: number;
+  type?: "DEPOSIT" | "WITHDRAWAL" | "TRANSFER" | "BONUS";
+  status?: "PENDING" | "COMPLETED" | "FAILED" | "CANCELLED";
+  description?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  sender_id?: string;
+  recipient_id?: string;
+}
+
 interface User {
   id?: string;
   avatar?: string;
@@ -16,6 +28,13 @@ interface User {
   verify?: "UNVERIFIED" | "VERIFIED";
   balance?: number;
   bonus?: number;
+
+  recentDeposit?: number;
+  recentWithdrawal?: number;
+  recentWithdrawStatus?: "COMPLETED" | "FAILED" | "PENDING" | "CANCELLED";
+  recentBonus?: number;
+  
+  transactions?: Transaction[];
 }
 
 interface UserState {

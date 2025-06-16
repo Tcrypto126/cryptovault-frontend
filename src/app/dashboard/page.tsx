@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { IconWallet, IconLoader2 } from "@tabler/icons-react";
+import { IconWallet } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -13,37 +13,28 @@ import { DataTable } from "@/components/DataTableUserTransactions";
 import WheelOfFortune from "@/components/WheelOfFortune";
 import { SendBonusModal } from "@/components/SendBonusModal";
 import { WithdrawModal } from "@/components/WithdrawModal";
-import DepositModal from "@/components/DepositModal";
+import { DepositModal } from "@/components/DepositModal";
 import Firework from "@/components/Firework";
 
 import { useNotification } from "@/providers/notificationProvider";
+import { useUserStore } from "@/store/userStore";
 
 import data from "@/app/userTransactionData.json";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
-  const [isDepositing, setIsDepositing] = useState(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const { toast } = useNotification();
+  const { user } = useUserStore();
 
   const [spinningAvailable, setSpinningAvailable] = useState(true);
   const [spinningModal, setSpinningModal] = useState(false);
   const [spinningEnd, setSpinningEnd] = useState(false);
-
   const [spinValue, setSpinValue] = useState<number | null>(null);
 
+  const [recentBonus, setRecentBonus] = useState<number>(0);
+  const [recentWithdraw, setRecentWithdraw] = useState<number>(0);
+
   const [progress, setProgress] = useState(60);
-  const { toast } = useNotification();
-
-  const handleDeposit = () => {
-    setIsDepositing(true);
-    setIsDepositModalOpen(true);
-    setTimeout(() => {
-      setIsDepositing(false);
-      setIsDepositModalOpen(false);
-    }, 3000);
-
-    toast("Deposit successful", "Success");
-  };
 
   const handleSpinOutSideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (
@@ -97,7 +88,9 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 justify-between">
+        {/* Total Virtual Balance */}
         <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -109,33 +102,31 @@ const Dashboard = () => {
               <IconArrowDown width="24" height="24" color="#838799" />
             </div>
           </div>
-          <h3 className="!text-[24px]">$2,123,982.20</h3>
+          <h3 className="!text-[24px]">${user?.balance?.toFixed(2) || 0}</h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
             <h6 className="!text-[14px]">USD</h6>
           </div>
           <div className="flex flex-col gap-1">
-            <h6 className="!text-[14px] text-[#838799]">Profit Today</h6>
+            <h6 className="!text-[14px] text-[#838799]">Profit Recently</h6>
             <div className="flex justify-between items-center gap-2">
-              <h5 className="text-[#1FB356] !font-bold">+$3,234.22</h5>
-              <h5 className="text-[#1FB356] !font-bold">+12.3%</h5>
+              <h5 className="text-[#1FB356] !font-bold">
+                +${user?.recentDeposit?.toFixed(2) || 0}
+              </h5>
+              <h5 className="text-[#1FB356] !font-bold">
+                +
+                {(
+                  ((user?.recentDeposit || 0) / (user?.balance || 0)) *
+                  100
+                ).toFixed(2)}
+                %
+              </h5>
             </div>
           </div>
-          <Button
-            variant="deposit"
-            className="!h-8"
-            disabled={isDepositing}
-            onClick={() => {
-              handleDeposit();
-            }}
-          >
-            {isDepositing ? (
-              <IconLoader2 className="animate-spin" />
-            ) : (
-              <>Deposit</>
-            )}
-          </Button>
+          <DepositModal />
         </div>
+
+        {/* Withdrawable Balance */}
         <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -147,7 +138,9 @@ const Dashboard = () => {
               <IconArrowDown width="24" height="24" color="#838799" />
             </div>
           </div>
-          <h3 className="!text-[24px]">$2,123,982.20</h3>
+          <h3 className="!text-[24px]">
+            ${(user?.balance || 0) > 1500 ? user?.balance || 0 : 0}
+          </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
             <h6 className="!text-[14px]">USD</h6>
@@ -157,12 +150,26 @@ const Dashboard = () => {
               Last Withdraw Amount
             </h6>
             <div className="flex justify-between items-center gap-2">
-              <h5 className="text-[#1FB356] !font-bold">+$3,234.22</h5>
-              <StatusCode status="Success" />
+              <h5 className="text-[#1FB356] !font-bold">
+                +${user?.recentWithdrawal?.toFixed(2) || 0}
+              </h5>
+              <StatusCode
+                status={
+                  user?.recentWithdrawStatus == "COMPLETED"
+                    ? "Success"
+                    : user?.recentWithdrawStatus == "FAILED"
+                    ? "Failed"
+                    : user?.recentWithdrawStatus == "CANCELLED"
+                    ? "Cancelled"
+                    : "Pending"
+                }
+              />
             </div>
           </div>
           <WithdrawModal />
         </div>
+
+        {/* Total Bonus */}
         <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -188,7 +195,7 @@ const Dashboard = () => {
           <SendBonusModal />
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-4">
         <h5>Transactions</h5>
         <div>
@@ -213,9 +220,6 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-
-      {/* deposit modal */}
-      {isDepositModalOpen && <DepositModal />}
     </div>
   );
 };

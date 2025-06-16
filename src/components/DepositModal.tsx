@@ -1,11 +1,65 @@
-import Image from "next/image";
-import { Button } from "./ui/button";
+"use client";
 
-const DepositModal = () => {
+import Image from "next/image";
+import { useState, useRef } from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import { useNotification } from "@/providers/notificationProvider";
+import { IconLoader2 } from "@tabler/icons-react";
+import { deposit } from "@/api";
+import { useUserStore } from "@/store/userStore";
+
+export function DepositModal() {
+  const { user, setUserData } = useUserStore();
+  const { toast } = useNotification();
+  const [isSendding, setIsSendding] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  const handleDeposit = async () => {
+    setIsSendding(true);
+    const amount = 200;
+    await deposit(
+      { amount, type: "DEPOSIT" },
+      () => {
+        setUserData({
+          ...user,
+          balance: (user?.balance || 0) + amount,
+          recentDeposit: amount,
+        });
+        toast("Deposited successfully", "Success");
+        closeRef.current?.click();
+        setIsSendding(false);
+      },
+      (message) => {
+        toast(message, "Error");
+        setIsSendding(false);
+      }
+    );
+  };
+
   return (
-    <div className="w-full h-full fixed top-0 left-0 z-50 bg-[#00000050] flex justify-center items-center">
-      <div className="flex flex-col gap-4 px-4 py-6 sm:px-6 w-full max-w-[90%] md:max-w-[550px] bg-[#12121C] border-[#373940] border rounded-[12px]">
-        <h5>Boost Your Balance & Unlock Rewards!</h5>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="deposit" className="!h-8 !w-full">
+          Deposit
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]">
+        <DialogHeader>
+          <DialogTitle className="!text-[18px] sm:!text-[24px] !font-medium">
+            Boost Your Balance & Unlock Rewards!
+          </DialogTitle>
+        </DialogHeader>
         <div className="relative flex flex-col gap-2 p-4 w-full rounded-[12px] overflow-hidden bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl">
           <Image
             src="/assets/dashboard/noto_wrapped-gift.png"
@@ -35,12 +89,27 @@ const DepositModal = () => {
             <span className="text-[#1FB356]">$100</span>
           </div>
         </div>
-        <Button className="!h-9" variant="deposit">
-          Deposit Now
-        </Button>
-      </div>
-    </div>
-  );
-};
 
-export default DepositModal;
+        <DialogFooter className="grid grid-cols-2 gap-4 !mt-6">
+          <DialogClose ref={closeRef} asChild>
+            <Button variant="withdraw">Cancel</Button>
+          </DialogClose>
+          <Button
+            variant="deposit"
+            type="button"
+            disabled={isSendding}
+            onClick={() => {
+              handleDeposit();
+            }}
+          >
+            {isSendding ? (
+              <IconLoader2 className="animate-spin" />
+            ) : (
+              <>Deposit Now</>
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

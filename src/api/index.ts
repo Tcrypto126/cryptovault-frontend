@@ -1,5 +1,4 @@
 import instance from "@/lib/axios";
-import { toast } from "sonner";
 
 export const signup = async (
   email: string,
@@ -146,6 +145,50 @@ export const resetPassword = async (
     }
   } catch (error: any) {
     console.error("Error resetting password:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Deposit
+export const deposit = async (
+  data: {
+    amount: number;
+    type: "DEPOSIT";
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post("/api/user/balance", data);
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error depositing:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Withdraw
+export const withdraw = async (
+  data: {
+    amount: number;
+    type: "WITHDRAWAL";
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post("/api/user/balance", data);
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error withdrawing:", error);
     onError(error.response.data.message);
   }
 };
