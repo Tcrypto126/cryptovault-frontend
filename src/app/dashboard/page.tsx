@@ -29,7 +29,7 @@ const Dashboard = () => {
   const [spinningAvailable, setSpinningAvailable] = useState(true);
   const [spinningModal, setSpinningModal] = useState(false);
   const [spinningEnd, setSpinningEnd] = useState(false);
-  const [spinValue, setSpinValue] = useState<number | null>(null);
+  const [processing, setProcessing] = useState(false);
 
   const [recentBonus, setRecentBonus] = useState<number>(0);
   const [recentWithdraw, setRecentWithdraw] = useState<number>(0);
@@ -115,7 +115,7 @@ const Dashboard = () => {
               </h5>
               <h5 className="text-[#1FB356] !font-bold">
                 +
-                {(
+                {user?.balance == 0 ? 0 : (
                   ((user?.recentDeposit || 0) / (user?.balance || 0)) *
                   100
                 ).toFixed(2)}
@@ -214,12 +214,15 @@ const Dashboard = () => {
           onClick={handleSpinOutSideClick}
         >
           {spinningEnd && <Firework />}
-          <div className="max-w-[500px] w-full z-60" ref={wheelRef}>
+          <div
+            className="max-w-[500px] w-full z-60"
+            ref={processing ? null : wheelRef}
+          >
             <WheelOfFortune
-              setSpinValue={setSpinValue}
               spinningEnd={spinningEnd}
               setSpinningEnd={setSpinningEnd}
               setSpinningModal={setSpinningModal}
+              setProcessing={setProcessing}
             />
           </div>
         </div>

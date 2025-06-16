@@ -9,10 +9,12 @@ import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
 
 import { WithdrawModal } from "@/components/WithdrawModal";
 import StatusCode from "@/components/StatusBadge";
-import DepositModal from "@/components/DepositModal";
+import { DepositModal } from "@/components/DepositModal";
 import { useNotification } from "@/providers/notificationProvider";
+import { useUserStore } from "@/store/userStore";
 
 const WalletPage = () => {
+  const { user } = useUserStore();
   const { toast } = useNotification();
   const [isDepositing, setIsDepositing] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
@@ -45,7 +47,7 @@ const WalletPage = () => {
                 <IconArrowDown width="24" height="24" color="#838799" />
               </div>
             </div>
-            <h3 className="!text-[24px]">$2,123,982.20</h3>
+            <h3 className="!text-[24px]">${user?.balance?.toFixed(2) || 0}</h3>
             <div className="flex flex-col gap-1">
               <Progress value={progress} />
               <h6 className="!text-[14px]">USD</h6>
@@ -53,24 +55,22 @@ const WalletPage = () => {
             <div className="flex flex-col gap-1">
               <h6 className="!text-[14px] text-[#838799]">Profit Today</h6>
               <div className="flex justify-between items-center gap-2">
-                <h5 className="text-[#1FB356] !font-bold">+$3,234.22</h5>
-                <h5 className="text-[#1FB356] !font-bold">+12.3%</h5>
+                <h5 className="text-[#1FB356] !font-bold">
+                  +${user?.recentDeposit?.toFixed(2) || 0}
+                </h5>
+                <h5 className="text-[#1FB356] !font-bold">
+                  +
+                  {user?.balance == 0
+                    ? 0
+                    : (
+                        ((user?.recentDeposit || 0) / (user?.balance || 0)) *
+                        100
+                      ).toFixed(2)}
+                  %
+                </h5>
               </div>
             </div>
-            <Button
-              variant="deposit"
-              className="!h-8"
-              disabled={isDepositing}
-              onClick={() => {
-                handleDeposit();
-              }}
-            >
-              {isDepositing ? (
-                <IconLoader2 className="animate-spin" />
-              ) : (
-                <>Deposit</>
-              )}
-            </Button>
+            <DepositModal />
           </div>
           <div className="flex flex-col justify-between w-full gap-4 p-4 bg-dashboard rounded-[12px]">
             <div className="flex items-center justify-between gap-2">
@@ -83,7 +83,12 @@ const WalletPage = () => {
                 <IconArrowDown width="24" height="24" color="#838799" />
               </div>
             </div>
-            <h3 className="!text-[24px]">$2,123,982.20</h3>
+            <h3 className="!text-[24px]">
+              $
+              {(user?.balance || 0) > 1500
+                ? (user?.balance || 0).toFixed(2)
+                : 0}
+            </h3>
             <div className="flex flex-col gap-1">
               <Progress value={progress} />
               <h6 className="!text-[14px]">USD</h6>
@@ -93,8 +98,20 @@ const WalletPage = () => {
                 Last Withdraw Amount
               </h6>
               <div className="flex justify-between items-center gap-2">
-                <h5 className="text-[#1FB356] !font-bold">+$3,234.22</h5>
-                <StatusCode status="Success" />
+                <h5 className="text-[#1FB356] !font-bold">
+                  +${user?.recentWithdrawal?.toFixed(2) || 0}
+                </h5>
+                <StatusCode
+                  status={
+                    user?.recentWithdrawStatus == "COMPLETED"
+                      ? "Success"
+                      : user?.recentWithdrawStatus == "FAILED"
+                      ? "Failed"
+                      : user?.recentWithdrawStatus == "CANCELLED"
+                      ? "Cancelled"
+                      : "Pending"
+                  }
+                />
               </div>
             </div>
             <WithdrawModal />

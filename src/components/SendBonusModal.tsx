@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,7 +21,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,6 +28,8 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
+import { sendBonus } from "@/api";
+import { useUserStore } from "@/store/userStore";
 
 const FormSchema = z.object({
   email: z
@@ -44,8 +44,8 @@ const FormSchema = z.object({
 
 export function SendBonusModal() {
   const { toast } = useNotification();
-  const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { user, setUserData } = useUserStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -57,14 +57,26 @@ export function SendBonusModal() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    setIsSendding(true);
-    setTimeout(() => {
-      setIsSendding(false);
-      toast("welcome", "Success");
-      closeRef.current?.click();
-    }, 3000);
+    if (data.amount > (user?.bonus || 0)) {
+      toast("Insufficient balance", "Error");
+      return;
+    }
 
-    console.log("data: ", data);
+    sendBonus(
+      { ...data, type: "TRANSFER" },
+      () => {
+        setUserData({
+          ...user,
+          bonus: (user?.bonus || 0) - data.amount,
+        });
+        toast("Bonus sent successfully", "Success");
+        closeRef.current?.click();
+        form.reset();
+      },
+      (message) => {
+        toast(message, "Error");
+      }
+    );
   }
 
   return (
@@ -144,8 +156,12 @@ export function SendBonusModal() {
               <DialogClose ref={closeRef} asChild>
                 <Button variant="withdraw">Cancel</Button>
               </DialogClose>
-              <Button variant="deposit" type="submit" disabled={isSendding}>
-                {isSendding ? (
+              <Button
+                variant="deposit"
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? (
                   <IconLoader2 className="animate-spin" />
                 ) : (
                   <>Send Now</>

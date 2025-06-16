@@ -28,15 +28,15 @@ const segments: WheelSegment[] = [
 ];
 
 function WheelOfFortune1({
-  setSpinValue,
   spinningEnd,
   setSpinningEnd,
   setSpinningModal,
+  setProcessing,
 }: {
-  setSpinValue: (value: number) => void;
   spinningEnd: boolean;
   setSpinningEnd: (value: boolean) => void;
   setSpinningModal: (value: boolean) => void;
+  setProcessing: (value: boolean) => void;
 }) {
   const { user, setUserData } = useUserStore();
   const { toast } = useNotification();
@@ -51,6 +51,7 @@ function WheelOfFortune1({
     const targetId = Math.floor(Math.random() * segments.length) + 1;
     setTargetSegmentId(targetId);
     setSpinning(true);
+    setProcessing(true);
   };
 
   const onStop = () => {
@@ -65,28 +66,23 @@ function WheelOfFortune1({
     setIsAdding(true);
 
     addBonus(
-      { amount: bonus },
+      { amount: bonus, type: "BONUS" },
       () => {
         setUserData({
           ...user,
-          bonus: user?.bonus || 0 + bonus,
+          bonus: (user?.bonus || 0) + bonus,
+          recentBonus: bonus,
         });
-        toast("Bonus added successfully", "Success");
         setIsAdding(false);
-        setUserData({
-          ...user,
-          bonus: user?.bonus || 0 + bonus,
-        });
-        setTimeout(() => {
-          setSpinValue(bonus);
-          setSpinningEnd(false);
-          setSpinningModal(false);
-          setIsAdding(false);
-        }, 3000);
+        setSpinningEnd(false);
+        setProcessing(false);
+        setSpinningModal(false);
+        toast("Bonus added successfully", "Success");
       },
       (message) => {
         toast(message, "Error");
         setIsAdding(false);
+        setProcessing(false);
       }
     );
   };
@@ -115,6 +111,7 @@ function WheelOfFortune1({
           onClick={addBonusToUser}
           variant="spin"
           className="w-full text-white h-[32px] sm:h-[45px]"
+          disabled={isAdding}
         >
           {isAdding ? (
             <IconLoader2 className="animate-spin" />

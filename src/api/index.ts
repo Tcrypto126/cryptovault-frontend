@@ -197,12 +197,13 @@ export const withdraw = async (
 export const addBonus = async (
   data: {
     amount: number;
+    type: "BONUS";
   },
   onSuccess: () => void,
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.post("/api/user/balance", data);
+    const res = await instance.post("/api/user/bonus", data);
     if (res.status === 201) {
       onSuccess();
     } else {
@@ -210,6 +211,29 @@ export const addBonus = async (
     }
   } catch (error: any) {
     console.error("Error adding bonus:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Send bonus
+export const sendBonus = async (
+  data: {
+    amount: number;
+    email: string;
+    type: "TRANSFER";
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post("/api/user/bonus", data);
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error sending bonus:", error);
     onError(error.response.data.message);
   }
 };
