@@ -191,7 +191,9 @@ const Dashboard = () => {
           <div className="flex flex-col gap-1">
             <h6 className="!text-[14px] text-[#838799]">Last earned bonus</h6>
             <div className="flex justify-between items-center gap-2">
-              <h5 className="text-[#1FB356] !font-bold">+${spinValue}</h5>
+              <h5 className="text-[#1FB356] !font-bold">
+                +${user?.recentBonus?.toFixed(2) || 0}
+              </h5>
             </div>
           </div>
           <SendBonusModal />

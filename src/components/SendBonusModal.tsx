@@ -74,7 +74,10 @@ export function SendBonusModal() {
           Send
         </Button>
       </DialogTrigger>
-      <DialogContent className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940] ">
+      <DialogContent
+        className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]"
+        aria-describedby="send-bonus-dialog-description"
+      >
         <DialogHeader>
           <DialogTitle className="!text-[18px] sm:!text-[24px] !font-medium">
             Send Bonus to Another User

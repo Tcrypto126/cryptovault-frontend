@@ -4,6 +4,9 @@ import React, { useRef, useState } from "react";
 import WheelOfFortune from "@armin-eslami/wheel-of-fortune";
 import { Button } from "./ui/button";
 import { IconLoader2 } from "@tabler/icons-react";
+import { useUserStore } from "@/store/userStore";
+import { addBonus } from "@/api";
+import { useNotification } from "@/providers/notificationProvider";
 
 type WheelSegment = {
   id: number;
@@ -35,6 +38,8 @@ function WheelOfFortune1({
   setSpinningEnd: (value: boolean) => void;
   setSpinningModal: (value: boolean) => void;
 }) {
+  const { user, setUserData } = useUserStore();
+  const { toast } = useNotification();
   const [spinning, setSpinning] = useState(false);
   const [resetting, setResetting] = useState<boolean>(false);
   const [targetSegmentId, setTargetSegmentId] = useState<number | undefined>();
@@ -53,19 +58,37 @@ function WheelOfFortune1({
     setSpinningEnd(true);
   };
 
-  const addBonus = () => {
+  const addBonusToUser = () => {
+    const bonus = Number(
+      targetSegmentId && segments[targetSegmentId - 1]?.title.replace("$", "")
+    );
     setIsAdding(true);
-    setTimeout(() => {
-      setSpinValue(
-        Number(
-          targetSegmentId &&
-            segments[targetSegmentId - 1]?.title.replace("$", "")
-        )
-      );
-      setSpinningEnd(false);
-      setSpinningModal(false);
-      setIsAdding(false);
-    }, 3000);
+
+    addBonus(
+      { amount: bonus },
+      () => {
+        setUserData({
+          ...user,
+          bonus: user?.bonus || 0 + bonus,
+        });
+        toast("Bonus added successfully", "Success");
+        setIsAdding(false);
+        setUserData({
+          ...user,
+          bonus: user?.bonus || 0 + bonus,
+        });
+        setTimeout(() => {
+          setSpinValue(bonus);
+          setSpinningEnd(false);
+          setSpinningModal(false);
+          setIsAdding(false);
+        }, 3000);
+      },
+      (message) => {
+        toast(message, "Error");
+        setIsAdding(false);
+      }
+    );
   };
 
   return (
@@ -89,7 +112,7 @@ function WheelOfFortune1({
         </Button>
       ) : (
         <Button
-          onClick={addBonus}
+          onClick={addBonusToUser}
           variant="spin"
           className="w-full text-white h-[32px] sm:h-[45px]"
         >

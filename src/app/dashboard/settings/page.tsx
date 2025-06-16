@@ -393,6 +393,7 @@ const SettingsPage = () => {
                     variant="deposit"
                     type="submit"
                     className="w-full max-w-[48%] sm:max-w-34 h-10"
+                    disabled={form1.formState.isSubmitting}
                   >
                     {form1.formState.isSubmitting && (
                       <IconLoader2 className="w-4 h-4 animate-spin" />
@@ -481,6 +482,7 @@ const SettingsPage = () => {
                     variant="deposit"
                     type="submit"
                     className="w-full max-w-[48%] sm:max-w-34 h-10"
+                    disabled={form2.formState.isSubmitting}
                   >
                     {form2.formState.isSubmitting && (
                       <IconLoader2 className="w-4 h-4 animate-spin" />
@@ -786,6 +788,7 @@ const SettingsPage = () => {
                   variant="deposit"
                   type="submit"
                   className="w-full max-w-[48%] sm:max-w-34 h-10"
+                  disabled={form3.formState.isSubmitting}
                 >
                   {form3.formState.isSubmitting && (
                     <IconLoader2 className="w-4 h-4 animate-spin" />

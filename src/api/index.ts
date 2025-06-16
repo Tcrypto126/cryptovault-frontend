@@ -192,3 +192,24 @@ export const withdraw = async (
     onError(error.response.data.message);
   }
 };
+
+// Add bonus
+export const addBonus = async (
+  data: {
+    amount: number;
+  },
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post("/api/user/balance", data);
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error adding bonus:", error);
+    onError(error.response.data.message);
+  }
+};
