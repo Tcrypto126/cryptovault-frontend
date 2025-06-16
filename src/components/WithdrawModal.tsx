@@ -108,7 +108,9 @@ export function WithdrawModal() {
                   <FormMessage />
                   <span className="text-[14px]">
                     Available balance: $
-                    {(user?.balance || 0) > 1500 ? user?.balance || 0 : 0}
+                    {(user?.balance || 0) > 1500
+                      ? (user?.balance || 0).toFixed(2)
+                      : 0}
                   </span>
                 </FormItem>
               )}

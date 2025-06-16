@@ -27,7 +27,7 @@ export function DepositModal() {
 
   const handleDeposit = async () => {
     setIsSendding(true);
-    const amount = 200;
+    const amount = 1000;
     await deposit(
       { amount, type: "DEPOSIT" },
       () => {

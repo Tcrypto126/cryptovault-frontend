@@ -152,7 +152,7 @@ const Header = () => {
               </Sheet>
             </div>
 
-            {user ? (
+            {localStorage.getItem("token") ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="h-10 w-10 rounded-full cursor-pointer">

@@ -33,18 +33,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const init = async () => {
       try {
         const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, user } = await verifyToken(token || "");
+        const { isTokenValid, user }: { isTokenValid: boolean; user: any } =
+          await verifyToken(token || "");
+
         if (isTokenValid) {
           const newUser = {
             ...user,
-            transactions: [
-              ...user.sentTransactions,
-              ...user.receivedTransactions,
-            ].sort(
-              (a, b) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
-            ),
             recentDeposit: user.receivedTransactions
               ?.filter((transaction: any) => transaction.type === "DEPOSIT")
               .sort(
@@ -76,6 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           };
           setUserData(newUser);
           console.log("user: ", newUser);
+
           if (user.role === "USER" && pathname.includes("/admin-dashboard")) {
             router.push("/dashboard");
           }

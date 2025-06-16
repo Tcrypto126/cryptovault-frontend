@@ -139,7 +139,7 @@ const Dashboard = () => {
             </div>
           </div>
           <h3 className="!text-[24px]">
-            ${(user?.balance || 0) > 1500 ? user?.balance || 0 : 0}
+            ${(user?.balance || 0) > 1500 ? (user?.balance || 0).toFixed(2) : 0}
           </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
@@ -181,7 +181,9 @@ const Dashboard = () => {
               <IconArrowDown width="24" height="24" color="#838799" />
             </div>
           </div>
-          <h3 className="!text-[24px] !text-[#69CC8E]">$50,371.38</h3>
+          <h3 className="!text-[24px] !text-[#69CC8E]">
+            ${user?.bonus?.toFixed(2) || 0}
+          </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} className="bg-[#1FB356]" />
             <h6 className="!text-[14px]">USD</h6>
