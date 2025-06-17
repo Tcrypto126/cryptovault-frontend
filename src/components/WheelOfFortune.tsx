@@ -76,7 +76,6 @@ function WheelOfFortune1({
           recentBonus: bonus,
         });
         await getAllTransactions(
-          user,
           (transactions: any) => {
             setTransactions(transactions);
           },

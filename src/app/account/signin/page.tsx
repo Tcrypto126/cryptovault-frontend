@@ -68,7 +68,7 @@ const SignIn = () => {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    login(data.email, data.password, data.rememberme);
+    await login(data.email, data.password, data.rememberme);
   }
 
   return (

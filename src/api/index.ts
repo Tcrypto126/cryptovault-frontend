@@ -297,25 +297,18 @@ export const sendBonus = async (
 
 // Get all transactions
 export const getAllTransactions = async (
-  user: any,
   onSuccess: (transactions: any) => void,
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/transactions/all-transaction");
+    const res = await instance.get("/api/transactions/get-transaction");
 
     if (res.status === 200) {
       const transactions: any = res.data.transactions;
-      const newTransactions: any = transactions
-        .filter(
-          (transaction: any) =>
-            transaction.sender_id === user.id ||
-            transaction.recipient_id === user.id
-        )
-        .sort(
-          (a: any, b: any) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
+      const newTransactions: any = transactions.sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
       onSuccess(newTransactions);
     } else {
       onError(res.data.message);

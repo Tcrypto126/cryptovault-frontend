@@ -36,14 +36,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const init = async () => {
       try {
         const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid }: { isTokenValid: boolean } = await verifyToken(
-          token || ""
-        );
+        const { isTokenValid, user }: { isTokenValid: boolean; user: any } =
+          await verifyToken(token || "");
 
         if (isTokenValid) {
-          
-          const res = await instance.get(`/api/user/profile`);
-          const { user } = res.data;
           const newUser: any = {
             ...user,
             transactions: user.receivedTransactions
@@ -85,7 +81,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUserData(newUser);
 
           await getAllTransactions(
-            user,
             (transactions: any) => {
               setTransactions(transactions);
             },
@@ -100,6 +95,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           localStorage.removeItem("token");
           delete instance.defaults.headers.common.Authorization;
+          signoutTransaction();
+          signout();
 
           // Allow access to public routes without redirect
           const publicRoutes = [
@@ -182,6 +179,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             )[0]?.status,
         };
         setUserData(newUser);
+
+        await getAllTransactions(
+          (transactions: any) => {
+            setTransactions(transactions);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
+
         toast("Logged in successfully", "Success");
 
         if (user.role === "ADMIN") {

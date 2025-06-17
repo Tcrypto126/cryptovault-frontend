@@ -74,7 +74,6 @@ export function SendBonusModal() {
           bonus: (user?.bonus || 0) - data.amount,
         });
         await getAllTransactions(
-          user,
           (transactions: any) => {
             setTransactions(transactions);
           },

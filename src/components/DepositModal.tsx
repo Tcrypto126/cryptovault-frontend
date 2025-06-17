@@ -39,7 +39,6 @@ export function DepositModal() {
           recentDeposit: amount,
         });
         await getAllTransactions(
-          user,
           (transactions: any) => {
             setTransactions(transactions);
           },

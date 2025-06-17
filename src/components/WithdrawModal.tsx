@@ -64,7 +64,6 @@ export function WithdrawModal() {
           recentWithdrawStatus: "PENDING",
         });
         await getAllTransactions(
-          user,
           (transactions: any) => {
             setTransactions(transactions);
           },
