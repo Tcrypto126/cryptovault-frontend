@@ -2,12 +2,12 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useTransactionStore, useUserStore } from "@/store";
+import { useSupportStore, useTransactionStore, useUserStore } from "@/store";
 
 import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
-import { getAllTransactions } from "@/api";
+import { getAllTransactions, getSupport } from "@/api";
 
 type User = {
   id: string;
@@ -28,6 +28,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { signout, setUserData, user } = useUserStore();
   const { setTransactions, signoutTransaction } = useTransactionStore();
+  const { setSupports, signoutSupport } = useSupportStore();
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useNotification();
@@ -38,6 +39,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const token: string | null = window.localStorage.getItem("token");
         const { isTokenValid, user }: { isTokenValid: boolean; user: any } =
           await verifyToken(token || "");
+
+        await getAllTransactions(
+          (transactions: any) => {
+            setTransactions(transactions);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
+
+        await getSupport(
+          (supports: any) => {
+            setSupports(supports);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
 
         if (isTokenValid) {
           const newUser: any = {
@@ -80,15 +99,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           };
           setUserData(newUser);
 
-          await getAllTransactions(
-            (transactions: any) => {
-              setTransactions(transactions);
-            },
-            (message: string) => {
-              toast(message, "Error");
-            }
-          );
-
           if (user.role === "USER" && pathname.includes("/admin-dashboard")) {
             router.push("/dashboard");
           }
@@ -96,6 +106,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           localStorage.removeItem("token");
           delete instance.defaults.headers.common.Authorization;
           signoutTransaction();
+          signoutSupport();
           signout();
 
           // Allow access to public routes without redirect
@@ -209,6 +220,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("token");
     signout();
     signoutTransaction();
+    signoutSupport();
     router.push("/account/signin");
   };
 

@@ -319,7 +319,7 @@ export const getAllTransactions = async (
   }
 };
 
-// Support
+// Send support
 export const sendSupport = async (
   data: {
     subject: string;
@@ -337,6 +337,70 @@ export const sendSupport = async (
     }
   } catch (error: any) {
     console.error("Error sending support:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Get support
+export const getSupport = async (
+  onSuccess: (supports: any) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.get("/api/support/get-support");
+    if (res.status === 200) {
+      const supports: any = res.data.supports.map(
+        (support: any, index: number) => ({
+          id: support.id,
+          ticketId: `#T-14354${index + 1}`,
+          user: {
+            id: support.user.id,
+            name: support.user.name,
+            email: support.user.email,
+            avatar: support.user.avatar,
+          },
+          subject: support.subject,
+          status:
+            support.status == "INPROGRESS"
+              ? "In Progress"
+              : support.status == "RESOLVED"
+              ? "Resolved"
+              : "Rejected",
+          lastUpdated: support.updated_at,
+          message: support.message,
+        })
+      );
+      onSuccess(
+        supports.sort(
+          (a: any, b: any) =>
+            new Date(b.lastUpdated).getTime() -
+            new Date(a.lastUpdated).getTime()
+        )
+      );
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error getting support:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Delete support
+export const deleteSupport = async (
+  id: number,
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.delete(`/api/support/delete/${id}`);
+    if (res.status === 200) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error deleting support:", error);
     onError(error.response.data.message);
   }
 };

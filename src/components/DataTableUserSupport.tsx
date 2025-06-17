@@ -52,6 +52,9 @@ import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
 import { UpdateTicketModalUser } from "./UpdateTicketModalUser";
+import { deleteSupport, getSupport } from "@/api";
+import { useSupportStore } from "@/store";
+import { useNotification } from "@/providers/notificationProvider";
 
 export const schema = z.object({
   id: z.number(),
@@ -104,7 +107,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Last Updated",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        <h6>{row.original.lastUpdated}</h6>
+        <h6>{row.original.lastUpdated.split("T")[0]}</h6>
       </div>
     ),
   },
@@ -113,34 +116,43 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        {row.original.status === "Resolved" ? (
-          <div className="w-[74px] flex items-center justify-end gap-2">
-            <Button
-              variant="ghost"
-              className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-              size="icon"
-            >
-              <IconTrash color="#E62E2E" />
-            </Button>
-          </div>
-        ) : (
-          <div className="w-[74px] flex items-center justify-between gap-2">
-            <UpdateTicketModalUser
-              id={row.original.id}
-              ticketId={row.original.ticketId}
-              user={row.original.user}
-              message={row.original.message}
-              lastUpdated={row.original.lastUpdated}
-            />
-            <Button
-              variant="ghost"
-              className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-              size="icon"
-            >
-              <IconTrash color="#E62E2E" />
-            </Button>
-          </div>
-        )}
+        <div className="w-[74px] flex items-center justify-between gap-2">
+          <UpdateTicketModalUser
+            id={row.original.id}
+            ticketId={row.original.ticketId}
+            user={row.original.user}
+            message={row.original.message}
+            lastUpdated={row.original.lastUpdated}
+          />
+          <Button
+            variant="ghost"
+            className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+            size="icon"
+            onClick={() => {
+              // deleteSupport(row.original.id);
+              // deleteSupport(
+              //   row.original.id,
+              //   async () => {
+              //     await getSupport(
+              //       (supports: any) => {
+              //         setSupports(supports);
+              //       },
+              //       (message: string) => {
+              //         toast(message, "Error");
+              //       }
+              //     );
+              //     toast("Support request deleted successfully", "Success");
+              //   },
+              //   (message) => {
+              //     toast(message, "Error");
+              //   }
+              // );
+              // toast("Support request deleted successfully", "Success");
+            }}
+          >
+            <IconTrash color="#E62E2E" />
+          </Button>
+        </div>
       </div>
     ),
   },
@@ -151,6 +163,7 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
+  const { setSupports } = useSupportStore();
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
   const [data, setData] = React.useState(() => initialData);
@@ -165,6 +178,10 @@ export function DataTable({
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const deleteSupport = async (id: number) => {
+
+  }
 
   const filteredData = React.useMemo(() => {
     return data.filter((item) => {

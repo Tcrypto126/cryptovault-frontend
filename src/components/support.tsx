@@ -30,20 +30,16 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { sendSupport } from "@/api";
+import { getSupport, sendSupport } from "@/api";
+import { useSupportStore } from "@/store";
 
 const FormSchema = z.object({
-  email: z
-    .string()
-    .nonempty({ message: "Email is required" })
-    .email({ message: "Invalid email format" }),
-
   subject: z.string().nonempty({ message: "Subject is required" }),
-
   message: z.string().nonempty({ message: "Message is required" }),
 });
 
 export function SupportModal() {
+  const { setSupports } = useSupportStore();
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -51,7 +47,6 @@ export function SupportModal() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
       subject: "",
       message: "",
     },
@@ -61,7 +56,15 @@ export function SupportModal() {
     setIsSendding(true);
     sendSupport(
       data,
-      () => {
+      async () => {
+        await getSupport(
+          (supports: any) => {
+            setSupports(supports);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
         toast("Support request sent successfully", "Success");
         closeRef.current?.click();
         form.reset();
@@ -69,6 +72,7 @@ export function SupportModal() {
       },
       (message) => {
         toast(message, "Error");
+        setIsSendding(false);
       }
     );
   }
@@ -92,23 +96,6 @@ export function SupportModal() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="w-full mt-[5px] space-y-4"
           >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your Email"
-                      {...field}
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="subject"
