@@ -50,13 +50,13 @@ import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   header: z.string(),
   type: z.string(),
   amount: z.string(),
   status: z.string(),
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     avatar: z.string(),
@@ -159,12 +159,27 @@ export function DataTable({
   });
 
   const filteredData = React.useMemo(() => {
-    return data.filter(
-      (item) =>
+    return data.filter((item) => {
+      const matchesSearch =
         item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase())
-    );
-  }, [data, searchKey]);
+        item.user.email.toLowerCase().includes(searchKey.toLowerCase());
+
+      switch (activeTab) {
+        case "deposit":
+          return matchesSearch && item.type === "Deposit";
+        case "withdraw":
+          return matchesSearch && item.type === "Withdraw";
+        case "bonus":
+          return (
+            matchesSearch &&
+            (item.type === "BonusSent" || item.type === "BonusReceived")
+          );
+        case "all":
+        default:
+          return matchesSearch;
+      }
+    });
+  }, [data, searchKey, activeTab]);
 
   const table = useReactTable({
     data: filteredData,

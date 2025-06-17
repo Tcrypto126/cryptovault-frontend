@@ -5,8 +5,9 @@ import WheelOfFortune from "@armin-eslami/wheel-of-fortune";
 import { Button } from "./ui/button";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useUserStore } from "@/store/userStore";
-import { addBonus } from "@/api";
+import { addBonus, getAllTransactions } from "@/api";
 import { useNotification } from "@/providers/notificationProvider";
+import { useTransactionStore } from "@/store/transactionStore";
 
 type WheelSegment = {
   id: number;
@@ -39,6 +40,7 @@ function WheelOfFortune1({
   setProcessing: (value: boolean) => void;
 }) {
   const { user, setUserData } = useUserStore();
+  const { setTransactions } = useTransactionStore();
   const { toast } = useNotification();
   const [spinning, setSpinning] = useState(false);
   const [resetting, setResetting] = useState<boolean>(false);
@@ -59,7 +61,7 @@ function WheelOfFortune1({
     setSpinningEnd(true);
   };
 
-  const addBonusToUser = () => {
+  const addBonusToUser = async () => {
     const bonus = Number(
       targetSegmentId && segments[targetSegmentId - 1]?.title.replace("$", "")
     );
@@ -67,12 +69,21 @@ function WheelOfFortune1({
 
     addBonus(
       { amount: bonus, type: "BONUS" },
-      () => {
+      async () => {
         setUserData({
           ...user,
           bonus: (user?.bonus || 0) + bonus,
           recentBonus: bonus,
         });
+        await getAllTransactions(
+          user,
+          (transactions: any) => {
+            setTransactions(transactions);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
         setIsAdding(false);
         setSpinningEnd(false);
         setProcessing(false);

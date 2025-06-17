@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { IconWallet } from "@tabler/icons-react";
 
@@ -17,24 +17,75 @@ import { DepositModal } from "@/components/DepositModal";
 import Firework from "@/components/Firework";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { useUserStore } from "@/store/userStore";
-
-import data from "@/app/userTransactionData.json";
+import { useTransactionStore, useUserStore } from "@/store";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const { toast } = useNotification();
   const { user } = useUserStore();
+  const { transactions } = useTransactionStore();
 
   const [spinningAvailable, setSpinningAvailable] = useState(true);
   const [spinningModal, setSpinningModal] = useState(false);
   const [spinningEnd, setSpinningEnd] = useState(false);
   const [processing, setProcessing] = useState(false);
-
-  const [recentBonus, setRecentBonus] = useState<number>(0);
-  const [recentWithdraw, setRecentWithdraw] = useState<number>(0);
-
   const [progress, setProgress] = useState(60);
+
+  const [tableData, setTableData] = useState<any[]>(
+    transactions.map((transaction: any) => ({
+      id: transaction.id,
+      header: "No",
+      type:
+        transaction.type === "DEPOSIT"
+          ? "Deposit"
+          : transaction.type === "WITHDRAWAL"
+          ? "Withdraw"
+          : transaction.type === "TRANSFER" &&
+            transaction.sender_id === user?.id
+          ? "BonusSent"
+          : "BonusReceived",
+      amount: transaction.amount.toString(),
+      status:
+        transaction.status === "COMPLETED"
+          ? "Success"
+          : transaction.status === "FAILED"
+          ? "Failed"
+          : transaction.status === "CANCELLED"
+          ? "Cancelled"
+          : "Pending",
+      user: {
+        id:
+          transaction.type === "TRANSFER" && transaction.sender_id === user?.id
+            ? transaction.recipient_id
+            : transaction.type === "TRANSFER" &&
+              transaction.recipient_id === user?.id
+            ? transaction.sender_id
+            : "Unknown",
+        name:
+          transaction.type === "TRANSFER" && transaction.sender_id === user?.id
+            ? transaction.recipient?.full_name || "Unknown"
+            : transaction.type === "TRANSFER" &&
+              transaction.recipient_id === user?.id
+            ? transaction.sender?.full_name || "Unknown"
+            : "Platform",
+        email:
+          transaction.type === "TRANSFER" && transaction.sender_id === user?.id
+            ? transaction.recipient?.email || "Unknown"
+            : transaction.type === "TRANSFER" &&
+              transaction.recipient_id === user?.id
+            ? transaction.sender?.email || "Unknown"
+            : "",
+        avatar:
+          transaction.type === "TRANSFER" && transaction.sender_id === user?.id
+            ? transaction.recipient?.avatar ||
+              "/assets/avatars/avatar-default.png"
+            : transaction.type === "TRANSFER" &&
+              transaction.recipient_id === user?.id
+            ? transaction.sender?.avatar || "/assets/avatars/avatar-default.png"
+            : "/assets/logo.png",
+      },
+    }))
+  );
 
   const handleSpinOutSideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (
@@ -115,10 +166,12 @@ const Dashboard = () => {
               </h5>
               <h5 className="text-[#1FB356] !font-bold">
                 +
-                {user?.balance == 0 ? 0 : (
-                  ((user?.recentDeposit || 0) / (user?.balance || 0)) *
-                  100
-                ).toFixed(2)}
+                {user?.balance == 0
+                  ? 0
+                  : (
+                      ((user?.recentDeposit || 0) / (user?.balance || 0)) *
+                      100
+                    ).toFixed(2)}
                 %
               </h5>
             </div>
@@ -203,10 +256,9 @@ const Dashboard = () => {
       <div className="flex flex-col gap-4">
         <h5>Transactions</h5>
         <div>
-          <DataTable data={data} />
+          <DataTable data={tableData} />
         </div>
       </div>
-
       {/* spinning modal */}
       {spinningModal && (
         <div

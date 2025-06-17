@@ -6,16 +6,16 @@ interface User {
   avatar?: string;
   email?: string;
   full_name?: string;
-  phone_number?: string;
-  address?: string;
-  government_id?: string;
-  id_card?: string;
-  username?: string;
-  role?: "ADMIN" | "USER";
-  status?: "ACTIVE" | "INACTIVE" | "FREEZE" | "SUSPENDED";
-  verify?: "UNVERIFIED" | "VERIFIED";
-  balance?: number;
-  bonus?: number;
+  // phone_number?: string;
+  // address?: string;
+  // government_id?: string;
+  // id_card?: string;
+  // username?: string;
+  // role?: "ADMIN" | "USER";
+  // status?: "ACTIVE" | "INACTIVE" | "FREEZE" | "SUSPENDED";
+  // verify?: "UNVERIFIED" | "VERIFIED";
+  // balance?: number;
+  // bonus?: number;
 }
 
 interface Transaction {
@@ -28,6 +28,7 @@ interface Transaction {
   updated_at?: Date;
   sender_id?: string;
   recipient_id?: string;
+
   sender?: User;
   recipient?: User;
 }

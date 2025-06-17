@@ -28,7 +28,8 @@ import {
 
 import { useNotification } from "@/providers/notificationProvider";
 import { useUserStore } from "@/store/userStore";
-import { withdraw } from "@/api";
+import { getAllTransactions, withdraw } from "@/api";
+import { useTransactionStore } from "@/store/transactionStore";
 
 const FormSchema = z.object({
   amount: z.number().min(1500, "Minimum withdrawal amount is $1500"),
@@ -36,6 +37,7 @@ const FormSchema = z.object({
 
 export function WithdrawModal() {
   const { user, setUserData } = useUserStore();
+  const { setTransactions } = useTransactionStore();
   const { toast } = useNotification();
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -54,13 +56,22 @@ export function WithdrawModal() {
 
     await withdraw(
       { ...data, type: "WITHDRAWAL" },
-      () => {
+      async () => {
         setUserData({
           ...user,
           balance: (user?.balance || 0) - data.amount,
           recentWithdrawal: data.amount,
           recentWithdrawStatus: "PENDING",
         });
+        await getAllTransactions(
+          user,
+          (transactions: any) => {
+            setTransactions(transactions);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
         toast("Withdrawal request sent successfully", "Success");
         closeRef.current?.click();
         form.reset();

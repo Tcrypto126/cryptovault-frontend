@@ -2,11 +2,12 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useUserStore } from "@/store";
+import { useTransactionStore, useUserStore } from "@/store";
 
 import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
+import { getAllTransactions } from "@/api";
 
 type User = {
   id: string;
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { signout, setUserData, user } = useUserStore();
+  const { setTransactions } = useTransactionStore();
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useNotification();
@@ -37,8 +39,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await verifyToken(token || "");
 
         if (isTokenValid) {
-          const newUser = {
+          const newUser: any = {
             ...user,
+            transactions: user.receivedTransactions
+              .concat(user.sentTransactions)
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.created_at).getTime() -
+                  new Date(a.created_at).getTime()
+              ),
             recentDeposit: user.receivedTransactions
               ?.filter((transaction: any) => transaction.type === "DEPOSIT")
               .sort(
@@ -68,8 +77,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                   new Date(a.created_at).getTime()
               )[0]?.status,
           };
+
           setUserData(newUser);
-          console.log("user: ", newUser);
+
+          await getAllTransactions(
+            user,
+            (transactions: any) => {
+              setTransactions(transactions);
+            },
+            (message: string) => {
+              toast(message, "Error");
+            }
+          );
 
           if (user.role === "USER" && pathname.includes("/admin-dashboard")) {
             router.push("/dashboard");

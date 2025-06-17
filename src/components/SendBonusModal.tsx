@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
@@ -28,8 +28,9 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { sendBonus } from "@/api";
+import { getAllTransactions, sendBonus } from "@/api";
 import { useUserStore } from "@/store/userStore";
+import { useTransactionStore } from "@/store/transactionStore";
 
 const FormSchema = z.object({
   email: z
@@ -46,6 +47,8 @@ export function SendBonusModal() {
   const { toast } = useNotification();
   const closeRef = useRef<HTMLButtonElement>(null);
   const { user, setUserData } = useUserStore();
+  const { setTransactions } = useTransactionStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -57,6 +60,7 @@ export function SendBonusModal() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsSubmitting(true);
     if (data.amount > (user?.bonus || 0)) {
       toast("Insufficient balance", "Error");
       return;
@@ -64,16 +68,27 @@ export function SendBonusModal() {
 
     sendBonus(
       { ...data, type: "TRANSFER" },
-      () => {
+      async () => {
         setUserData({
           ...user,
           bonus: (user?.bonus || 0) - data.amount,
         });
+        await getAllTransactions(
+          user,
+          (transactions: any) => {
+            setTransactions(transactions);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
+        setIsSubmitting(false);
         toast("Bonus sent successfully", "Success");
         closeRef.current?.click();
         form.reset();
       },
       (message) => {
+        setIsSubmitting(false);
         toast(message, "Error");
       }
     );
@@ -134,7 +149,9 @@ export function SendBonusModal() {
                     />
                   </FormControl>
                   {/* <FormMessage /> */}
-                  <span className="text-[14px]">Available balance: $2,500</span>
+                  <span className="text-[14px]">
+                    Available balance: ${user?.bonus}
+                  </span>
                 </FormItem>
               )}
             />
@@ -156,12 +173,8 @@ export function SendBonusModal() {
               <DialogClose ref={closeRef} asChild>
                 <Button variant="withdraw">Cancel</Button>
               </DialogClose>
-              <Button
-                variant="deposit"
-                type="submit"
-                disabled={form.formState.isSubmitting}
-              >
-                {form.formState.isSubmitting ? (
+              <Button variant="deposit" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
                   <IconLoader2 className="animate-spin" />
                 ) : (
                   <>Send Now</>

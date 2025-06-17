@@ -16,11 +16,13 @@ import {
 
 import { useNotification } from "@/providers/notificationProvider";
 import { IconLoader2 } from "@tabler/icons-react";
-import { deposit } from "@/api";
+import { deposit, getAllTransactions } from "@/api";
 import { useUserStore } from "@/store/userStore";
+import { useTransactionStore } from "@/store/transactionStore";
 
 export function DepositModal() {
   const { user, setUserData } = useUserStore();
+  const { setTransactions } = useTransactionStore();
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -30,12 +32,21 @@ export function DepositModal() {
     const amount = 1000;
     await deposit(
       { amount, type: "DEPOSIT" },
-      () => {
+      async () => {
         setUserData({
           ...user,
           balance: (user?.balance || 0) + amount,
           recentDeposit: amount,
         });
+        await getAllTransactions(
+          user,
+          (transactions: any) => {
+            setTransactions(transactions);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
         toast("Deposited successfully", "Success");
         closeRef.current?.click();
         setIsSendding(false);
@@ -54,7 +65,7 @@ export function DepositModal() {
           Deposit
         </Button>
       </DialogTrigger>
-      <DialogContent 
+      <DialogContent
         className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]"
         aria-describedby="deposit-dialog-description"
       >

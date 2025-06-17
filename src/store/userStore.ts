@@ -11,6 +11,19 @@ interface Transaction {
   updated_at?: Date;
   sender_id?: string;
   recipient_id?: string;
+
+  sender?: {
+    id?: string;
+    name?: string;
+    email?: string;
+    avatar?: string;
+  };
+  recipient?: {
+    id?: string;
+    name?: string;
+    email?: string;
+    avatar?: string;
+  };
 }
 
 interface User {
