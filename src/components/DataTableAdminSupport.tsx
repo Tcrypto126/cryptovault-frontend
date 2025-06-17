@@ -48,7 +48,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
-import { UpdateTicketModal } from "./UpdateTicketModal";
+import { UpdateTicketModal } from "./UpdateTicketModalAdmin";
 
 export const schema = z.object({
   id: z.number(),

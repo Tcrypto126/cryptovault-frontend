@@ -2,18 +2,16 @@
 
 import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconLoader2 } from "@tabler/icons-react";
+import { IconEye } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
+  DialogClose,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,28 +20,39 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { sendSupport } from "@/api";
+import { Textarea } from "./ui/textarea";
 
 const FormSchema = z.object({
-  email: z
-    .string()
-    .nonempty({ message: "Email is required" })
-    .email({ message: "Invalid email format" }),
-
-  subject: z.string().nonempty({ message: "Subject is required" }),
-
-  message: z.string().nonempty({ message: "Message is required" }),
+  ticketId: z.string(),
+  email: z.string().email(),
+  message: z.string(),
+  lastUpdated: z.string(),
+  reply: z.string().nonempty({ message: "Reply is required" }),
 });
 
-export function SupportModal() {
+export function UpdateTicketModalUser({
+  id,
+  ticketId,
+  user,
+  message,
+  lastUpdated,
+}: {
+  id: number;
+  ticketId: string;
+  user: {
+    name: string;
+    email: string;
+    avatar: string;
+  };
+  message: string;
+  lastUpdated: string;
+}) {
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -51,39 +60,41 @@ export function SupportModal() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: "",
-      subject: "",
-      message: "",
+      ticketId: ticketId,
+      email: user.email,
+      message: message,
+      lastUpdated: lastUpdated,
+      reply: "",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsSendding(true);
-    sendSupport(
-      data,
-      () => {
-        toast("Support request sent successfully", "Success");
-        closeRef.current?.click();
-        form.reset();
-        setIsSendding(false);
-      },
-      (message) => {
-        toast(message, "Error");
-      }
-    );
+    setTimeout(() => {
+      setIsSendding(false);
+      toast("Successfully added new incentive", "Success");
+      closeRef.current?.click();
+      form.reset();
+    }, 3000);
+
+    console.log("data: ", data);
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="deposit" className="!h-8">
-          Need Help?
+        <Button
+          variant="ghost"
+          className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+          size="icon"
+        >
+          <IconEye color="#00A6E8" />
         </Button>
       </DialogTrigger>
       <DialogContent className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940] ">
         <DialogHeader>
           <DialogTitle className="!text-[18px] sm:!text-[24px] !font-medium">
-            Open a Support Request
+            User Info
           </DialogTitle>
         </DialogHeader>
 
@@ -94,49 +105,49 @@ export function SupportModal() {
           >
             <FormField
               control={form.control}
-              name="email"
+              name="ticketId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your Email"
-                      {...field}
-                    />
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="subject"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Subject</FormLabel>
+                  <FormLabel>Ticket ID</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
-                      placeholder="Enter your subject"
+                      placeholder="Enter ticket id"
+                      disabled
                       {...field}
                     />
                   </FormControl>
-                  {/* <FormMessage /> */}
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>message</FormLabel>
+                  <FormLabel>Message</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Write a note..."
-                      className="!min-h-28"
+                      placeholder="Enter your message"
+                      disabled
+                      {...field}
+                      className="!h-[30px]"
+                    />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="reply"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reply</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Write your reply"
+                      disabled
                       {...field}
                     />
                   </FormControl>
@@ -145,17 +156,12 @@ export function SupportModal() {
               )}
             />
 
-            <DialogFooter className="grid grid-cols-2 gap-4 !mt-8">
-              <DialogClose ref={closeRef} asChild>
-                <Button variant="withdraw">Cancel</Button>
+            <DialogFooter className="!mt-6">
+              <DialogClose asChild>
+                <Button variant="withdraw" className="w-full">
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button variant="deposit" type="submit" disabled={isSendding}>
-                {isSendding ? (
-                  <IconLoader2 className="animate-spin" />
-                ) : (
-                  <>Send Now</>
-                )}
-              </Button>
             </DialogFooter>
           </form>
         </Form>

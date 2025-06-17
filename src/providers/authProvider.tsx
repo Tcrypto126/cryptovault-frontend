@@ -13,6 +13,7 @@ type User = {
   id: string;
   name: string;
   email: string;
+  role: "ADMIN" | "USER";
 };
 
 type AuthContextType = {
@@ -26,7 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { signout, setUserData, user } = useUserStore();
-  const { setTransactions } = useTransactionStore();
+  const { setTransactions, signoutTransaction } = useTransactionStore();
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useNotification();
@@ -35,10 +36,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const init = async () => {
       try {
         const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, user }: { isTokenValid: boolean; user: any } =
-          await verifyToken(token || "");
+        const { isTokenValid }: { isTokenValid: boolean } = await verifyToken(
+          token || ""
+        );
 
         if (isTokenValid) {
+          
+          const res = await instance.get(`/api/user/profile`);
+          const { user } = res.data;
           const newUser: any = {
             ...user,
             transactions: user.receivedTransactions
@@ -77,7 +82,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                   new Date(a.created_at).getTime()
               )[0]?.status,
           };
-
           setUserData(newUser);
 
           await getAllTransactions(
@@ -120,7 +124,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     init();
-  }, [pathname, router, setUserData]);
+  }, []);
 
   const login = async (
     email: string,
@@ -137,11 +141,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (res.status === 200) {
         const { token, user } = res.data;
         localStorage.setItem("token", token);
+        instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+        const newUser: any = {
+          ...user,
+          transactions: user.receivedTransactions
+            .concat(user.sentTransactions)
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            ),
+          recentDeposit: user.receivedTransactions
+            ?.filter((transaction: any) => transaction.type === "DEPOSIT")
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            )[0]?.amount,
+          recentWithdrawal: user.sentTransactions
+            ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            )[0]?.amount,
+          recentBonus: user.receivedTransactions
+            ?.filter((transaction: any) => transaction.type === "BONUS")
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            )[0]?.amount,
+          recentWithdrawStatus: user.sentTransactions
+            ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+            .sort(
+              (a: any, b: any) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            )[0]?.status,
+        };
+        setUserData(newUser);
         toast("Logged in successfully", "Success");
 
-        const role: "ADMIN" | "USER" = user.role;
-
-        if (role === "ADMIN") {
+        if (user.role === "ADMIN") {
           router.push("/admin-dashboard");
         } else {
           router.push("/dashboard");
@@ -158,6 +201,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     localStorage.removeItem("token");
     signout();
+    signoutTransaction();
     router.push("/account/signin");
   };
 

@@ -36,6 +36,7 @@ interface Transaction {
 interface TransactionState {
   transactions: Transaction[];
   setTransactions: (transactions: Transaction[]) => void;
+  signoutTransaction: () => void;
 }
 
 export const useTransactionStore = create(
@@ -44,6 +45,9 @@ export const useTransactionStore = create(
       transactions: [],
       setTransactions: (transactions: Transaction[]) => {
         set({ transactions });
+      },
+      signoutTransaction: () => {
+        set({ transactions: [] });
       },
     }),
     {

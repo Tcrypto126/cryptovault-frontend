@@ -10,6 +10,7 @@ import {
   IconLoader,
   IconSearch,
   IconEye,
+  IconTrash,
 } from "@tabler/icons-react";
 import {
   ColumnDef,
@@ -50,7 +51,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
-import { UpdateTicketModal } from "./UpdateTicketModal";
+import { UpdateTicketModalUser } from "./UpdateTicketModalUser";
 
 export const schema = z.object({
   id: z.number(),
@@ -107,25 +108,42 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       </div>
     ),
   },
-  // {
-  //   accessorKey: "action",
-  //   header: "Action",
-  //   cell: ({ row }) => (
-  //     <div className="flex items-center justify-start ">
-  //       {row.original.status === "Resolved" ? (
-  //         <></>
-  //       ) : (
-  //         <UpdateTicketModal
-  //           id={row.original.id}
-  //           ticketId={row.original.ticketId}
-  //           user={row.original.user}
-  //           message={row.original.message}
-  //           lastUpdated={row.original.lastUpdated}
-  //         />
-  //       )}
-  //     </div>
-  //   ),
-  // },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => (
+      <div className="flex items-center justify-start ">
+        {row.original.status === "Resolved" ? (
+          <div className="w-[74px] flex items-center justify-end gap-2">
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+              size="icon"
+            >
+              <IconTrash color="#E62E2E" />
+            </Button>
+          </div>
+        ) : (
+          <div className="w-[74px] flex items-center justify-between gap-2">
+            <UpdateTicketModalUser
+              id={row.original.id}
+              ticketId={row.original.ticketId}
+              user={row.original.user}
+              message={row.original.message}
+              lastUpdated={row.original.lastUpdated}
+            />
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+              size="icon"
+            >
+              <IconTrash color="#E62E2E" />
+            </Button>
+          </div>
+        )}
+      </div>
+    ),
+  },
 ];
 
 export function DataTable({
@@ -149,12 +167,24 @@ export function DataTable({
   });
 
   const filteredData = React.useMemo(() => {
-    return data.filter(
-      (item) =>
-        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase())
-    );
-  }, [data, searchKey]);
+    return data.filter((item) => {
+      // const matchesSearch =
+      //   item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+      //   item.user.email.toLowerCase().includes(searchKey.toLowerCase());
+
+      switch (activeTab) {
+        case "inprogress":
+          return item.status === "In Progress";
+        case "resolved":
+          return item.status === "Resolved";
+        case "escalated":
+          return item.status === "Escalated";
+        case "all":
+        default:
+          return true;
+      }
+    });
+  }, [data, searchKey, activeTab]);
 
   const table = useReactTable({
     data: filteredData,
@@ -215,7 +245,7 @@ export function DataTable({
           <TabsTrigger value="resolved">Resolved</TabsTrigger>
           <TabsTrigger value="escalated">Escalated</TabsTrigger>
         </TabsList>
-        <div className="relative pr-1">
+        {/* <div className="relative pr-1">
           <IconSearch className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <Input
             type="text"
@@ -225,7 +255,7 @@ export function DataTable({
             }}
             className="pl-8 w-44 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
           />
-        </div>
+        </div> */}
       </div>
       <TabsContent value="all" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
