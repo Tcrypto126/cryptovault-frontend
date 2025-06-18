@@ -31,6 +31,7 @@ import { useNotification } from "@/providers/notificationProvider";
 import { getAllTransactions, sendBonus } from "@/api";
 import { useUserStore } from "@/store/userStore";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   email: z
@@ -49,6 +50,7 @@ export function SendBonusModal() {
   const { user, setUserData } = useUserStore();
   const { setTransactions } = useTransactionStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -95,11 +97,26 @@ export function SendBonusModal() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="deposit" className="!h-8 !w-full">
+      {user?.verify === "VERIFIED" ? (
+        <DialogTrigger asChild>
+          <Button variant="deposit" className="!h-8 !w-full">
+            Send
+          </Button>
+        </DialogTrigger>
+      ) : (
+        <Button
+          variant="deposit"
+          className="!h-8 !w-full"
+          onClick={() => {
+            toast("Please complete KYC verification.", "Error");
+            setTimeout(() => {
+              router.push("/dashboard/settings");
+            }, 1000);
+          }}
+        >
           Send
         </Button>
-      </DialogTrigger>
+      )}
       <DialogContent
         className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]"
         aria-describedby="send-bonus-dialog-description"

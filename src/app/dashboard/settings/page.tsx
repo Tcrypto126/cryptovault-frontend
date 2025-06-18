@@ -653,7 +653,12 @@ const SettingsPage = () => {
                     <FormItem>
                       <FormControl>
                         <div className="flex flex-col gap-1">
-                          <h6 className="text-sm font-medium">Government ID</h6>
+                          <h6 className="text-sm font-medium">
+                            Government ID{" "}
+                            <span className="text-xs text-gray-500">
+                              (.png .jpg .jpeg .webp)
+                            </span>
+                          </h6>
                           <div className="flex justify-center sm:justify-start">
                             <label
                               htmlFor="government_id-input"
@@ -715,7 +720,12 @@ const SettingsPage = () => {
                     <FormItem>
                       <FormControl>
                         <div className="flex flex-col gap-1">
-                          <h6 className="text-sm font-medium">ID Card</h6>
+                          <h6 className="text-sm font-medium">
+                            ID Card{" "}
+                            <span className="text-xs text-gray-500">
+                              (.png .jpg .jpeg .webp)
+                            </span>
+                          </h6>
                           <div className="flex justify-center sm:justify-start">
                             <label
                               htmlFor="id_card-input"
@@ -779,7 +789,10 @@ const SettingsPage = () => {
                   className="w-full max-w-[48%] sm:max-w-24 h-10"
                   onClick={(e) => {
                     e.preventDefault();
-                    form3.reset();
+                    form3.reset({
+                      government_id: "",
+                      id_card: "",
+                    });
                   }}
                 >
                   Cancel

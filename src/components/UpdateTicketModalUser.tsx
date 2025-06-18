@@ -43,7 +43,7 @@ export function UpdateTicketModalUser({
   message,
   lastUpdated,
 }: {
-  id: number;
+  id: string;
   ticketId: string;
   user: {
     name: string;

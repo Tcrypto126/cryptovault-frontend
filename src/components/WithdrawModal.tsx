@@ -30,6 +30,7 @@ import { useNotification } from "@/providers/notificationProvider";
 import { useUserStore } from "@/store/userStore";
 import { getAllTransactions, withdraw } from "@/api";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   amount: z.number().min(1500, "Minimum withdrawal amount is $1500"),
@@ -40,6 +41,7 @@ export function WithdrawModal() {
   const { setTransactions } = useTransactionStore();
   const { toast } = useNotification();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -83,11 +85,26 @@ export function WithdrawModal() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="withdraw" className="!h-8 !w-full">
+      {user?.verify === "VERIFIED" ? (
+        <DialogTrigger asChild>
+          <Button variant="withdraw" className="!h-8 !w-full">
+            Withdraw
+          </Button>
+        </DialogTrigger>
+      ) : (
+        <Button
+          variant="withdraw"
+          className="!h-8 !w-full"
+          onClick={() => {
+            toast("Please complete KYC verification.", "Error");
+            setTimeout(() => {
+              router.push("/dashboard/settings");
+            }, 1000);
+          }}
+        >
           Withdraw
         </Button>
-      </DialogTrigger>
+      )}
       <DialogContent
         className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]"
         aria-describedby="withdraw-dialog-description"

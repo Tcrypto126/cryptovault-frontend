@@ -18,14 +18,16 @@ import Firework from "@/components/Firework";
 
 import { useNotification } from "@/providers/notificationProvider";
 import { useTransactionStore, useUserStore } from "@/store";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const { toast } = useNotification();
   const { user } = useUserStore();
   const { transactions } = useTransactionStore();
+  const router = useRouter();
 
-  const [spinningAvailable, setSpinningAvailable] = useState(true);
+  const [spinningAvailable, setSpinningAvailable] = useState(false);
   const [spinningModal, setSpinningModal] = useState(false);
   const [spinningEnd, setSpinningEnd] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -113,10 +115,15 @@ const Dashboard = () => {
           <div
             className="relative flex flex-col gap-2 p-4 min-w-[100%] sm:min-w-[300px] rounded-[12px] overflow-hidden cursor-pointer bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl"
             onClick={() => {
-              if (spinningAvailable) {
-                setSpinningModal(true);
-              } else {
+              if (user?.verify !== "VERIFIED") {
+                toast("Please complete KYC verification.", "Warning");
+                setTimeout(() => {
+                  router.push("/dashboard/settings");
+                }, 1000);
+              } else if (!spinningAvailable) {
                 toast("You are not available to spin", "Warning");
+              } else {
+                setSpinningModal(true);
               }
             }}
           >

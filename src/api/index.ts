@@ -355,7 +355,7 @@ export const getSupport = async (
           ticketId: `#T-14354${index + 1}`,
           user: {
             id: support.user.id,
-            name: support.user.name,
+            name: support.user.full_name,
             email: support.user.email,
             avatar: support.user.avatar,
           },
@@ -388,13 +388,17 @@ export const getSupport = async (
 
 // Delete support
 export const deleteSupport = async (
-  id: number,
+  id: string,
   onSuccess: () => void,
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.delete(`/api/support/delete/${id}`);
-    if (res.status === 200) {
+    const res = await instance.delete(`/api/support/delete`, {
+      data: {
+        id,
+      },
+    });
+    if (res.status === 201) {
       onSuccess();
     } else {
       onError(res.data.message);

@@ -1,15 +1,11 @@
 "use client";
 
 import * as React from "react";
-
 import {
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconLoader,
-  IconSearch,
-  IconEye,
   IconTrash,
 } from "@tabler/icons-react";
 import {
@@ -22,7 +18,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Row,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -30,7 +25,6 @@ import {
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -48,16 +42,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
-import { NavUser } from "./NavUser";
 import { UpdateTicketModalUser } from "./UpdateTicketModalUser";
-import { deleteSupport, getSupport } from "@/api";
+import { deleteSupport as deleteSupportApi, getSupport } from "@/api";
 import { useSupportStore } from "@/store";
 import { useNotification } from "@/providers/notificationProvider";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   ticketId: z.string(),
   subject: z.string(),
   lastUpdated: z.string(),
@@ -71,7 +63,9 @@ export const schema = z.object({
   }),
 });
 
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+const createColumns = (
+  handleDeleteSupport: (id: string) => void
+): ColumnDef<z.infer<typeof schema>>[] => [
   {
     accessorKey: "ticketId",
     header: "Ticket ID",
@@ -128,27 +122,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
             variant="ghost"
             className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
             size="icon"
-            onClick={() => {
-              // deleteSupport(row.original.id);
-              // deleteSupport(
-              //   row.original.id,
-              //   async () => {
-              //     await getSupport(
-              //       (supports: any) => {
-              //         setSupports(supports);
-              //       },
-              //       (message: string) => {
-              //         toast(message, "Error");
-              //       }
-              //     );
-              //     toast("Support request deleted successfully", "Success");
-              //   },
-              //   (message) => {
-              //     toast(message, "Error");
-              //   }
-              // );
-              // toast("Support request deleted successfully", "Success");
-            }}
+            onClick={() => handleDeleteSupport(row.original.id)}
           >
             <IconTrash color="#E62E2E" />
           </Button>
@@ -164,6 +138,7 @@ export function DataTable({
   data: z.infer<typeof schema>[];
 }) {
   const { setSupports } = useSupportStore();
+  const { toast } = useNotification();
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
   const [data, setData] = React.useState(() => initialData);
@@ -179,9 +154,30 @@ export function DataTable({
     pageSize: 10,
   });
 
-  const deleteSupport = async (id: number) => {
+  const handleDeleteSupport = (id: string) => {
+    deleteSupportApi(
+      id,
+      () => {
+        getSupport(
+          (supports) => {
+            setSupports(supports);
+            toast("Support ticket deleted successfully", "Success");
+          },
+          (message) => {
+            toast(message, "Error");
+          }
+        );
+      },
+      (message) => {
+        toast(message, "Error");
+      }
+    );
+  };
 
-  }
+  const columns = React.useMemo(
+    () => createColumns(handleDeleteSupport),
+    [handleDeleteSupport]
+  );
 
   const filteredData = React.useMemo(() => {
     return data.filter((item) => {

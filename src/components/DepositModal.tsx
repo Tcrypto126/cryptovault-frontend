@@ -19,6 +19,7 @@ import { IconLoader2 } from "@tabler/icons-react";
 import { deposit, getAllTransactions } from "@/api";
 import { useUserStore } from "@/store/userStore";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useRouter } from "next/navigation";
 
 export function DepositModal() {
   const { user, setUserData } = useUserStore();
@@ -26,6 +27,7 @@ export function DepositModal() {
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   const handleDeposit = async () => {
     setIsSendding(true);
@@ -59,11 +61,26 @@ export function DepositModal() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="deposit" className="!h-8 !w-full">
+      {user?.verify === "VERIFIED" ? (
+        <DialogTrigger asChild>
+          <Button variant="deposit" className="!h-8 !w-full">
+            Deposit
+          </Button>
+        </DialogTrigger>
+      ) : (
+        <Button
+          variant="deposit"
+          className="!h-8 !w-full"
+          onClick={() => {
+            toast("Please complete KYC verification.", "Error");
+            setTimeout(() => {
+              router.push("/dashboard/settings");
+            }, 1000);
+          }}
+        >
           Deposit
         </Button>
-      </DialogTrigger>
+      )}
       <DialogContent
         className="!max-w-[90%] sm:!max-w-[500px] w-full px-4 py-6 sm:p-6 bg-[#12121C] border-[#373940]"
         aria-describedby="deposit-dialog-description"
