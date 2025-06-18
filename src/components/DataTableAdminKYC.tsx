@@ -52,15 +52,17 @@ import { NavUser } from "./NavUser";
 import { KYCapproveModal } from "./KYCapproveModal";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     avatar: z.string(),
+    role: z.string(),
   }),
   submitted: z.string(),
   status: z.string(),
+  verify: z.string(),
   ipAddress: z.string(),
   device: z.string(),
   documents: z.array(z.string()),
@@ -98,40 +100,36 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
+    accessorKey: "verify",
+    header: "Verify Status",
+    cell: ({ row }) => (
+      <div className="flex items-center justify-start gap-1">
+        {row.original.verify == "Verified" ? (
+          <h6 className="text-center !text-[14px] text-[#1FB356]">Verified</h6>
+        ) : (
+          <h6 className="text-center !text-[14px] text-[#E62E2E]">
+            Unverified
+          </h6>
+        )}
+      </div>
+    ),
+  },
+  {
     header: "Action",
     cell: ({ row }) => (
-      <div className="flex items-center justify-end gap-0">
-        <KYCapproveModal
-          id={row.original.id}
-          fullName={row.original.user.name}
-          email={row.original.user.email}
-          dateOfSubmission={row.original.submitted}
-          ipAddress={row.original.ipAddress}
-          device={row.original.device}
-          documents={row.original.documents}
-        />
-
-        {row.original.status === "Approved" ? (
-          <></>
+      <div className="flex items-center justify-start gap-0">
+        {row.original.user.role === "ADMIN" ? (
+          <h6 className="text-center !text-[14px] text-[#1FB356]">Admin</h6>
         ) : (
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-            size="icon"
-          >
-            <IconCheck color="#1FB356" />
-          </Button>
-        )}
-        {row.original.status === "Approved" ? (
-          <></>
-        ) : (
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-            size="icon"
-          >
-            <IconX color="#E62E2E" />
-          </Button>
+          <KYCapproveModal
+            id={row.original.id}
+            fullName={row.original.user.name}
+            email={row.original.user.email}
+            dateOfSubmission={row.original.submitted}
+            ipAddress={row.original.ipAddress}
+            device={row.original.device}
+            documents={row.original.documents}
+          />
         )}
       </div>
     ),

@@ -47,27 +47,35 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
+import {
+  approveWithdrawal as approveWithdrawalApi,
+  getAllTransactions,
+} from "@/api";
+import { useNotification } from "@/providers/notificationProvider";
+import { useTransactionStore } from "@/store/transactionStore";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   timestamp: z.string(),
   email: z.string().email(),
   type: z.string(),
-  amount: z.string(),
+  amount: z.number(),
   status: z.string(),
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     avatar: z.string(),
   }),
 });
 
-const approveRequest = (id: number) => {
-  console.log(id);
-};
-
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+const createColumns = (
+  handleApproveWithdrawal: (
+    id: string,
+    email: string,
+    amount: number
+  ) => Promise<void>
+): ColumnDef<z.infer<typeof schema>>[] => [
   {
     accessorKey: "timestamp",
     header: "Timestamp",
@@ -126,10 +134,14 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       <div className="flex items-center justify-start">
         {row.original.status === "Pending" ? (
           <Button
-            variant="spin"
+            variant="deposit"
             size="sm"
             onClick={() => {
-              approveRequest(row.original.id);
+              handleApproveWithdrawal(
+                row.original.id,
+                row.original.email,
+                row.original.amount
+              );
             }}
           >
             Approve
@@ -145,6 +157,8 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
+  const { setAllTransactions } = useTransactionStore();
+  const { toast } = useNotification();
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
   const [data, setData] = React.useState(() => initialData);
@@ -160,11 +174,47 @@ export function DataTable({
     pageSize: 10,
   });
 
-  const filteredData = React.useMemo(() => {
-    return data.filter((item) =>
-      item.email.toLowerCase().includes(searchKey.toLowerCase())
+  const handleApproveWithdrawal = async (
+    id: string,
+    email: string,
+    amount: number
+  ) => {
+    approveWithdrawalApi(
+      id,
+      email,
+      amount,
+      () => {
+        getAllTransactions(
+          (transactions) => {
+            setAllTransactions(transactions);
+          },
+          (message) => {
+            toast(message, "Error");
+          }
+        );
+        toast("You approved withdrawal request successfully!", "Success");
+      },
+      (message) => {
+        toast(message, "Error");
+      }
     );
-  }, [data, searchKey]);
+  };
+
+  const columns = React.useMemo(
+    () => createColumns(handleApproveWithdrawal),
+    [handleApproveWithdrawal]
+  );
+
+  const filteredData = React.useMemo(() => {
+    return data.filter(
+      (item) =>
+        item.email.toLowerCase().includes(searchKey.toLowerCase()) &&
+        (activeTab === "all" ||
+          (activeTab === "approved" && item.status === "Approved") ||
+          (activeTab === "pending" && item.status === "Pending") ||
+          (activeTab === "failed" && item.status === "Failed"))
+    );
+  }, [data, searchKey, activeTab]);
 
   const table = useReactTable({
     data: filteredData,
@@ -214,12 +264,16 @@ export function DataTable({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
+            <SelectItem value="approved">Approved</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="failed">Failed</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="hidden md:flex">
           <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="approved">Approved</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
+          <TabsTrigger value="failed">Failed</TabsTrigger>
         </TabsList>
         <div className="relative pr-1">
           <IconSearch className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -389,6 +443,151 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
+      <TabsContent value="approved" className="relative flex flex-col gap-4">
+        <div className="rounded-[5px] overflow-auto">
+          <Table>
+            <TableHeader className="bg-dashboard sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        className="text-[#838799] text-left h-11 px-4"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody className="bg-[#40414933]">
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Approved")
+                .length ? (
+                table
+                  .getRowModel()
+                  .rows.filter((row) => row.original.status === "Approved")
+                  .map((row, index) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className="h-14"
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        return (
+                          <TableCell key={cell.id} className="px-4 text-left">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+            {/* {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected. */}
+          </div>
+          <div className="flex w-full items-center gap-8 lg:w-fit">
+            <div className="hidden items-center gap-2 lg:flex">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
+                Rows per page
+              </Label>
+              <Select
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(value) => {
+                  table.setPageSize(Number(value));
+                }}
+              >
+                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
+                  <SelectValue
+                    placeholder={table.getState().pagination.pageSize}
+                  />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[10, 20, 30, 40, 50].map((pageSize) => (
+                    <SelectItem key={pageSize} value={`${pageSize}`}>
+                      {pageSize}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </div>
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to first page</span>
+                <IconChevronsLeft />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to previous page</span>
+                <IconChevronLeft />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to next page</span>
+                <IconChevronRight />
+              </Button>
+              <Button
+                variant="outline"
+                className="hidden size-8 lg:flex"
+                size="icon"
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to last page</span>
+                <IconChevronsRight />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </TabsContent>
       <TabsContent value="pending" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
@@ -415,14 +614,158 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Pending")
+                .length ? (
                 table
                   .getRowModel()
-                  .rows.filter(
-                    (row) =>
-                      row.original.type === "Withdraw" &&
-                      row.original.status === "Pending"
-                  )
+                  .rows.filter((row) => row.original.status === "Pending")
+                  .map((row, index) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className="h-14"
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        return (
+                          <TableCell key={cell.id} className="px-4 text-left">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+            {/* {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected. */}
+          </div>
+          <div className="flex w-full items-center gap-8 lg:w-fit">
+            <div className="hidden items-center gap-2 lg:flex">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
+                Rows per page
+              </Label>
+              <Select
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(value) => {
+                  table.setPageSize(Number(value));
+                }}
+              >
+                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
+                  <SelectValue
+                    placeholder={table.getState().pagination.pageSize}
+                  />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[10, 20, 30, 40, 50].map((pageSize) => (
+                    <SelectItem key={pageSize} value={`${pageSize}`}>
+                      {pageSize}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex w-fit items-center justify-center text-sm font-medium">
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </div>
+            <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to first page</span>
+                <IconChevronsLeft />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to previous page</span>
+                <IconChevronLeft />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8"
+                size="icon"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to next page</span>
+                <IconChevronRight />
+              </Button>
+              <Button
+                variant="outline"
+                className="hidden size-8 lg:flex"
+                size="icon"
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to last page</span>
+                <IconChevronsRight />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </TabsContent>
+      <TabsContent value="failed" className="relative flex flex-col gap-4">
+        <div className="rounded-[5px] overflow-auto">
+          <Table>
+            <TableHeader className="bg-dashboard sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        className="text-[#838799] text-left h-11 px-4"
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody className="bg-[#40414933]">
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Failed")
+                .length ? (
+                table
+                  .getRowModel()
+                  .rows.filter((row) => row.original.status === "Failed")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}

@@ -1,94 +1,43 @@
 "use client";
 
+import { useState } from "react";
 import { DataTable } from "@/components/DataTableAdminKYC";
-
-const data = [
-  {
-    id: 1,
-    user: {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    submitted: "2025-06-11 14:30:25",
-    status: "Rejected",
-    ipAddress: "127.0.0.1",
-    device: "Desktop",
-    documents: [
-      "https://www.google.com",
-      "https://www.google.com",
-      "https://www.google.com",
-    ],
-  },
-  {
-    id: 2,
-    user: {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    submitted: "2025-06-11 14:30:25",
-    status: "Pending",
-    ipAddress: "127.0.0.1",
-    device: "Desktop",
-    documents: [
-      "https://www.google.com",
-      "https://www.google.com",
-      "https://www.google.com",
-    ],
-  },
-  {
-    id: 3,
-    user: {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    submitted: "2025-06-11 14:30:25",
-    status: "Approved",
-    ipAddress: "127.0.0.1",
-    device: "Desktop",
-    documents: [
-      "https://www.google.com",
-      "https://www.google.com",
-      "https://www.google.com",
-    ],
-  },
-  {
-    id: 4,
-    user: {
-      id: 1,
-      name: "reku Doe",
-      email: "john.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    submitted: "2025-06-11 14:30:25",
-    status: "In Progress",
-    ipAddress: "127.0.0.1",
-    device: "web2.3",
-    documents: [
-      "https://www.google.com",
-      "https://www.google.com",
-      "https://www.google.com",
-    ],
-  },
-];
+import { useUserStore } from "@/store/userStore";
 
 const KYCverification = () => {
+  const { users } = useUserStore();
+
+  const [tableData, setTableData] = useState<any[]>(
+    users?.map((user: any) => ({
+      id: user.id,
+      user: {
+        id: user.id,
+        name: user.full_name,
+        email: user.email,
+        avatar: user.avatar || "/assets/avatars/avatar-default.png",
+        role: user.role,
+      },
+      submitted: user.updated_at.split(".")[0].replace("T", " "),
+      status:
+        user.status === "ACTIVE"
+          ? "Active"
+          : user.status === "INACTIVE"
+          ? "Inactive"
+          : user.status === "FREEZE"
+          ? "Freeze"
+          : "Suspended",
+      verify: user.verify === "VERIFIED" ? "Verified" : "Unverified",
+      documents: [user.government_id, user.id_card],
+    })) || []
+  );
+
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h3>KYC Submissions</h3>
-        {/* <Button variant="deposit" className="flex items-center gap-2 h-12">
-          <IconPlus />
-          Create New Incentive
-        </Button> */}
       </div>
       <div>
-        <DataTable data={data} />
+        <DataTable data={tableData} />
       </div>
     </div>
   );

@@ -48,7 +48,7 @@ export function KYCapproveModal({
   device,
   documents,
 }: {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   dateOfSubmission: string;
@@ -66,8 +66,8 @@ export function KYCapproveModal({
       fullName: fullName,
       email: email,
       dateOfSubmission: dateOfSubmission,
-      ipAddress: ipAddress,
-      device: device,
+      ipAddress: ipAddress || "192.168.142.78",
+      device: device || "Desktop",
       documents: documents,
     },
   });
@@ -225,11 +225,7 @@ export function KYCapproveModal({
                           target="_blank"
                           className="text-blue-500"
                         >
-                          {index === 0
-                            ? "Government ID"
-                            : index === 1
-                            ? "Proof of Address"
-                            : "Selfie with ID"}
+                          {index === 0 ? "Government ID" : "ID Card"}
                         </Link>
                       ))}
                     </div>

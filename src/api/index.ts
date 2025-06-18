@@ -512,3 +512,28 @@ export const updateUserStatus = async (
     onError(error.response.data.message);
   }
 };
+
+// Approve withdrawal request
+export const approveWithdrawal = async (
+  id: string,
+  email: string,
+  amount: number,
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.put("/api/transactions/approve-withdrawal", {
+      id,
+      email,
+      amount,
+    });
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error approving withdrawal:", error);
+    onError(error.response.data.message);
+  }
+};
