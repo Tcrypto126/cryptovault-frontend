@@ -79,7 +79,7 @@ export const getUser = async (
   }
 };
 
-// Get users
+// Get users by admin
 export const getAllUsers = async (
   onSuccess: (users: any) => void,
   onError: (message: string) => void
@@ -376,6 +376,30 @@ export const getTransactions = async (
   }
 };
 
+// Get all transactions by admin
+export const getAllTransactions = async (
+  onSuccess: (transactions: any) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.get("/api/transactions/all-transaction");
+
+    if (res.status === 200) {
+      const transactions: any = res.data.transactions;
+      const newTransactions: any = transactions.sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      onSuccess(newTransactions);
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error getting all transactions:", error);
+    onError(error.response.data.message);
+  }
+};
+
 // Send support
 export const sendSupport = async (
   data: {
@@ -462,6 +486,29 @@ export const deleteSupport = async (
     }
   } catch (error: any) {
     console.error("Error deleting support:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Update user status by admin
+export const updateUserStatus = async (
+  email: string,
+  status: string,
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.put("/api/user/status", {
+      email,
+      status,
+    });
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error updating user status:", error);
     onError(error.response.data.message);
   }
 };

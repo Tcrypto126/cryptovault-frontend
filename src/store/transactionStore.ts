@@ -25,7 +25,9 @@ interface Transaction {
 
 interface TransactionState {
   transactions: Transaction[];
+  allTransactions: Transaction[];
   setTransactions: (transactions: Transaction[]) => void;
+  setAllTransactions: (transactions: Transaction[]) => void;
   signoutTransaction: () => void;
 }
 
@@ -33,11 +35,16 @@ export const useTransactionStore = create(
   persist<TransactionState>(
     (set) => ({
       transactions: [],
+      allTransactions: [],
+      setAllTransactions: (transactions: Transaction[]) => {
+        set({ allTransactions: transactions });
+      },
       setTransactions: (transactions: Transaction[]) => {
         set({ transactions });
       },
       signoutTransaction: () => {
         set({ transactions: [] });
+        set({ allTransactions: [] });
       },
     }),
     {

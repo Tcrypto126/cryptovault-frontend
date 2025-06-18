@@ -170,10 +170,28 @@ export function DataTable({
   });
 
   const filteredData = React.useMemo(() => {
-    return data.filter((item) =>
-      item.email.toLowerCase().includes(searchKey.toLowerCase())
-    );
-  }, [data, searchKey]);
+    return data.filter((item) => {
+      const matchesSearch =
+        item.email.toLowerCase().includes(searchKey.toLowerCase()) ||
+        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+        item.user.email.toLowerCase().includes(searchKey.toLowerCase());
+
+      switch (activeTab) {
+        case "deposit":
+          return matchesSearch && item.type === "Deposit";
+        case "withdraw":
+          return matchesSearch && item.type === "Withdraw";
+        case "bonus":
+          return (
+            matchesSearch &&
+            (item.type === "BonusSent" || item.type === "BonusReceived")
+          );
+        case "all":
+        default:
+          return matchesSearch;
+      }
+    });
+  }, [data, searchKey, activeTab]);
 
   const table = useReactTable({
     data: filteredData,
@@ -311,7 +329,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -450,7 +471,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -589,7 +613,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -732,7 +759,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select

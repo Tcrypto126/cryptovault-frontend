@@ -59,6 +59,48 @@ export function DepositModal() {
     );
   };
 
+  const handleUserStatus = () => {
+    const statusMessages = {
+      UNVERIFIED: {
+        message: "Please complete KYC verification.",
+        redirect: "/dashboard/settings",
+      },
+      SUSPENDED: {
+        message: "Your account is suspended",
+      },
+      FREEZE: {
+        message: "Your account is frozen now. Please contact to support team",
+        redirect: "/dashboard/support",
+      },
+      INACTIVE: {
+        message: "Your account not activated yet.",
+      },
+    };
+
+    if (user?.verify !== "VERIFIED") {
+      const { message, redirect } = statusMessages.UNVERIFIED;
+      toast(message, "Warning");
+      if (redirect) {
+        setTimeout(() => router.push(redirect), 1000);
+      }
+      return;
+    }
+
+    const userStatus = user?.status as keyof typeof statusMessages;
+    if (statusMessages[userStatus]) {
+      const { message } = statusMessages[userStatus];
+      toast(message, "Warning");
+      if ("redirect" in statusMessages[userStatus]) {
+        const { redirect } = statusMessages[userStatus] as {
+          redirect: string;
+        };
+        setTimeout(() => router.push(redirect), 1000);
+      }
+    } else {
+      toast("Something went wrong!", "Warning");
+    }
+  };
+
   return (
     <Dialog>
       {user?.verify === "VERIFIED" && user?.status === "ACTIVE" ? (
@@ -71,26 +113,7 @@ export function DepositModal() {
         <Button
           variant="deposit"
           className="!h-8 !w-full"
-          onClick={() => {
-            if (user?.verify !== "VERIFIED") {
-              toast("Please complete KYC verification.", "Warning");
-              setTimeout(() => {
-                router.push("/dashboard/settings");
-              }, 1000);
-            } else if (user?.status === "SUSPENDED") {
-              toast("Your account is suspended", "Warning");
-            } else if (user?.status === "FREEZE") {
-              toast(
-                "Your account is frozen now. Please contact to support team",
-                "Warning"
-              );
-              setTimeout(() => {
-                router.push("/dashboard/support");
-              }, 1000);
-            } else {
-              toast("You have some problems on your account.", "Warning");
-            }
-          }}
+          onClick={() => handleUserStatus()}
         >
           Deposit
         </Button>

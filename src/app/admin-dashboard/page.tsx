@@ -3,19 +3,78 @@
 import { useEffect, useRef, useState } from "react";
 import { UsersIcon, TotalBalanceIcon, PeddingIcon } from "@/components/ui/icon";
 import { useUserStore } from "@/store/userStore";
+import { useTransactionStore } from "@/store";
 import { DataTable } from "@/components/DataTableAdminTransactions";
 
-import data from "@/app/adminTransactionData.json";
+// import data from "@/app/adminTransactionData.json";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const { users } = useUserStore();
+  const { allTransactions } = useTransactionStore();
   const [totalActiveUsers, setTotalActiveUsers] = useState<number>(0);
+  const [totalAvailableBalance, setTotalAvailableBalance] = useState<number>(0);
+
+  const [tableData, setTableData] = useState<any[]>(
+    allTransactions.map((transaction: any) => ({
+      id: transaction.id,
+      timestamp: transaction.created_at.split(".")[0].replace("T", " "),
+      email:
+        transaction.sender?.email || transaction.recipient?.email || "Unknown",
+      type:
+        transaction.type === "DEPOSIT"
+          ? "Deposit"
+          : transaction.type === "WITHDRAWAL"
+          ? "Withdraw"
+          : transaction.type === "TRANSFER"
+          ? "BonusSent"
+          : "BonusReceived",
+      amount: transaction.amount.toString(),
+      status:
+        transaction.status === "COMPLETED"
+          ? "Success"
+          : transaction.status === "FAILED"
+          ? "Failed"
+          : transaction.status === "CANCELLED"
+          ? "Cancelled"
+          : "Pending",
+      user: {
+        id:
+          transaction.type === "TRANSFER"
+            ? transaction.recipient_id
+            : "Unknown",
+        name:
+          transaction.type === "TRANSFER"
+            ? transaction.recipient?.full_name || "Unknown"
+            : "Platform",
+        email:
+          transaction.type === "TRANSFER"
+            ? transaction.recipient?.email || "Unknown"
+            : "",
+        avatar:
+          transaction.type === "TRANSFER"
+            ? transaction.recipient?.avatar ||
+              "/assets/avatars/avatar-default.png"
+            : "/assets/logo.png",
+      },
+    }))
+  );
+
+  const [pendingApproval, setPendingApproval] = useState<number>(
+    allTransactions.filter(
+      (transaction) =>
+        transaction.status === "PENDING" && transaction.type === "WITHDRAWAL"
+    ).length
+  );
 
   useEffect(() => {
-    console.log("users: ", users);
     setTotalActiveUsers(
       users?.filter((user) => user.status === "ACTIVE").length || 0
+    );
+    setTotalAvailableBalance(
+      users
+        ?.filter((user) => user.status === "ACTIVE")
+        .reduce((total, user) => total + (user.balance || 0), 0) || 0
     );
   }, [users]);
 
@@ -38,7 +97,7 @@ const Dashboard = () => {
             <TotalBalanceIcon width="40" height="40" />
             <h6>Total Platform Balance</h6>
           </div>
-          <h3 className="!text-[24px]">$2,313,482.44</h3>
+          <h3 className="!text-[24px]">${totalAvailableBalance.toFixed(2)}</h3>
           <p className="!text-[14px]">Available for transfers.</p>
         </div>
         <div className="flex flex-col justify-between w-full gap-2 p-4 rounded-[12px] bg-dashboard">
@@ -46,14 +105,14 @@ const Dashboard = () => {
             <PeddingIcon width="40" height="40" />
             <h6>Pending Approval</h6>
           </div>
-          <h3 className="!text-[24px]">21</h3>
+          <h3 className="!text-[24px]">{pendingApproval}</h3>
           <p className="!text-[14px]">Requests awaiting admin review</p>
         </div>
       </div>
       <div className="flex flex-col gap-4">
         <h5>Recent Activity</h5>
         <div>
-          <DataTable data={data} />
+          <DataTable data={tableData} />
         </div>
       </div>
     </div>

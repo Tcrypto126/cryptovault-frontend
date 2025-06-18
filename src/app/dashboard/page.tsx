@@ -98,6 +98,57 @@ const Dashboard = () => {
     }
   };
 
+  const handleSpin = () => {
+    if (!user) return;
+
+    const statusMessages = {
+      UNVERIFIED: {
+        message: "Please complete KYC verification.",
+        redirect: "/dashboard/settings",
+      },
+      SUSPENDED: {
+        message: "Your account is suspended",
+      },
+      FREEZE: {
+        message: "Your account is frozen now. Please contact to support team",
+        redirect: "/dashboard/support",
+      },
+      INACTIVE: {
+        message:
+          "Your account not activated yet.",
+      },
+    };
+
+    if (user.verify !== "VERIFIED") {
+      const { message, redirect } = statusMessages.UNVERIFIED;
+      toast(message, "Warning");
+      if (redirect) {
+        setTimeout(() => router.push(redirect), 1000);
+      }
+      return;
+    }
+
+    const userStatus = user.status as keyof typeof statusMessages;
+    if (statusMessages[userStatus]) {
+      const { message } = statusMessages[userStatus];
+      toast(message, "Warning");
+      if ("redirect" in statusMessages[userStatus]) {
+        const { redirect } = statusMessages[userStatus] as {
+          redirect: string;
+        };
+        setTimeout(() => router.push(redirect), 1000);
+      }
+      return;
+    }
+
+    if (!spinningAvailable) {
+      toast("You are not available to spin", "Warning");
+      return;
+    }
+
+    setSpinningModal(true);
+  };
+
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between gap-6">
@@ -114,28 +165,7 @@ const Dashboard = () => {
           <h5>Spin & Win</h5>
           <div
             className="relative flex flex-col gap-2 p-4 min-w-[100%] sm:min-w-[300px] rounded-[12px] overflow-hidden cursor-pointer bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl"
-            onClick={() => {
-              if (user?.verify !== "VERIFIED") {
-                toast("Please complete KYC verification.", "Warning");
-                setTimeout(() => {
-                  router.push("/dashboard/settings");
-                }, 1000);
-              } else if (user?.status === "SUSPENDED") {
-                toast("Your account is suspended", "Warning");
-              } else if (user?.status === "FREEZE") {
-                toast(
-                  "Your account is frozen now. Please contact to support team",
-                  "Warning"
-                );
-                setTimeout(() => {
-                  router.push("/dashboard/support");
-                }, 1000);
-              } else if (!spinningAvailable) {
-                toast("You are not available to spin", "Warning");
-              } else {
-                setSpinningModal(true);
-              }
-            }}
+            onClick={handleSpin}
           >
             <Image
               src="/assets/dashboard/noto_wrapped-gift.png"

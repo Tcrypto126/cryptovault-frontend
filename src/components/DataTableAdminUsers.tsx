@@ -56,26 +56,29 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
+import { toast } from "sonner";
+import { getAllUsers, updateUserStatus as updateUserStatusApi } from "@/api";
+import { useUserStore } from "@/store/userStore";
+import { useNotification } from "@/providers/notificationProvider";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     avatar: z.string(),
+    role: z.string(),
   }),
   balance: z.number(),
   status: z.string(),
   verify: z.string(),
-  activity: z.string(),
+  registered_at: z.string(),
 });
 
-const updateStatus = (email: string, status: string) => {
-  console.log(email, status);
-};
-
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+const createColumns = (
+  handleUpdateStatus: (email: string, status: string) => void
+): ColumnDef<z.infer<typeof schema>>[] => [
   {
     accessorKey: "user",
     header: "User",
@@ -122,62 +125,75 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "activity",
-    header: "Last Activity",
+    accessorKey: "registered_at",
+    header: "Registered At",
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start">
-          {row.original.activity}
+          {row.original.registered_at}
         </div>
       );
     },
   },
   {
     header: "Action",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-            size="icon"
-          >
-            <IconDotsVertical />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={() => updateStatus(row.original.user.email, "Active")}
-          >
-            Active
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={() => updateStatus(row.original.user.email, "Inactive")}
-          >
-            Inactive
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={() => updateStatus(row.original.user.email, "Freeze")}
-          >
-            Freeze
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            variant="destructive"
-            className="cursor-pointer"
-            onClick={() => updateStatus(row.original.user.email, "Suspended")}
-          >
-            Suspended
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    cell: ({ row }) =>
+      row.original.user.role === "ADMIN" ? (
+        <div className="flex items-center justify-start">
+          <h6 className="text-center !text-[14px] text-[#1FB356]">Admin</h6>
+        </div>
+      ) : (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+              size="icon"
+            >
+              <IconDotsVertical />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() =>
+                handleUpdateStatus(row.original.user.email, "ACTIVE")
+              }
+            >
+              Active
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() =>
+                handleUpdateStatus(row.original.user.email, "INACTIVE")
+              }
+            >
+              Inactive
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() =>
+                handleUpdateStatus(row.original.user.email, "FREEZE")
+              }
+            >
+              Freeze
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant="destructive"
+              className="cursor-pointer"
+              onClick={() =>
+                handleUpdateStatus(row.original.user.email, "SUSPENDED")
+              }
+            >
+              Suspended
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
   },
 ];
 
@@ -186,6 +202,8 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
+  const { users, setUsersData } = useUserStore();
+  const { toast } = useNotification();
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
   const [data, setData] = React.useState(() => initialData);
@@ -201,13 +219,53 @@ export function DataTable({
     pageSize: 10,
   });
 
-  const filteredData = React.useMemo(() => {
-    return data.filter(
-      (item) =>
-        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase())
+  const handleUpdateStatus = (email: string, status: string) => {
+    updateUserStatusApi(
+      email,
+      status,
+      () => {
+        getAllUsers(
+          (users) => {
+            setUsersData(users);
+            toast(`User status updated to ${status} successfully!`, "Success");
+          },
+          (message) => {
+            toast(message, "Error");
+          }
+        );
+      },
+      (message) => {
+        toast(message, "Error");
+      }
     );
-  }, [data, searchKey]);
+  };
+
+  const columns = React.useMemo(
+    () => createColumns(handleUpdateStatus),
+    [handleUpdateStatus]
+  );
+
+  const filteredData = React.useMemo(() => {
+    return data.filter((item) => {
+      const matchesSearch =
+        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
+        item.user.email.toLowerCase().includes(searchKey.toLowerCase());
+
+      switch (activeTab) {
+        case "active":
+          return matchesSearch && item.status === "Active";
+        case "inactive":
+          return matchesSearch && item.status === "Inactive";
+        case "freeze":
+          return matchesSearch && item.status === "Freeze";
+        case "suspended":
+          return matchesSearch && item.status === "Suspended";
+        case "all":
+        default:
+          return matchesSearch;
+      }
+    });
+  }, [data, searchKey, activeTab]);
 
   const table = useReactTable({
     data: filteredData,
@@ -346,7 +404,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -485,7 +546,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -624,7 +688,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -763,7 +830,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select
@@ -902,7 +972,10 @@ export function DataTable({
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium min-w-24">
+              <Label
+                htmlFor="rows-per-page"
+                className="text-sm font-medium min-w-24"
+              >
                 Rows per page
               </Label>
               <Select

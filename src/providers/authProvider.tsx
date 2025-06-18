@@ -7,7 +7,12 @@ import { useSupportStore, useTransactionStore, useUserStore } from "@/store";
 import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
-import { getAllUsers, getSupport, getTransactions } from "@/api";
+import {
+  getAllUsers,
+  getSupport,
+  getTransactions,
+  getAllTransactions,
+} from "@/api";
 
 type User = {
   id: string;
@@ -27,7 +32,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { signout, setUserData, user, users, setUsersData } = useUserStore();
-  const { setTransactions, signoutTransaction } = useTransactionStore();
+  const { setTransactions, setAllTransactions, signoutTransaction } =
+    useTransactionStore();
   const { setSupports, signoutSupport } = useSupportStore();
   const router = useRouter();
   const pathname = usePathname();
@@ -76,6 +82,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             await getAllUsers(
               (users: any) => {
                 setUsersData(users);
+              },
+              (message: string) => {
+                toast(message, "Error");
+              }
+            );
+
+            await getAllTransactions(
+              (transactions: any) => {
+                setAllTransactions(transactions);
               },
               (message: string) => {
                 toast(message, "Error");
@@ -213,6 +228,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             toast(message, "Error");
           }
         );
+
+        if (user.role === "ADMIN") {
+          await getAllUsers(
+            (users: any) => {
+              setUsersData(users);
+            },
+            (message: string) => {
+              toast(message, "Error");
+            }
+          );
+
+          await getAllTransactions(
+            (transactions: any) => {
+              setAllTransactions(transactions);
+            },
+            (message: string) => {
+              toast(message, "Error");
+            }
+          );
+        }
 
         toast("Logged in successfully", "Success");
 
