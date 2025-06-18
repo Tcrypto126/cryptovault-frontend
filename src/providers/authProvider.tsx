@@ -7,7 +7,7 @@ import { useSupportStore, useTransactionStore, useUserStore } from "@/store";
 import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
-import { getAllTransactions, getSupport } from "@/api";
+import { getAllUsers, getSupport, getTransactions } from "@/api";
 
 type User = {
   id: string;
@@ -26,7 +26,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { signout, setUserData, user } = useUserStore();
+  const { signout, setUserData, user, users, setUsersData } = useUserStore();
   const { setTransactions, signoutTransaction } = useTransactionStore();
   const { setSupports, signoutSupport } = useSupportStore();
   const router = useRouter();
@@ -40,34 +40,53 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { isTokenValid, user }: { isTokenValid: boolean; user: any } =
           await verifyToken(token || "");
 
-        await getAllTransactions(
-          (transactions: any) => {
-            setTransactions(transactions);
-          },
-          (message: string) => {
-            toast(message, "Error");
-          }
-        );
-
-        await getSupport(
-          (supports: any) => {
-            setSupports(supports);
-          },
-          (message: string) => {
-            toast(message, "Error");
-          }
-        );
+        if (user?.status === "SUSPENDED") {
+          toast("Your account is suspended", "Warning");
+          logout();
+        } else if (user?.status === "FREEZE") {
+          toast(
+            "Your account is frozen now. Please contact to support team",
+            "Warning"
+          );
+          setTimeout(() => {
+            router.push("/dashboard/support");
+          }, 1000);
+        }
 
         if (isTokenValid) {
+          await getTransactions(
+            (transactions: any) => {
+              setTransactions(transactions);
+            },
+            (message: string) => {
+              toast(message, "Error");
+            }
+          );
+
+          await getSupport(
+            (supports: any) => {
+              setSupports(supports);
+            },
+            (message: string) => {
+              toast(message, "Error");
+            }
+          );
+
+          if (user.role === "ADMIN") {
+            await getAllUsers(
+              (users: any) => {
+                setUsersData(users);
+              },
+              (message: string) => {
+                toast(message, "Error");
+              }
+            );
+          }
+
           const newUser: any = {
             ...user,
-            transactions: user.receivedTransactions
-              .concat(user.sentTransactions)
-              .sort(
-                (a: any, b: any) =>
-                  new Date(b.created_at).getTime() -
-                  new Date(a.created_at).getTime()
-              ),
+            sentTransactions: [],
+            receivedTransactions: [],
             recentDeposit: user.receivedTransactions
               ?.filter((transaction: any) => transaction.type === "DEPOSIT")
               .sort(
@@ -105,9 +124,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           localStorage.removeItem("token");
           delete instance.defaults.headers.common.Authorization;
+          signout();
           signoutTransaction();
           signoutSupport();
-          signout();
 
           // Allow access to public routes without redirect
           const publicRoutes = [
@@ -153,13 +172,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         const newUser: any = {
           ...user,
-          transactions: user.receivedTransactions
-            .concat(user.sentTransactions)
-            .sort(
-              (a: any, b: any) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
-            ),
+          sentTransactions: [],
+          receivedTransactions: [],
           recentDeposit: user.receivedTransactions
             ?.filter((transaction: any) => transaction.type === "DEPOSIT")
             .sort(
@@ -191,7 +205,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         };
         setUserData(newUser);
 
-        await getAllTransactions(
+        await getTransactions(
           (transactions: any) => {
             setTransactions(transactions);
           },
@@ -218,6 +232,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    delete instance.defaults.headers.common.Authorization;
     signout();
     signoutTransaction();
     signoutSupport();

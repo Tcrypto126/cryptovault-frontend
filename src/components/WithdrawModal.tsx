@@ -28,7 +28,7 @@ import {
 
 import { useNotification } from "@/providers/notificationProvider";
 import { useUserStore } from "@/store/userStore";
-import { getAllTransactions, withdraw } from "@/api";
+import { getTransactions, withdraw } from "@/api";
 import { useTransactionStore } from "@/store/transactionStore";
 import { useRouter } from "next/navigation";
 
@@ -65,7 +65,7 @@ export function WithdrawModal() {
           recentWithdrawal: data.amount,
           recentWithdrawStatus: "PENDING",
         });
-        await getAllTransactions(
+        await getTransactions(
           (transactions: any) => {
             setTransactions(transactions);
           },
@@ -85,7 +85,7 @@ export function WithdrawModal() {
 
   return (
     <Dialog>
-      {user?.verify === "VERIFIED" ? (
+      {user?.verify === "VERIFIED" && user?.status === "ACTIVE" ? (
         <DialogTrigger asChild>
           <Button variant="withdraw" className="!h-8 !w-full">
             Withdraw
@@ -96,10 +96,24 @@ export function WithdrawModal() {
           variant="withdraw"
           className="!h-8 !w-full"
           onClick={() => {
-            toast("Please complete KYC verification.", "Error");
-            setTimeout(() => {
-              router.push("/dashboard/settings");
-            }, 1000);
+            if (user?.verify !== "VERIFIED") {
+              toast("Please complete KYC verification.", "Warning");
+              setTimeout(() => {
+                router.push("/dashboard/settings");
+              }, 1000);
+            } else if (user?.status === "SUSPENDED") {
+              toast("Your account is suspended", "Warning");
+            } else if (user?.status === "FREEZE") {
+              toast(
+                "Your account is frozen now. Please contact to support team",
+                "Warning"
+              );
+              setTimeout(() => {
+                router.push("/dashboard/support");
+              }, 1000);
+            } else {
+              toast("You have some problems on your account.", "Warning");
+            }
           }}
         >
           Withdraw

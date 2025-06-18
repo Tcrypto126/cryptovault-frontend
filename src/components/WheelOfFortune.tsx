@@ -5,7 +5,7 @@ import WheelOfFortune from "@armin-eslami/wheel-of-fortune";
 import { Button } from "./ui/button";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useUserStore } from "@/store/userStore";
-import { addBonus, getAllTransactions } from "@/api";
+import { addBonus, getTransactions } from "@/api";
 import { useNotification } from "@/providers/notificationProvider";
 import { useTransactionStore } from "@/store/transactionStore";
 
@@ -75,7 +75,7 @@ function WheelOfFortune1({
           bonus: (user?.bonus || 0) + bonus,
           recentBonus: bonus,
         });
-        await getAllTransactions(
+        await getTransactions(
           (transactions: any) => {
             setTransactions(transactions);
           },

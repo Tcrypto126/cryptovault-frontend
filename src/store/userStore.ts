@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from 'zustand/middleware';
+import { persist } from "zustand/middleware";
 
 interface Transaction {
   id?: string;
@@ -46,13 +46,15 @@ interface User {
   recentWithdrawal?: number;
   recentWithdrawStatus?: "COMPLETED" | "FAILED" | "PENDING" | "CANCELLED";
   recentBonus?: number;
-  
+
   transactions?: Transaction[];
 }
 
 interface UserState {
   user?: User;
+  users?: User[];
   setUserData: (data: User) => void;
+  setUsersData: (data: User[]) => void;
   signout: () => void;
 }
 
@@ -60,15 +62,19 @@ export const useUserStore = create(
   persist<UserState>(
     (set) => ({
       user: undefined,
+      users: [],
       setUserData: (data: User) => {
         set({ user: data });
       },
+      setUsersData: (data: User[]) => {
+        set({ users: data });
+      },
       signout: () => {
-        set({ user: undefined });
+        set({ user: undefined, users: [] });
       },
     }),
     {
-      name: "loginStatus"
+      name: "loginStatus",
     }
   )
-)
+);

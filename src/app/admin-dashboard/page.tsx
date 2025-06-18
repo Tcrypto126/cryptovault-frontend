@@ -1,18 +1,23 @@
 "use client";
 
-import { useRef, useState } from "react";
-import {
-  UsersIcon,
-  TotalBalanceIcon,
-  PeddingIcon,
-} from "@/components/ui/icon";
-
+import { useEffect, useRef, useState } from "react";
+import { UsersIcon, TotalBalanceIcon, PeddingIcon } from "@/components/ui/icon";
+import { useUserStore } from "@/store/userStore";
 import { DataTable } from "@/components/DataTableAdminTransactions";
 
 import data from "@/app/adminTransactionData.json";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
+  const { users } = useUserStore();
+  const [totalActiveUsers, setTotalActiveUsers] = useState<number>(0);
+
+  useEffect(() => {
+    console.log("users: ", users);
+    setTotalActiveUsers(
+      users?.filter((user) => user.status === "ACTIVE").length || 0
+    );
+  }, [users]);
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
@@ -23,7 +28,7 @@ const Dashboard = () => {
             <UsersIcon width="40" height="40" />
             <h6>Total Users</h6>
           </div>
-          <h3 className="!text-[24px]">234</h3>
+          <h3 className="!text-[24px]">{totalActiveUsers}</h3>
           <p className="!text-[14px]">
             Active users registered on the platform.
           </p>

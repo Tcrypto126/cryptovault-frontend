@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { getAllTransactions, sendBonus } from "@/api";
+import { getTransactions, sendBonus } from "@/api";
 import { useUserStore } from "@/store/userStore";
 import { useTransactionStore } from "@/store/transactionStore";
 import { useRouter } from "next/navigation";
@@ -75,7 +75,7 @@ export function SendBonusModal() {
           ...user,
           bonus: (user?.bonus || 0) - data.amount,
         });
-        await getAllTransactions(
+        await getTransactions(
           (transactions: any) => {
             setTransactions(transactions);
           },
@@ -97,7 +97,7 @@ export function SendBonusModal() {
 
   return (
     <Dialog>
-      {user?.verify === "VERIFIED" ? (
+      {user?.verify === "VERIFIED" && user?.status === "ACTIVE" ? (
         <DialogTrigger asChild>
           <Button variant="deposit" className="!h-8 !w-full">
             Send
@@ -108,10 +108,24 @@ export function SendBonusModal() {
           variant="deposit"
           className="!h-8 !w-full"
           onClick={() => {
-            toast("Please complete KYC verification.", "Error");
-            setTimeout(() => {
-              router.push("/dashboard/settings");
-            }, 1000);
+            if (user?.verify !== "VERIFIED") {
+              toast("Please complete KYC verification.", "Warning");
+              setTimeout(() => {
+                router.push("/dashboard/settings");
+              }, 1000);
+            } else if (user?.status === "SUSPENDED") {
+              toast("Your account is suspended", "Warning");
+            } else if (user?.status === "FREEZE") {
+              toast(
+                "Your account is frozen now. Please contact to support team",
+                "Warning"
+              );
+              setTimeout(() => {
+                router.push("/dashboard/support");
+              }, 1000);
+            } else {
+              toast("You have some problems on your account.", "Warning");
+            }
           }}
         >
           Send

@@ -79,6 +79,63 @@ export const getUser = async (
   }
 };
 
+// Get users
+export const getAllUsers = async (
+  onSuccess: (users: any) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.get(`/api/user/all-user`);
+    if (res.status === 200) {
+      const { users } = res.data;
+      // const newUser: any = {
+      //   ...user,
+      //   transactions: user.receivedTransactions
+      //     .concat(user.sentTransactions)
+      //     .sort(
+      //       (a: any, b: any) =>
+      //         new Date(b.created_at).getTime() -
+      //         new Date(a.created_at).getTime()
+      //     ),
+      //   recentDeposit: user.receivedTransactions
+      //     ?.filter((transaction: any) => transaction.type === "DEPOSIT")
+      //     .sort(
+      //       (a: any, b: any) =>
+      //         new Date(b.created_at).getTime() -
+      //         new Date(a.created_at).getTime()
+      //     )[0]?.amount,
+      //   recentWithdrawal: user.sentTransactions
+      //     ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+      //     .sort(
+      //       (a: any, b: any) =>
+      //         new Date(b.created_at).getTime() -
+      //         new Date(a.created_at).getTime()
+      //     )[0]?.amount,
+      //   recentBonus: user.receivedTransactions
+      //     ?.filter((transaction: any) => transaction.type === "BONUS")
+      //     .sort(
+      //       (a: any, b: any) =>
+      //         new Date(b.created_at).getTime() -
+      //         new Date(a.created_at).getTime()
+      //     )[0]?.amount,
+      //   recentWithdrawStatus: user.sentTransactions
+      //     ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+      //     .sort(
+      //       (a: any, b: any) =>
+      //         new Date(b.created_at).getTime() -
+      //         new Date(a.created_at).getTime()
+      //     )[0]?.status,
+      // };
+      onSuccess(users);
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error getting user:", error);
+    onError(error.response.data.message);
+  }
+};
+
 export const updateProfile = async (
   data: any,
   onSuccess: () => void,
@@ -296,7 +353,7 @@ export const sendBonus = async (
 };
 
 // Get all transactions
-export const getAllTransactions = async (
+export const getTransactions = async (
   onSuccess: (transactions: any) => void,
   onError: (message: string) => void
 ) => {

@@ -120,6 +120,16 @@ const Dashboard = () => {
                 setTimeout(() => {
                   router.push("/dashboard/settings");
                 }, 1000);
+              } else if (user?.status === "SUSPENDED") {
+                toast("Your account is suspended", "Warning");
+              } else if (user?.status === "FREEZE") {
+                toast(
+                  "Your account is frozen now. Please contact to support team",
+                  "Warning"
+                );
+                setTimeout(() => {
+                  router.push("/dashboard/support");
+                }, 1000);
               } else if (!spinningAvailable) {
                 toast("You are not available to spin", "Warning");
               } else {
