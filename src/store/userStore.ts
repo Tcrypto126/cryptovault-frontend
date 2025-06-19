@@ -38,7 +38,7 @@ interface User {
   username?: string;
   role?: "ADMIN" | "USER";
   status?: "ACTIVE" | "INACTIVE" | "FREEZE" | "SUSPENDED";
-  verify?: "UNVERIFIED" | "VERIFIED";
+  verify?: "UNVERIFIED" | "VERIFIED" | "REJECTED";
   balance?: number;
   bonus?: number;
 

@@ -116,8 +116,10 @@ const createColumns = (
       <div className="flex items-center justify-start gap-1">
         {row.original.verify == "Verified" ? (
           <h6 className="text-center !text-[14px] text-[#1FB356]">Verified</h6>
+        ) : row.original.verify == "Rejected" ? (
+          <h6 className="text-center !text-[14px] text-[#E62E2E]">Rejected</h6>
         ) : (
-          <h6 className="text-center !text-[14px] text-[#E62E2E]">
+          <h6 className="text-center !text-[14px] text-[#c09919]">
             Unverified
           </h6>
         )}

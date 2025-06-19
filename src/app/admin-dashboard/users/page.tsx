@@ -21,7 +21,12 @@ const UsersPage = () => {
           : user.status === "FREEZE"
           ? "Freeze"
           : "Suspended",
-      verify: user.verify === "VERIFIED" ? "Verified" : "Unverified",
+      verify:
+        user.verify === "VERIFIED"
+          ? "Verified"
+          : user.verify === "REJECTED"
+          ? "Rejected"
+          : "Unverified",
       user: {
         id: user.id,
         name: user.full_name,

@@ -537,3 +537,26 @@ export const approveWithdrawal = async (
     onError(error.response.data.message);
   }
 };
+
+// Approve KYC by admin
+export const handleKYC = async (
+  email: string,
+  type: string,
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.put("/api/user/handle-kyc", {
+      email,
+      type,
+    });
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error approving KYC:", error);
+    onError(error.response.data.message);
+  }
+};

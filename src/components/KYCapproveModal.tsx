@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconEye } from "@tabler/icons-react";
+import { IconEye, IconLoader2 } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
+import { handleKYC, getAllUsers } from "@/api";
+import { useUserStore } from "@/store/userStore";
 
 const FormSchema = z.object({
   fullName: z.string().nonempty({ message: "Full name is required" }),
@@ -57,8 +59,10 @@ export function KYCapproveModal({
   documents: Array<string>;
 }) {
   const { toast } = useNotification();
-  const [isSendding, setIsSendding] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
+  const [isApproveing, setIsApproveing] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { setUsersData } = useUserStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -72,28 +76,43 @@ export function KYCapproveModal({
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    setIsSendding(true);
-    setTimeout(() => {
-      setIsSendding(false);
-      toast("Successfully added new incentive", "Success");
-      closeRef.current?.click();
-      form.reset();
-    }, 3000);
+  function handleVerify(email: string, type: string) {
+    if (type === "VERIFIED") {
+      setIsApproveing(true);
+    } else {
+      setIsRejecting(true);
+    }
 
-    console.log("data: ", data);
-  }
-
-  function reject() {
-    console.log("reject");
-    toast("Successfully rejected", "Success");
-    closeRef.current?.click();
-  }
-
-  function approve() {
-    console.log("approve");
-    toast("Successfully approved", "Success");
-    closeRef.current?.click();
+    handleKYC(
+      email,
+      type,
+      () => {
+        getAllUsers(
+          (users: any) => {
+            setUsersData(users);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
+        if (type === "VERIFIED") {
+          setIsApproveing(false);
+          toast("Successfully approved", "Success");
+        } else {
+          setIsRejecting(false);
+          toast("Successfully rejected", "Success");
+        }
+        closeRef.current?.click();
+      },
+      (message: string) => {
+        toast(message, "Error");
+        if (type === "VERIFIED") {
+          setIsApproveing(false);
+        } else {
+          setIsRejecting(false);
+        }
+      }
+    );
   }
 
   return (
@@ -115,10 +134,7 @@ export function KYCapproveModal({
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full mt-[5px] space-y-4"
-          >
+          <form className="w-full mt-[5px] space-y-4">
             <FormField
               control={form.control}
               name="fullName"
@@ -245,21 +261,30 @@ export function KYCapproveModal({
               <Button
                 variant="withdraw"
                 type="button"
+                disabled={isApproveing}
                 onClick={() => {
-                  reject();
+                  handleVerify(email, "REJECTED");
                 }}
               >
-                Reject
+                {isRejecting ? (
+                  <IconLoader2 className="animate-spin" />
+                ) : (
+                  "Reject"
+                )}
               </Button>
               <Button
                 variant="spin"
                 type="button"
-                disabled={isSendding}
+                disabled={isApproveing}
                 onClick={() => {
-                  approve();
+                  handleVerify(email, "VERIFIED");
                 }}
               >
-                Approve
+                {isApproveing ? (
+                  <IconLoader2 className="animate-spin" />
+                ) : (
+                  "Approve"
+                )}
               </Button>
             </DialogFooter>
           </form>

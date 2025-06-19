@@ -106,6 +106,11 @@ const Dashboard = () => {
         message: "Please complete KYC verification.",
         redirect: "/dashboard/settings",
       },
+      REJECTED: {
+        message:
+          "Your verification is rejected. Please re-submit your correct documents.",
+        redirect: "/dashboard/settings",
+      },
       SUSPENDED: {
         message: "Your account is suspended",
       },
@@ -114,13 +119,15 @@ const Dashboard = () => {
         redirect: "/dashboard/support",
       },
       INACTIVE: {
-        message:
-          "Your account not activated yet.",
+        message: "Your account not activated yet.",
       },
     };
 
     if (user.verify !== "VERIFIED") {
-      const { message, redirect } = statusMessages.UNVERIFIED;
+      const { message, redirect } =
+        user?.verify === "REJECTED"
+          ? statusMessages.REJECTED
+          : statusMessages.UNVERIFIED;
       toast(message, "Warning");
       if (redirect) {
         setTimeout(() => router.push(redirect), 1000);

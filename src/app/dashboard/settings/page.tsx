@@ -114,7 +114,6 @@ const SettingsPage = () => {
   const { toast } = useNotification();
   const [activeTab, setActiveTab] = useState("userSettings");
   const { user } = useUserStore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form1 = useForm<z.infer<typeof FormSchema1>>({
     resolver: zodResolver(FormSchema1),
@@ -199,11 +198,9 @@ const SettingsPage = () => {
       data,
       () => {
         toast("KYC submitted successfully", "Success");
-        setIsSubmitting(true);
       },
       (message: string) => {
         toast(message, "Error");
-        setIsSubmitting(false);
       }
     );
   }
@@ -804,7 +801,9 @@ const SettingsPage = () => {
                   variant="deposit"
                   type="submit"
                   className="w-full max-w-[48%] sm:max-w-34 h-10"
-                  disabled={isSubmitting || form3.formState.isSubmitting}
+                  disabled={
+                    user?.verify === "VERIFIED" || form3.formState.isSubmitting
+                  }
                 >
                   {form3.formState.isSubmitting && (
                     <IconLoader2 className="w-4 h-4 animate-spin" />

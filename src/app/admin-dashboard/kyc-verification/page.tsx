@@ -26,7 +26,12 @@ const KYCverification = () => {
           : user.status === "FREEZE"
           ? "Freeze"
           : "Suspended",
-      verify: user.verify === "VERIFIED" ? "Verified" : "Unverified",
+      verify:
+        user.verify === "VERIFIED"
+          ? "Verified"
+          : user.verify === "REJECTED"
+          ? "Rejected"
+          : "Unverified",
       documents: [user.government_id, user.id_card],
     })) || []
   );

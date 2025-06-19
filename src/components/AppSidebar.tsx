@@ -98,11 +98,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/admin-dashboard/withdrawal-requests",
         icon: IconTransferOut,
       },
-      {
-        title: "Deposit Incentives",
-        url: "/admin-dashboard/deposit-incentives",
-        icon: IconTransferIn,
-      },
+      // {
+      //   title: "Deposit Incentives",
+      //   url: "/admin-dashboard/deposit-incentives",
+      //   icon: IconTransferIn,
+      // },
       {
         title: "KYC Verification",
         url: "/admin-dashboard/kyc-verification",
