@@ -14,8 +14,9 @@ interface Support {
   user?: User;
   subject?: string;
   status?: string;
-  lastUpdated?: Date;
+  updated_at?: Date;
   message?: string;
+  replyMessage?: string;
 }
 
 interface SupportState {

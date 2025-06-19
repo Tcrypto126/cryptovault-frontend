@@ -560,3 +560,53 @@ export const handleKYC = async (
     onError(error.response.data.message);
   }
 };
+
+// Get all supports by admin
+export const getAllSupports = async (
+  onSuccess: (supports: any) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.get("/api/support/get-supports");
+    if (res.status === 200) {
+      const supports: any = res.data.supports;
+      const newSupports: any = supports.sort(
+        (a: any, b: any) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      );
+      onSuccess(newSupports);
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error getting all supports:", error);
+    onError(error.response.data.message);
+  }
+};
+
+// Update support by admin
+export const updateSupport = async (
+  id: string,
+  message: string,
+  reply: string,
+  status: string,
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.put("/api/support/update", {
+      id,
+      message,
+      reply,
+      status,
+    });
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error updating support:", error);
+    onError(error.response.data.message);
+  }
+};

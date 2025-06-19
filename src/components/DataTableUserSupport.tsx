@@ -56,11 +56,12 @@ export const schema = z.object({
   status: z.string(),
   message: z.string(),
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     avatar: z.string(),
   }),
+  reply: z.string(),
 });
 
 const createColumns = (
@@ -101,7 +102,7 @@ const createColumns = (
     header: "Last Updated",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        <h6>{row.original.lastUpdated.split("T")[0]}</h6>
+        <h6>{row.original.lastUpdated.split(".")[0].replace("T", " ")}</h6>
       </div>
     ),
   },
@@ -117,6 +118,8 @@ const createColumns = (
             user={row.original.user}
             message={row.original.message}
             lastUpdated={row.original.lastUpdated}
+            reply={row.original.reply}
+            status={row.original.status}
           />
           <Button
             variant="ghost"

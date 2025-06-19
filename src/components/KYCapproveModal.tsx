@@ -261,7 +261,7 @@ export function KYCapproveModal({
               <Button
                 variant="withdraw"
                 type="button"
-                disabled={isApproveing}
+                disabled={isRejecting}
                 onClick={() => {
                   handleVerify(email, "REJECTED");
                 }}

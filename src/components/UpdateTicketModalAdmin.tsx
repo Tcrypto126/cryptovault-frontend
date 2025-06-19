@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconEye } from "@tabler/icons-react";
+import { IconEye, IconLoader2 } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
+  DialogClose,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -26,6 +27,8 @@ import {
 
 import { useNotification } from "@/providers/notificationProvider";
 import { Textarea } from "./ui/textarea";
+import { getAllSupports, updateSupport } from "@/api";
+import { useSupportStore } from "@/store/supportStore";
 
 const FormSchema = z.object({
   ticketId: z.string(),
@@ -41,8 +44,9 @@ export function UpdateTicketModal({
   user,
   message,
   lastUpdated,
+  reply,
 }: {
-  id: number;
+  id: string;
   ticketId: string;
   user: {
     name: string;
@@ -51,10 +55,13 @@ export function UpdateTicketModal({
   };
   message: string;
   lastUpdated: string;
+  reply: string;
 }) {
   const { toast } = useNotification();
   const [isSendding, setIsSendding] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { setSupports } = useSupportStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -63,20 +70,64 @@ export function UpdateTicketModal({
       email: user.email,
       message: message,
       lastUpdated: lastUpdated,
-      reply: "",
+      reply: reply || "",
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsSendding(true);
-    setTimeout(() => {
-      setIsSendding(false);
-      toast("Successfully added new incentive", "Success");
-      closeRef.current?.click();
-      form.reset();
-    }, 3000);
+    updateSupport(
+      id,
+      message,
+      data.reply,
+      "ESCALATED",
+      () => {
+        getAllSupports(
+          (supports: any) => {
+            setSupports(supports);
+          },
+          (message: string) => {
+            toast(message, "Error");
+            setIsSendding(false);
+          }
+        );
+        toast("Successfully updated support", "Success");
+        closeRef.current?.click();
+        form.reset();
+      },
+      (message: string) => {
+        toast(message, "Error");
+        setIsSendding(false);
+      }
+    );
+  }
 
-    console.log("data: ", data);
+  function resolveSupport(id: string) {
+    setIsResolving(true);
+    updateSupport(
+      id,
+      message,
+      form.getValues("reply") || "",
+      "RESOLVED",
+      () => {
+        getAllSupports(
+          (supports: any) => {
+            setSupports(supports);
+          },
+          (message: string) => {
+            toast(message, "Error");
+            setIsResolving(false);
+          }
+        );
+        toast("Successfully resolved support", "Success");
+        closeRef.current?.click();
+        form.reset();
+      },
+      (message: string) => {
+        toast(message, "Error");
+        setIsResolving(false);
+      }
+    );
   }
 
   return (
@@ -189,18 +240,36 @@ export function UpdateTicketModal({
             />
 
             <DialogFooter className="grid grid-cols-2 gap-4 !mt-6">
-              <Button variant="withdraw" type="submit">
-                Escalate to Compliance
+              <DialogClose asChild>
+                <Button
+                  ref={closeRef}
+                  variant="outline"
+                  type="button"
+                  className="hidden"
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button variant="withdraw" type="submit" disabled={isSendding}>
+                {isSendding ? (
+                  <IconLoader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Escalate to Compliance"
+                )}
               </Button>
               <Button
                 variant="spin"
                 type="button"
                 onClick={() => {
-                  alert("hi");
+                  resolveSupport(id);
                 }}
-                disabled={isSendding}
+                disabled={isResolving}
               >
-                Mark as Resolved
+                {isResolving ? (
+                  <IconLoader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  "Mark as Resolved"
+                )}
               </Button>
             </DialogFooter>
           </form>

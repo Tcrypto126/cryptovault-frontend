@@ -1,76 +1,40 @@
 "use client";
 
+import { useState } from "react";
 import { DataTable } from "@/components/DataTableAdminSupport";
-
-const data = [
-  {
-    id: 1,
-    ticketId: "#T-14352",
-    user: {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    subject: "Withdrawal Delay",
-    status: "Resolved",
-    lastUpdated: "2025-06-11 14:30:25",
-    message:
-      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
-  },
-  {
-    id: 2,
-    ticketId: "#T-14353",
-    user: {
-      id: 1,
-      name: "kaori Doe",
-      email: "fujio.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    subject: "Bonus not received",
-    status: "In Progress",
-    lastUpdated: "2025-06-11 14:30:25",
-    message:
-      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
-  },
-  {
-    id: 3,
-    ticketId: "#T-14354",
-    user: {
-      id: 1,
-      name: "maksyme kolesov",
-      email: "fujio.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    subject: "Bonus not received",
-    status: "Escalated",
-    lastUpdated: "2025-06-11 14:30:25",
-    message:
-      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
-  },
-  {
-    id: 4,
-    ticketId: "#T-14355",
-    user: {
-      id: 1,
-      name: "maksyme kolesov",
-      email: "fujio.doe@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
-    },
-    subject: "Bonus not received",
-    status: "Escalated",
-    lastUpdated: "2025-06-11 14:30:25",
-    message:
-      "I'm sorry to inform you that the withdrawal is delayed due to some technical issues. We are working on it and will update you as soon as possible.",
-  },
-];
+import { useSupportStore } from "@/store/supportStore";
 
 const SupportPage = () => {
+  const { supports } = useSupportStore();
+
+  const [tableData, setTableData] = useState<any[]>(
+    supports.map((support: any, index: number) => ({
+      id: support.id,
+      ticketId: `#T-1435${index + 1}`,
+      user: {
+        id: support.user.id,
+        name: support.user.full_name,
+        email: support.user.email,
+        avatar: support.user.avatar,
+      },
+      subject: support.subject,
+      status:
+        support.status === "RESOLVED"
+          ? "Resolved"
+          : support.status === "ESCALATED"
+          ? "Escalated"
+          : "In Progress",
+      lastUpdated: support.updated_at,
+      message: support.message,
+      reply: support.replyMessage,
+    }))
+  );
+
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       <h3>Support</h3>
       <div>
-        <DataTable data={data} />
+        <DataTable data={tableData} />
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ import {
   getSupport,
   getTransactions,
   getAllTransactions,
+  getAllSupports,
 } from "@/api";
 
 type User = {
@@ -91,6 +92,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             await getAllTransactions(
               (transactions: any) => {
                 setAllTransactions(transactions);
+              },
+              (message: string) => {
+                toast(message, "Error");
+              }
+            );
+
+            await getAllSupports(
+              (supports: any) => {
+                setSupports(supports);
               },
               (message: string) => {
                 toast(message, "Error");

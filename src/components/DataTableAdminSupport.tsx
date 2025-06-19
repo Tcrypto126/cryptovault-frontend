@@ -6,9 +6,7 @@ import {
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconLoader,
   IconSearch,
-  IconEye,
 } from "@tabler/icons-react";
 import {
   ColumnDef,
@@ -51,18 +49,19 @@ import { NavUser } from "./NavUser";
 import { UpdateTicketModal } from "./UpdateTicketModalAdmin";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   ticketId: z.string(),
   subject: z.string(),
   lastUpdated: z.string(),
   status: z.string(),
   message: z.string(),
   user: z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     email: z.string().email(),
     avatar: z.string(),
   }),
+  reply: z.string(),
 });
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
@@ -110,7 +109,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Last Updated",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        <h6>{row.original.lastUpdated}</h6>
+        <h6>{row.original.lastUpdated.split(".")[0].replace("T", " ")}</h6>
       </div>
     ),
   },
@@ -119,17 +118,14 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        {row.original.status === "Resolved" ? (
-          <></>
-        ) : (
-          <UpdateTicketModal
-            id={row.original.id}
-            ticketId={row.original.ticketId}
-            user={row.original.user}
-            message={row.original.message}
-            lastUpdated={row.original.lastUpdated}
-          />
-        )}
+        <UpdateTicketModal
+          id={row.original.id}
+          ticketId={row.original.ticketId}
+          user={row.original.user}
+          message={row.original.message}
+          lastUpdated={row.original.lastUpdated}
+          reply={row.original.reply}
+        />
       </div>
     ),
   },
