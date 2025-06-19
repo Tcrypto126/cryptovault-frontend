@@ -27,7 +27,7 @@ import {
 
 import { useNotification } from "@/providers/notificationProvider";
 import { Textarea } from "./ui/textarea";
-import { getAllSupports, updateSupport } from "@/api";
+import { getSupports, updateSupport } from "@/api";
 import { useSupportStore } from "@/store/supportStore";
 
 const FormSchema = z.object({
@@ -71,7 +71,7 @@ export function UpdateTicketModalUser({
       email: user.email,
       message: message,
       lastUpdated: lastUpdated,
-      reply: reply || "",
+      reply: reply || " ",
     },
   });
 
@@ -83,7 +83,7 @@ export function UpdateTicketModalUser({
       "",
       "INPROGRESS",
       () => {
-        getAllSupports(
+        getSupports(
           (supports: any) => {
             setSupports(supports);
           },
@@ -94,7 +94,6 @@ export function UpdateTicketModalUser({
         );
         toast("Successfully sent message", "Success");
         closeRef.current?.click();
-        form.reset();
       },
       (message: string) => {
         toast(message, "Error");

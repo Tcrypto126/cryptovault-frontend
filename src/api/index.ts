@@ -423,41 +423,19 @@ export const sendSupport = async (
 };
 
 // Get support
-export const getSupport = async (
+export const getSupports = async (
   onSuccess: (supports: any) => void,
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/support/get-support");
+    const res = await instance.get("/api/support/get-supports");
     if (res.status === 200) {
-      const supports: any = res.data.supports.map(
-        (support: any, index: number) => ({
-          id: support.id,
-          ticketId: `#T-14354${index + 1}`,
-          user: {
-            id: support.user.id,
-            name: support.user.full_name,
-            email: support.user.email,
-            avatar: support.user.avatar,
-          },
-          subject: support.subject,
-          status:
-            support.status == "INPROGRESS"
-              ? "In Progress"
-              : support.status == "RESOLVED"
-              ? "Resolved"
-              : "Rejected",
-          lastUpdated: support.updated_at,
-          message: support.message,
-        })
+      const supports: any = res.data.supports;
+      const newSupports: any = supports.sort(
+        (a: any, b: any) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
-      onSuccess(
-        supports.sort(
-          (a: any, b: any) =>
-            new Date(b.lastUpdated).getTime() -
-            new Date(a.lastUpdated).getTime()
-        )
-      );
+      onSuccess(newSupports);
     } else {
       onError(res.data.message);
     }
@@ -567,7 +545,7 @@ export const getAllSupports = async (
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/support/get-supports");
+    const res = await instance.get("/api/support/get-all-support");
     if (res.status === 200) {
       const supports: any = res.data.supports;
       const newSupports: any = supports.sort(

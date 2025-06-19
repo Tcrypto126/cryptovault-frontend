@@ -9,7 +9,7 @@ import verifyToken from "@/lib/verifyToken";
 import instance from "@/lib/axios";
 import {
   getAllUsers,
-  getSupport,
+  getSupports,
   getTransactions,
   getAllTransactions,
   getAllSupports,
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { signout, setUserData, user, users, setUsersData } = useUserStore();
   const { setTransactions, setAllTransactions, signoutTransaction } =
     useTransactionStore();
-  const { setSupports, signoutSupport } = useSupportStore();
+  const { setSupports, setAllSupports, signoutSupport } = useSupportStore();
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useNotification();
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           );
 
-          await getSupport(
+          await getSupports(
             (supports: any) => {
               setSupports(supports);
             },
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             await getAllSupports(
               (supports: any) => {
-                setSupports(supports);
+                setAllSupports(supports);
               },
               (message: string) => {
                 toast(message, "Error");

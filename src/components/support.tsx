@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
-import { getSupport, sendSupport } from "@/api";
+import { getSupports, sendSupport } from "@/api";
 import { useSupportStore } from "@/store";
 
 const FormSchema = z.object({
@@ -57,7 +57,7 @@ export function SupportModal() {
     sendSupport(
       data,
       async () => {
-        await getSupport(
+        await getSupports(
           (supports: any) => {
             setSupports(supports);
           },

@@ -5,10 +5,10 @@ import { DataTable } from "@/components/DataTableAdminSupport";
 import { useSupportStore } from "@/store/supportStore";
 
 const SupportPage = () => {
-  const { supports } = useSupportStore();
+  const { allSupports } = useSupportStore();
 
   const [tableData, setTableData] = useState<any[]>(
-    supports.map((support: any, index: number) => ({
+    allSupports.map((support: any, index: number) => ({
       id: support.id,
       ticketId: `#T-1435${index + 1}`,
       user: {
@@ -24,7 +24,7 @@ const SupportPage = () => {
           : support.status === "ESCALATED"
           ? "Escalated"
           : "In Progress",
-      lastUpdated: support.updated_at,
+      lastUpdated: support.updated_at.split(".")[0].replace("T", " "),
       message: support.message,
       reply: support.replyMessage,
     }))

@@ -109,7 +109,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Last Updated",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        <h6>{row.original.lastUpdated.split(".")[0].replace("T", " ")}</h6>
+        <h6>{row.original.lastUpdated}</h6>
       </div>
     ),
   },

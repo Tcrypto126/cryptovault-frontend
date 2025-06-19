@@ -19,11 +19,6 @@ const SettingsPage = () => {
             checked={isWithdrawals}
             onCheckedChange={() => {
               setIsWithdrawals(!isWithdrawals);
-              if (!isWithdrawals) {
-                toast("Activated successfully", "Success");
-              } else {
-                toast("Deactivated successfully", "Success");
-              }
             }}
           />
         </div>
@@ -37,11 +32,6 @@ const SettingsPage = () => {
             checked={isManualApproval}
             onCheckedChange={() => {
               setIsManualApproval(!isManualApproval);
-              if (!isManualApproval) {
-                toast("Activated successfully", "Success");
-              } else {
-                toast("Deactivated successfully", "Success");
-              }
             }}
           />
         </div>

@@ -24,7 +24,7 @@ const SupportPage = () => {
           : support.status === "ESCALATED"
           ? "Escalated"
           : "In Progress",
-      lastUpdated: support.updated_at,
+      lastUpdated: support.updated_at.split(".")[0].replace("T", " "),
       message: support.message,
       reply: support.replyMessage,
     }))

@@ -61,7 +61,7 @@ export function UpdateTicketModal({
   const [isSendding, setIsSendding] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const { setSupports } = useSupportStore();
+  const { setAllSupports } = useSupportStore();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -84,16 +84,15 @@ export function UpdateTicketModal({
       () => {
         getAllSupports(
           (supports: any) => {
-            setSupports(supports);
+            setAllSupports(supports);
           },
           (message: string) => {
             toast(message, "Error");
             setIsSendding(false);
           }
         );
-        toast("Successfully updated support", "Success");
+        toast("Successfully updated support!", "Success");
         closeRef.current?.click();
-        form.reset();
       },
       (message: string) => {
         toast(message, "Error");
@@ -112,14 +111,14 @@ export function UpdateTicketModal({
       () => {
         getAllSupports(
           (supports: any) => {
-            setSupports(supports);
+            setAllSupports(supports);
           },
           (message: string) => {
             toast(message, "Error");
             setIsResolving(false);
           }
         );
-        toast("Successfully resolved support", "Success");
+        toast("Successfully resolved support!", "Success");
         closeRef.current?.click();
         form.reset();
       },

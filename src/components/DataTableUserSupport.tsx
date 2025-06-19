@@ -44,7 +44,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StatusBadge from "./StatusBadge";
 import { UpdateTicketModalUser } from "./UpdateTicketModalUser";
-import { deleteSupport as deleteSupportApi, getSupport } from "@/api";
+import { deleteSupport as deleteSupportApi, getSupports } from "@/api";
 import { useSupportStore } from "@/store";
 import { useNotification } from "@/providers/notificationProvider";
 
@@ -102,7 +102,7 @@ const createColumns = (
     header: "Last Updated",
     cell: ({ row }) => (
       <div className="flex items-center justify-start ">
-        <h6>{row.original.lastUpdated.split(".")[0].replace("T", " ")}</h6>
+        <h6>{row.original.lastUpdated}</h6>
       </div>
     ),
   },
@@ -161,7 +161,7 @@ export function DataTable({
     deleteSupportApi(
       id,
       () => {
-        getSupport(
+        getSupports(
           (supports) => {
             setSupports(supports);
             toast("Support ticket deleted successfully", "Success");
