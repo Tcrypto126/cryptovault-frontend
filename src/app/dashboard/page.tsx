@@ -86,6 +86,7 @@ const Dashboard = () => {
             ? transaction.sender?.avatar || "/assets/avatars/avatar-default.png"
             : "/assets/logo.png",
       },
+      created_at: transaction.created_at.split(".")[0].replace("T", " "),
     }))
   );
 

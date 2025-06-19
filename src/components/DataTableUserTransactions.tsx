@@ -61,6 +61,7 @@ export const schema = z.object({
     email: z.string().email(),
     avatar: z.string(),
   }),
+  created_at: z.string(),
 });
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
@@ -75,6 +76,15 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
       );
     },
     enableHiding: false,
+  },
+  {
+    accessorKey: "created_at",
+    header: "Date",
+    cell: ({ row }) => (
+      <div className="flex items-center justify-start">
+        {row.original.created_at}
+      </div>
+    ),
   },
   {
     accessorKey: "type",
@@ -431,7 +441,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.type === "Deposit")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.type === "Deposit")
@@ -587,7 +600,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.type === "Withdraw")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.type === "Withdraw")
@@ -743,7 +759,13 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter(
+                  (row) =>
+                    row.original.type === "BonusSent" ||
+                    row.original.type === "BonusReceived"
+                ).length ? (
                 table
                   .getRowModel()
                   .rows.filter(

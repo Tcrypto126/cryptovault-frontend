@@ -429,7 +429,7 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows?.filter((row) => row.original.type === "Deposit").length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.type === "Deposit")
@@ -571,7 +571,7 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows?.filter((row) => row.original.type === "Withdraw").length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.type === "Withdraw")
@@ -713,7 +713,7 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows?.filter((row) => row.original.type === "BonusSent" || row.original.type === "BonusReceived").length ? (
                 table
                   .getRowModel()
                   .rows.filter(

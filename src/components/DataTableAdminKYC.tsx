@@ -214,15 +214,15 @@ export function DataTable({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="inprogress">In Progress</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
+            <SelectItem value="verified">Verified</SelectItem>
+            <SelectItem value="unverified">Unverified</SelectItem>
             <SelectItem value="rejected">Rejected</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="hidden md:flex">
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="inprogress">In Progress</TabsTrigger>
-          <TabsTrigger value="approved">Approved</TabsTrigger>
+          <TabsTrigger value="verified">Verified</TabsTrigger>
+          <TabsTrigger value="unverified">Unverified</TabsTrigger>
           <TabsTrigger value="rejected">Rejected</TabsTrigger>
         </TabsList>
         <div className="relative pr-1">
@@ -390,7 +390,7 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="inprogress" className="relative flex flex-col gap-4">
+      <TabsContent value="verified" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
@@ -416,10 +416,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows?.filter((row) => row.original.verify === "Verified").length ? (
                 table
                   .getRowModel()
-                  .rows.filter((row) => row.original.status === "In Progress")
+                  .rows.filter((row) => row.original.verify === "Verified")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}
@@ -546,7 +546,7 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="approved" className="relative flex flex-col gap-4">
+      <TabsContent value="unverified" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">
           <Table>
             <TableHeader className="bg-dashboard sticky top-0 z-10">
@@ -572,10 +572,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows?.filter((row) => row.original.verify === "Unverified").length ? (
                 table
                   .getRowModel()
-                  .rows.filter((row) => row.original.status === "Approved")
+                  .rows.filter((row) => row.original.verify === "Unverified")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}
@@ -728,10 +728,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table.getRowModel().rows?.filter((row) => row.original.verify === "Rejected").length ? (
                 table
                   .getRowModel()
-                  .rows.filter((row) => row.original.status === "Rejected")
+                  .rows.filter((row) => row.original.verify === "Rejected")
                   .map((row, index) => (
                     <TableRow
                       key={row.id}

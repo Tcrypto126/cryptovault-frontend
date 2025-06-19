@@ -506,7 +506,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Active")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Active")
@@ -648,7 +651,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Inactive")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Inactive")
@@ -790,7 +796,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Freeze")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Freeze")
@@ -932,7 +941,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.status === "Suspended")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Suspended")

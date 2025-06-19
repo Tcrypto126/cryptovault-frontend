@@ -6,7 +6,7 @@ import {
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconLoader,
+  IconLoader2,
   IconSearch,
 } from "@tabler/icons-react";
 import {
@@ -74,7 +74,8 @@ const createColumns = (
     id: string,
     email: string,
     amount: number
-  ) => Promise<void>
+  ) => Promise<void>,
+  isApproveing: boolean
 ): ColumnDef<z.infer<typeof schema>>[] => [
   {
     accessorKey: "timestamp",
@@ -143,8 +144,13 @@ const createColumns = (
                 row.original.amount
               );
             }}
+            // disabled={isApproveing}
           >
+            {/* {isApproveing ? (
+              <IconLoader2 className="animate-spin" />
+            ) : ( */}
             Approve
+            {/* )} */}
           </Button>
         ) : null}
       </div>
@@ -157,6 +163,7 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
+  const [isApproveing, setIsApproveing] = React.useState(false);
   const { setAllTransactions } = useTransactionStore();
   const { toast } = useNotification();
   const [activeTab, setActiveTab] = React.useState("all");
@@ -179,6 +186,7 @@ export function DataTable({
     email: string,
     amount: number
   ) => {
+    setIsApproveing(true);
     approveWithdrawalApi(
       id,
       email,
@@ -193,16 +201,18 @@ export function DataTable({
           }
         );
         toast("You approved withdrawal request successfully!", "Success");
+        setIsApproveing(false);
       },
       (message) => {
         toast(message, "Error");
+        setIsApproveing(false);
       }
     );
   };
 
   const columns = React.useMemo(
-    () => createColumns(handleApproveWithdrawal),
-    [handleApproveWithdrawal]
+    () => createColumns(handleApproveWithdrawal, isApproveing),
+    [handleApproveWithdrawal, isApproveing]
   );
 
   const filteredData = React.useMemo(() => {
