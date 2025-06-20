@@ -173,8 +173,12 @@ export function DataTable({
     return data.filter((item) => {
       const matchesSearch =
         item.email.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase());
+        (item.user?.name?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        ) ||
+        (item.user?.email?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        );
 
       switch (activeTab) {
         case "deposit":

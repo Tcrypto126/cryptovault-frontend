@@ -154,8 +154,12 @@ export function DataTable({
   const filteredData = React.useMemo(() => {
     return data.filter(
       (item) =>
-        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase())
+        (item.user?.name?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        ) ||
+        (item.user?.email?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        )
     );
   }, [data, searchKey]);
 

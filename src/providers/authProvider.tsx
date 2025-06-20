@@ -60,6 +60,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }, 1000);
         }
 
+        const allowedRoutes = ["/account/signin", "/account/signup"];
+
+        if (isTokenValid && allowedRoutes.includes(pathname)) {
+          router.push("/dashboard");
+        }
+
         if (isTokenValid) {
           await getTransactions(
             (transactions: any) => {

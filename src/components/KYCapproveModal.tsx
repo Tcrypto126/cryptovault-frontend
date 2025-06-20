@@ -72,7 +72,7 @@ export function KYCapproveModal({
       dateOfSubmission: dateOfSubmission,
       ipAddress: ipAddress || "192.168.142.78",
       device: device || "Desktop",
-      documents: documents,
+      documents: documents || [],
     },
   });
 
@@ -234,16 +234,20 @@ export function KYCapproveModal({
                   <FormLabel>Documents</FormLabel>
                   <FormControl>
                     <div className="flex flex-col gap-2 text-sm">
-                      {documents.map((document, index) => (
-                        <Link
-                          key={index}
-                          href={document}
-                          target="_blank"
-                          className="text-blue-500"
-                        >
-                          {index === 0 ? "Government ID" : "ID Card"}
-                        </Link>
-                      ))}
+                      {documents.map((document, index) => 
+                        document ? (
+                          <Link
+                            key={index}
+                            href={document}
+                            target="_blank"
+                            className="text-blue-500"
+                          >
+                            {index === 0 ? "Government ID" : "ID Card"}
+                          </Link>
+                        ) : (
+                          <span key={index} className="text-muted">No document uploaded</span>
+                        )
+                      )}
                     </div>
                   </FormControl>
                   {/* <FormMessage /> */}

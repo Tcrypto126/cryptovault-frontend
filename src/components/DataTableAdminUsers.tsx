@@ -250,8 +250,12 @@ export function DataTable({
   const filteredData = React.useMemo(() => {
     return data.filter((item) => {
       const matchesSearch =
-        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase());
+        (item.user?.name?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        ) ||
+        (item.user?.email?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        );
 
       switch (activeTab) {
         case "active":

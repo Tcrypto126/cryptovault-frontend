@@ -161,8 +161,12 @@ export function DataTable({
   const filteredData = React.useMemo(() => {
     return data.filter(
       (item) =>
-        item.user.name.toLowerCase().includes(searchKey.toLowerCase()) ||
-        item.user.email.toLowerCase().includes(searchKey.toLowerCase())
+        (item.user?.name?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        ) ||
+        (item.user?.email?.toLowerCase() || "").includes(
+          searchKey.toLowerCase()
+        )
     );
   }, [data, searchKey]);
 
@@ -416,7 +420,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.filter((row) => row.original.verify === "Verified").length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.verify === "Verified")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.verify === "Verified")
@@ -572,7 +579,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.filter((row) => row.original.verify === "Unverified").length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.verify === "Unverified")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.verify === "Unverified")
@@ -728,7 +738,10 @@ export function DataTable({
               ))}
             </TableHeader>
             <TableBody className="bg-[#40414933]">
-              {table.getRowModel().rows?.filter((row) => row.original.verify === "Rejected").length ? (
+              {table
+                .getRowModel()
+                .rows?.filter((row) => row.original.verify === "Rejected")
+                .length ? (
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.verify === "Rejected")

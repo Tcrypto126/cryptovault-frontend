@@ -61,7 +61,6 @@ export function WithdrawModal() {
       async () => {
         setUserData({
           ...user,
-          balance: (user?.balance || 0) - data.amount,
           recentWithdrawal: data.amount,
           recentWithdrawStatus: "PENDING",
         });
@@ -90,7 +89,8 @@ export function WithdrawModal() {
         redirect: "/dashboard/settings",
       },
       REJECTED: {
-        message: "Your verification is rejected. Please re-submit your correct documents.",
+        message:
+          "Your verification is rejected. Please re-submit your correct documents.",
         redirect: "/dashboard/settings",
       },
       SUSPENDED: {

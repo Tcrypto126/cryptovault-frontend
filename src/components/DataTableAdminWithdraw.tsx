@@ -144,13 +144,8 @@ const createColumns = (
                 row.original.amount
               );
             }}
-            // disabled={isApproveing}
           >
-            {/* {isApproveing ? (
-              <IconLoader2 className="animate-spin" />
-            ) : ( */}
             Approve
-            {/* )} */}
           </Button>
         ) : null}
       </div>
@@ -218,7 +213,7 @@ export function DataTable({
   const filteredData = React.useMemo(() => {
     return data.filter(
       (item) =>
-        item.email.toLowerCase().includes(searchKey.toLowerCase()) &&
+        (item.email?.toLowerCase() || "").includes(searchKey.toLowerCase()) &&
         (activeTab === "all" ||
           (activeTab === "approved" && item.status === "Approved") ||
           (activeTab === "pending" && item.status === "Pending") ||

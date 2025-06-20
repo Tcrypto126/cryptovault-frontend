@@ -17,7 +17,7 @@ const DataHeader = () => {
     user: {
       name: user?.full_name || "",
       email: user?.email || "",
-      avatar: user?.avatar || null,
+      avatar: user?.avatar || "/assets/avatars/avatar-default.png",
     },
   };
 
@@ -42,7 +42,8 @@ const DataHeader = () => {
             >
               Dashboard
             </Button>
-          ) : user?.role === "ADMIN" && !pathname.includes("/admin-dashboard") ? (
+          ) : user?.role === "ADMIN" &&
+            !pathname.includes("/admin-dashboard") ? (
             <Button
               variant="deposit"
               className="h-9"
