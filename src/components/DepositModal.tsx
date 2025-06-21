@@ -39,6 +39,7 @@ export function DepositModal() {
           ...user,
           balance: (user?.balance || 0) + amount,
           recentDeposit: amount,
+          bonus: (user?.bonus || 0) + amount * 0.05,
         });
         await getTransactions(
           (transactions: any) => {
@@ -48,7 +49,10 @@ export function DepositModal() {
             toast(message, "Error");
           }
         );
-        toast("Deposited successfully", "Success");
+        toast(
+          `Deposited successfully! You got a $${amount * 0.05} bonus.`,
+          "Success"
+        );
         closeRef.current?.click();
         setIsSendding(false);
       },

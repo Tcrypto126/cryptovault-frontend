@@ -14,7 +14,13 @@ const WithdrawalRequestsPage = () => {
       .map((transaction: any) => ({
         id: transaction.id,
         timestamp: transaction.created_at.split(".")[0].replace("T", " "),
-        email: transaction.sender?.email || "Unknown",
+        user: {
+          id: transaction.sender?.id,
+          name: transaction.sender?.full_name,
+          email: transaction.sender?.email,
+          avatar:
+            transaction.sender?.avatar || "/assets/avatars/avatar-default.png",
+        },
         type: "Withdraw",
         amount: transaction.amount,
         status:

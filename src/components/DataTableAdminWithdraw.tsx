@@ -47,17 +47,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
-import {
-  approveWithdrawal as approveWithdrawalApi,
-  getAllTransactions,
-} from "@/api";
 import { useNotification } from "@/providers/notificationProvider";
 import { useTransactionStore } from "@/store/transactionStore";
+import { WithdrawApproveModalAdmin } from "./WithdrawApproveModalAdmin";
+import { NavUser } from "./NavUser";
 
 export const schema = z.object({
   id: z.string(),
   timestamp: z.string(),
-  email: z.string().email(),
   type: z.string(),
   amount: z.number(),
   status: z.string(),
@@ -69,14 +66,7 @@ export const schema = z.object({
   }),
 });
 
-const createColumns = (
-  handleApproveWithdrawal: (
-    id: string,
-    email: string,
-    amount: number
-  ) => Promise<void>,
-  isApproveing: boolean
-): ColumnDef<z.infer<typeof schema>>[] => [
+const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "timestamp",
     header: "Timestamp",
@@ -90,11 +80,11 @@ const createColumns = (
     enableHiding: false,
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "user",
+    header: "User",
     cell: ({ row }) => (
-      <div className="flex items-center justify-start gap-1 ">
-        {row.original.email}
+      <div className="flex items-center justify-start min-w-[160px]">
+        <NavUser user={row.original.user} type="table" />
       </div>
     ),
   },
@@ -134,19 +124,11 @@ const createColumns = (
     cell: ({ row }) => (
       <div className="flex items-center justify-start">
         {row.original.status === "Pending" ? (
-          <Button
-            variant="deposit"
-            size="sm"
-            onClick={() => {
-              handleApproveWithdrawal(
-                row.original.id,
-                row.original.email,
-                row.original.amount
-              );
-            }}
-          >
-            Approve
-          </Button>
+          <WithdrawApproveModalAdmin
+            id={row.original.id}
+            email={row.original.user.email}
+            amount={row.original.amount}
+          />
         ) : null}
       </div>
     ),
@@ -176,54 +158,25 @@ export function DataTable({
     pageSize: 10,
   });
 
-  const handleApproveWithdrawal = async (
-    id: string,
-    email: string,
-    amount: number
-  ) => {
-    setIsApproveing(true);
-    approveWithdrawalApi(
-      id,
-      email,
-      amount,
-      () => {
-        getAllTransactions(
-          (transactions) => {
-            setAllTransactions(transactions);
-          },
-          (message) => {
-            toast(message, "Error");
-          }
-        );
-        toast("You approved withdrawal request successfully!", "Success");
-        setIsApproveing(false);
-      },
-      (message) => {
-        toast(message, "Error");
-        setIsApproveing(false);
-      }
-    );
-  };
-
-  const columns = React.useMemo(
-    () => createColumns(handleApproveWithdrawal, isApproveing),
-    [handleApproveWithdrawal, isApproveing]
-  );
-
   const filteredData = React.useMemo(() => {
     return data.filter(
       (item) =>
-        (item.email?.toLowerCase() || "").includes(searchKey.toLowerCase()) &&
-        (activeTab === "all" ||
-          (activeTab === "approved" && item.status === "Approved") ||
-          (activeTab === "pending" && item.status === "Pending") ||
-          (activeTab === "failed" && item.status === "Failed"))
+        (item.user?.email?.toLowerCase() || "").includes(
+          searchKey?.toLowerCase()
+        ) ||
+        ((item.user?.name?.toLowerCase() || "").includes(
+          searchKey?.toLowerCase()
+        ) &&
+          (activeTab === "all" ||
+            (activeTab === "approved" && item.status === "Approved") ||
+            (activeTab === "pending" && item.status === "Pending") ||
+            (activeTab === "failed" && item.status === "Failed")))
     );
   }, [data, searchKey, activeTab]);
 
   const table = useReactTable({
     data: filteredData,
-    columns,
+    columns: columns,
     state: {
       sorting,
       columnVisibility,
