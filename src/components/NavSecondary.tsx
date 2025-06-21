@@ -105,7 +105,7 @@ export function NavSecondary({
                     {data.user.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                {user?.verify ? (
+                {user?.verify == "VERIFIED" ? (
                   <IconRosetteDiscountCheck
                     className="w-6 h-6 absolute bottom-0 left-8 z-20"
                     color="#6ED093"

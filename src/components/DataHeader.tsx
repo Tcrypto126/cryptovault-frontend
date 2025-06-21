@@ -33,7 +33,7 @@ const DataHeader = () => {
         <div className="flex items-center gap-2 md:gap-6">
           <div className="hidden lg:flex items-center gap-2">
             <NavUser user={data.user} />
-            {user?.verify ? (
+            {user?.verify == "VERIFIED" ? (
               <IconRosetteDiscountCheck className="w-6 h-6" color="#6ED093" />
             ) : (
               <IconRosetteDiscountCheckOff
