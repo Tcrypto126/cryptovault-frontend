@@ -149,12 +149,13 @@ const Dashboard = () => {
       return;
     }
 
-    if (!spinningAvailable) {
-      toast("You are not available to spin", "Warning");
+    if (user?.availableSpins && user?.availableSpins > 0) {
+      setSpinningModal(true);
+    } else {
+      setSpinningModal(false);
+      toast("You have no spins available", "Warning");
       return;
     }
-
-    setSpinningModal(true);
   };
 
   return (
@@ -170,7 +171,21 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex flex-col gap-4 p-4 h-auto md:h-[243px] bg-dashboard rounded-[12px]">
-          <h5>Spin & Win</h5>
+          <div className="flex items-center justify-between">
+            <h5>Spin & Win</h5>
+            {user?.availableSpins && user?.availableSpins > 0 ? (
+              <p className="!text-[14px] !text-[#11da5b] max-w-[130px] z-10 animate-[bounce_1s_ease-in-out_infinite]">
+                <span className="!text-[20px] !font-bold">
+                  {user?.availableSpins}
+                </span>{" "}
+                spins available
+              </p>
+            ) : (
+              <p className="!text-[14px] !text-[#0d8d3c] max-w-[130px] z-10">
+                No spins available
+              </p>
+            )}
+          </div>
           <div
             className="relative flex flex-col gap-2 p-4 min-w-[100%] sm:min-w-[300px] rounded-[12px] overflow-hidden cursor-pointer bg-gradient-to-b from-[#98FFEF] to-[#00C8EB] hover:bg-gradient-to-bl"
             onClick={handleSpin}
@@ -297,7 +312,7 @@ const Dashboard = () => {
             <h6 className="!text-[14px]">USD</h6>
           </div>
           <div className="flex flex-col gap-1">
-            <h6 className="!text-[14px] text-[#838799]">Last earned bonus</h6>
+            <h6 className="!text-[14px] text-[#838799]">Last Earned Bonus</h6>
             <div className="flex justify-between items-center gap-2">
               <h5 className="text-[#1FB356] !font-bold">
                 +${user?.recentBonus?.toFixed(2) || 0}

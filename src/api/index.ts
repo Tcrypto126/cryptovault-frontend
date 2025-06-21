@@ -588,3 +588,22 @@ export const updateSupport = async (
     onError(error.response.data.message);
   }
 };
+
+// Verify email
+export const verifyEmail = async (
+  token: string,
+  onSuccess: () => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const res = await instance.post(`/api/auth/verify-email`, { token });
+    if (res.status === 201) {
+      onSuccess();
+    } else {
+      onError(res.data.message);
+    }
+  } catch (error: any) {
+    console.error("Error verifying email:", error);
+    onError(error.response.data.message);
+  }
+};

@@ -168,7 +168,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           ];
           if (
             publicRoutes.includes(pathname) ||
-            pathname.includes("/reset-password")
+            pathname.includes("/reset-password") ||
+            pathname.includes("/verify-email")
           ) {
             return;
           }

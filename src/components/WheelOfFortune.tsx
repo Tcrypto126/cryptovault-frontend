@@ -17,14 +17,14 @@ type WheelSegment = {
 };
 
 const segments: WheelSegment[] = [
-  { id: 1, title: "$50", color: "#47CD4B", textColor: "#FFFFFF" },
-  { id: 2, title: "$100", color: "#FD8A16", textColor: "#000000" },
-  { id: 3, title: "$200", color: "#1DA4FD", textColor: "#FFFFFF" },
-  { id: 4, title: "$300", color: "#CF0B61", textColor: "#000000" },
-  { id: 5, title: "$400", color: "#6B16FE", textColor: "#FFFFFF" },
-  { id: 6, title: "$500", color: "#4BE2D2", textColor: "#000000" },
-  { id: 7, title: "$600", color: "#8B8B8B", textColor: "#FFFFFF" },
-  { id: 8, title: "$700", color: "#EB2C0C", textColor: "#000000" },
+  { id: 1, title: "$30", color: "#47CD4B", textColor: "#FFFFFF" },
+  { id: 2, title: "$60", color: "#FD8A16", textColor: "#000000" },
+  { id: 3, title: "$100", color: "#1DA4FD", textColor: "#FFFFFF" },
+  { id: 4, title: "$150", color: "#CF0B61", textColor: "#000000" },
+  { id: 5, title: "$210", color: "#6B16FE", textColor: "#FFFFFF" },
+  { id: 6, title: "$280", color: "#4BE2D2", textColor: "#000000" },
+  { id: 7, title: "$360", color: "#8B8B8B", textColor: "#FFFFFF" },
+  { id: 8, title: "$500", color: "#EB2C0C", textColor: "#000000" },
   // Add more segments here
 ];
 
@@ -74,6 +74,7 @@ function WheelOfFortune1({
           ...user,
           bonus: (user?.bonus || 0) + bonus,
           recentBonus: bonus,
+          availableSpins: (user?.availableSpins || 0) - 1,
         });
         await getTransactions(
           (transactions: any) => {

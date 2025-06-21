@@ -41,6 +41,7 @@ interface User {
   verify?: "UNVERIFIED" | "VERIFIED" | "REJECTED";
   balance?: number;
   bonus?: number;
+  availableSpins?: number;
 
   recentDeposit?: number;
   recentWithdrawal?: number;

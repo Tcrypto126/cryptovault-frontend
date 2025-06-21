@@ -75,8 +75,10 @@ const SignUp = () => {
       data.email,
       data.password,
       () => {
-        toast("Account created successfully", "Success");
-        router.push("/account/signin");
+        toast(
+          "Account created successfully. You will be receiving an email verification link shortly.",
+          "Success"
+        );
       },
       (message) => {
         toast(message, "Error");
