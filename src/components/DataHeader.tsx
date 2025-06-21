@@ -5,7 +5,13 @@ import { NavUser } from "./NavUser";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
-import { IconSearch, IconBell, IconSettings } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconBell,
+  IconSettings,
+  IconRosetteDiscountCheck,
+  IconRosetteDiscountCheckOff,
+} from "@tabler/icons-react";
 import { useUserStore } from "@/store";
 
 const DataHeader = () => {
@@ -25,8 +31,16 @@ const DataHeader = () => {
     <>
       <div className="flex justify-between items-center gap-2 w-full">
         <div className="flex items-center gap-2 md:gap-6">
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex items-center gap-2">
             <NavUser user={data.user} />
+            {user?.verify ? (
+              <IconRosetteDiscountCheck className="w-6 h-6" color="#6ED093" />
+            ) : (
+              <IconRosetteDiscountCheckOff
+                className="w-6 h-6"
+                color="#E8AD00"
+              />
+            )}
           </div>
           <Separator
             orientation="vertical"

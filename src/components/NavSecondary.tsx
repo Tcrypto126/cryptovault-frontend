@@ -21,8 +21,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { IconLogout, IconDashboard } from "@tabler/icons-react";
+import {
+  IconLogout,
+  IconDashboard,
+  IconRosetteDiscountCheck,
+  IconRosetteDiscountCheckOff,
+} from "@tabler/icons-react";
 import { useAuth } from "@/providers/authProvider";
+import { useUserStore } from "@/store";
 
 interface DataProps {
   user: {
@@ -50,7 +56,7 @@ export function NavSecondary({
   const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuth();
-
+  const { user } = useUserStore();
   return (
     <SidebarGroup>
       <SidebarGroupContent>
@@ -92,11 +98,24 @@ export function NavSecondary({
         <div className="mt-1 p-4 block lg:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center gap-2 cursor-pointer hover:bg-[#4b4770d3] rounded-md p-2">
+              <div className="flex items-center gap-2 cursor-pointer hover:bg-[#4b4770d3] rounded-md p-2 relative">
                 <Avatar className="h-10 w-10 rounded-full cursor-pointer border-[1px] border-[#beb6b6]">
-                  <AvatarImage src={data.user.avatar || ''} alt="avatar" />
-                  <AvatarFallback className="rounded-full">CN</AvatarFallback>
+                  <AvatarImage src={data.user.avatar || ""} alt="avatar" />
+                  <AvatarFallback className="rounded-full">
+                    {data.user.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
+                {user?.verify ? (
+                  <IconRosetteDiscountCheck
+                    className="w-6 h-6 absolute bottom-0 left-8 z-20"
+                    color="#6ED093"
+                  />
+                ) : (
+                  <IconRosetteDiscountCheckOff
+                    className="w-6 h-6 absolute bottom-0 left-8 z-20"
+                    color="#E8AD00"
+                  />
+                )}
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{data.user.name}</span>
                   <span className="text-muted-foreground truncate text-xs">

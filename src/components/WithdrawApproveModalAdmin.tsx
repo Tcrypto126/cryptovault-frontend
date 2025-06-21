@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   approveWithdrawal as approveWithdrawalApi,
@@ -32,6 +32,7 @@ export function WithdrawApproveModalAdmin({
   const { toast } = useNotification();
   const [isApproveing, setIsApproveing] = useState(false);
   const [allTransactions, setAllTransactions] = useState<any[]>([]);
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const approveWithdrawal = async () => {
     setIsApproveing(true);
@@ -48,12 +49,13 @@ export function WithdrawApproveModalAdmin({
             toast(message, "Error");
           }
         );
-        toast("You approved withdrawal request successfully!", "Success");
         setIsApproveing(false);
+        toast("You approved withdrawal request successfully!", "Success");
+        cancelRef.current?.click();
       },
       (message) => {
-        toast(message, "Error");
         setIsApproveing(false);
+        toast(message, "Error");
       }
     );
   };
@@ -75,17 +77,19 @@ export function WithdrawApproveModalAdmin({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <AlertDialogCancel ref={cancelRef}>Cancel</AlertDialogCancel>
+          <Button
+            variant="spin"
             onClick={approveWithdrawal}
             disabled={isApproveing}
+            className="!w-[75px]"
           >
             {isApproveing ? (
               <IconLoader2 className="animate-spin" />
             ) : (
               "Approve"
             )}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

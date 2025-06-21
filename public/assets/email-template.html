@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Cryptovault</title>
+  </head>
+
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="background-color: #f4f4f4; width: 100%; min-height: 100vh"
+    >
+      <tr>
+        <td align="center" valign="top" style="padding: 20px">
+          <table
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="
+              max-width: 495px;
+              width: 100%;
+              background-color: #0e0329;
+              border-radius: 24px;
+              text-align: center;
+              color: #fff;
+              font-family: Arial, Helvetica, sans-serif;
+              position: relative;
+            "
+          >
+            <tr>
+              <td style="padding: 32px; position: relative">
+                <!-- Background decorative images -->
+                <table
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="position: absolute; top: 0; left: 0; z-index: 1"
+                >
+                  <tr>
+                    <td style="position: relative">
+                      <img
+                        src="https://raw.githubusercontent.com/CryptoVaultPlatform/backend/refs/heads/main/public/default/light.png"
+                        alt="Light Effect"
+                        style="
+                          position: absolute;
+                          top: 20px;
+                          right: 20px;
+                          width: 80px;
+                          height: 80px;
+                          opacity: 0.6;
+                        "
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/CryptoVaultPlatform/backend/refs/heads/main/public/default/coin.png"
+                        alt="Coin"
+                        style="
+                          position: absolute;
+                          bottom: 20px;
+                          left: 20px;
+                          width: 60px;
+                          height: 60px;
+                          opacity: 0.7;
+                        "
+                      />
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Main content with higher z-index -->
+                <table
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="position: relative; z-index: 2"
+                >
+                  <!-- Header with logo and title -->
+                  <tr>
+                    <td style="padding-bottom: 16px">
+                      <img
+                        src="https://raw.githubusercontent.com/CryptoVaultPlatform/backend/refs/heads/main/public/default/logo.png"
+                        alt="Cryptovault Logo"
+                        style="
+                          width: 36px;
+                          height: 36px;
+                          display: inline-block;
+                          margin-right: 8px;
+                          vertical-align: middle;
+                        "
+                      />
+                      <span
+                        style="
+                          display: inline-block;
+                          font-size: 24px;
+                          font-weight: 600;
+                          line-height: 36px;
+                          letter-spacing: 0.05em;
+                          vertical-align: middle;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                        >Cryptovault!</span
+                      >
+                    </td>
+                  </tr>
+
+                  <!-- Main logo -->
+                  <tr>
+                    <td style="padding-bottom: 15px">
+                      <img
+                        src="https://raw.githubusercontent.com/CryptoVaultPlatform/backend/refs/heads/main/public/default/logo.png"
+                        alt="Cryptovault Logo"
+                        style="
+                          width: 62px;
+                          height: 62px;
+                          display: block;
+                          margin: 0 auto;
+                        "
+                      />
+                    </td>
+                  </tr>
+
+                  <!-- Welcome heading -->
+                  <tr>
+                    <td style="padding-bottom: 16px">
+                      <h1
+                        style="
+                          font-size: 24px;
+                          font-weight: 600;
+                          line-height: 150%;
+                          letter-spacing: 0.05em;
+                          margin: 0;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                      >
+                        Welcome to Cryptovault!
+                      </h1>
+                    </td>
+                  </tr>
+
+                  <!-- Subject line -->
+                  <tr>
+                    <td style="padding-bottom: 8px">
+                      <p
+                        style="
+                          font-weight: 500;
+                          font-size: 18px;
+                          line-height: 150%;
+                          color: #e4e4e4;
+                          margin: 0;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                      >
+                        Subject: Welcome to Cryptovault - Let's Get Started
+                      </p>
+                    </td>
+                  </tr>
+
+                  <!-- Main content -->
+                  <tr>
+                    <td style="padding-bottom: 24px">
+                      <p
+                        style="
+                          font-size: 16px;
+                          font-weight: 300;
+                          line-height: 150%;
+                          color: #e4e4e4;
+                          margin: 0;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                      >
+                        Hi <%= username %><br /><br />
+                        Welcome to Cryptovault - your secure gateway to managing
+                        and growing your crypto assets.<br /><br />
+                        Your account is now active. You can log in anytime to
+                        track balances, manage vaults, and explore rewards.
+                      </p>
+                    </td>
+                  </tr>
+
+                  <!-- Login button -->
+                  <tr>
+                    <td style="padding-bottom: 24px">
+                      <table
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        style="margin: 0 auto"
+                      >
+                        <tr>
+                          <td
+                            style="
+                              background-color: #632ee4;
+                              border: 2px solid #79699d;
+                              border-radius: 50px;
+                              padding: 0;
+                            "
+                          >
+                            <a
+                              href="#"
+                              style="
+                                display: inline-block;
+                                text-decoration: none;
+                                width: 142px;
+                                height: 52px;
+                                line-height: 52px;
+                                font-family: Arial, Helvetica, sans-serif;
+                                font-size: 12px;
+                                font-weight: 700;
+                                color: #fff;
+                                text-align: center;
+                                border-radius: 50px;
+                                background-color: #632ee4;
+                              "
+                            >
+                              Log in
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
+                  <!-- Footer text -->
+                  <tr>
+                    <td style="padding-bottom: 8px">
+                      <h2
+                        style="
+                          font-size: 14px;
+                          font-weight: 400;
+                          text-align: center;
+                          line-height: 150%;
+                          color: #e4e4e4;
+                          margin: 0;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                      >
+                        Thanks for joining the vault.
+                      </h2>
+                    </td>
+                  </tr>
+
+                  <!-- Signature -->
+                  <tr>
+                    <td>
+                      <h3
+                        style="
+                          margin-top: 8px;
+                          font-size: 12px;
+                          font-weight: 700;
+                          text-align: center;
+                          line-height: 150%;
+                          color: #e4e4e4;
+                          margin: 0;
+                          font-family: Arial, Helvetica, sans-serif;
+                        "
+                      >
+                        – Cryptovault Security Team
+                      </h3>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
