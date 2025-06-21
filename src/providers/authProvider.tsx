@@ -165,6 +165,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             "/account/signin",
             "/account/signup",
             "/account/forgot-password",
+            "/account/email-sents",
           ];
           if (
             publicRoutes.includes(pathname) ||
@@ -199,6 +200,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (res.status === 200) {
         const { token, user } = res.data;
+        if (!user?.isEmailVerified) {
+          router.push("/account/email-sents");
+          return;
+        }
         localStorage.setItem("token", token);
         instance.defaults.headers.common.Authorization = `Bearer ${token}`;
 

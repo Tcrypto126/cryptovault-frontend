@@ -1,8 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useTheme } from "next-themes";
-import { useNotification } from "@/providers/notificationProvider";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -17,9 +15,6 @@ import { AccordionDemo } from "@/components/Faq";
 import "./css/embla.css";
 
 const Home = () => {
-  const { setTheme } = useTheme();
-  const { toast } = useNotification();
-
   const OPTIONS: EmblaOptionsType = {
     dragFree: true,
     loop: true,

@@ -30,8 +30,6 @@ import { useNotification } from "@/providers/notificationProvider";
 import instance from "@/lib/axios";
 import { updateKYC, updatePassword, updateProfile } from "@/api";
 
-const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-
 const FormSchema1 = z.object({
   avatar: z.union([z.instanceof(File), z.string()]),
   email: z

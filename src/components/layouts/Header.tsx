@@ -83,9 +83,9 @@ const Header = () => {
         <div className="max-w-[1440px] h-[92px] m-auto px-2.5 lg:px-20 pt-4">
           <div className="w-full flex items-center justify-between gap-2">
             <Image
-              src="/assets/logo.svg"
-              width={54}
-              height={54}
+              src="/assets/logo_text.png"
+              width={130}
+              height={100}
               alt="logo"
               className="cursor-pointer hidden lg:block"
               onClick={() => {

@@ -23,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { IconEye, IconEyeOff } from "@/components/ui/icon";
 import { IconLoader2 } from "@tabler/icons-react";
 
-import instance from "@/lib/axios";
 import { signup } from "@/api";
 
 const FormSchema = z
@@ -59,6 +58,7 @@ const SignUp = () => {
   const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const [isVisible2, setIsVisible2] = useState(true);
+  const [isSent, setIsSent] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -79,6 +79,7 @@ const SignUp = () => {
           "Account created successfully. You will be receiving an email verification link shortly.",
           "Success"
         );
+        setIsSent(true);
       },
       (message) => {
         toast(message, "Error");
@@ -110,113 +111,131 @@ const SignUp = () => {
                 router.push("/");
               }}
             />
-            <div className="flex flex-col gap-2">
-              <h3 className="!text-[20px] md:!text-3xl">Create your account</h3>
-              <h6>Enter your email and password to sign up.</h6>
-            </div>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full space-y-6"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={`${isVisible ? "password" : "text"}`}
-                            placeholder="Enter your password"
-                            {...field}
-                          />
-                          <Button
-                            type="button"
-                            className="!p-0 !bg-transparent absolute right-2 top-0 h-full cursor-pointer"
-                            onClick={() => {
-                              setIsVisible(!isVisible);
-                            }}
-                          >
-                            {isVisible ? (
-                              <IconEye width="24" height="24" />
-                            ) : (
-                              <IconEyeOff width="24" height="24" />
-                            )}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password2"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={`${isVisible2 ? "password" : "text"}`}
-                            placeholder="Enter your password"
-                            {...field}
-                          />
-                          <Button
-                            type="button"
-                            className="!p-0 !bg-transparent absolute right-2 top-0 h-full cursor-pointer"
-                            onClick={() => {
-                              setIsVisible2(!isVisible2);
-                            }}
-                          >
-                            {isVisible2 ? (
-                              <IconEye width="24" height="24" />
-                            ) : (
-                              <IconEyeOff width="24" height="24" />
-                            )}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="submit"
-                  className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
-                >
-                  {form.formState.isSubmitting && (
-                    <IconLoader2 className="animate-spin" />
-                  )}
-                  Sign Up
-                </Button>
-                <div className="flex gap-2 justify-center items-center">
-                  <h6 className="!text-sm">Already have an account?</h6>
-                  <Link
-                    href="/account/signin"
-                    className="text-[#00A6E8] hover:text-[#7cd5f8] text-sm"
-                  >
-                    Sign In
-                  </Link>
+            {isSent ? (
+              <div className="flex flex-col gap-2">
+                <h3 className="!text-[20px] md:!text-3xl">
+                  Email Verification
+                </h3>
+                <h6>
+                  We’ve sent a email verification link to your email. Please
+                  check your inbox and follow the instructions in the email to
+                  verify your email. If you don’t see it, check your spam
+                  folder.
+                </h6>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-2">
+                  <h3 className="!text-[20px] md:!text-3xl">
+                    Create your account
+                  </h3>
+                  <h6>Enter your email and password to sign up.</h6>
                 </div>
-              </form>
-            </Form>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full space-y-6"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={`${isVisible ? "password" : "text"}`}
+                                placeholder="Enter your password"
+                                {...field}
+                              />
+                              <Button
+                                type="button"
+                                className="!p-0 !bg-transparent absolute right-2 top-0 h-full cursor-pointer"
+                                onClick={() => {
+                                  setIsVisible(!isVisible);
+                                }}
+                              >
+                                {isVisible ? (
+                                  <IconEye width="24" height="24" />
+                                ) : (
+                                  <IconEyeOff width="24" height="24" />
+                                )}
+                              </Button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password2"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={`${isVisible2 ? "password" : "text"}`}
+                                placeholder="Enter your password"
+                                {...field}
+                              />
+                              <Button
+                                type="button"
+                                className="!p-0 !bg-transparent absolute right-2 top-0 h-full cursor-pointer"
+                                onClick={() => {
+                                  setIsVisible2(!isVisible2);
+                                }}
+                              >
+                                {isVisible2 ? (
+                                  <IconEye width="24" height="24" />
+                                ) : (
+                                  <IconEyeOff width="24" height="24" />
+                                )}
+                              </Button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      type="submit"
+                      className="w-full h-12 py-3 px-4 text-white bg-button-p hover:bg-button-pu cursor-pointer"
+                    >
+                      {form.formState.isSubmitting && (
+                        <IconLoader2 className="animate-spin" />
+                      )}
+                      Sign Up
+                    </Button>
+                    <div className="flex gap-2 justify-center items-center">
+                      <h6 className="!text-sm">Already have an account?</h6>
+                      <Link
+                        href="/account/signin"
+                        className="text-[#00A6E8] hover:text-[#7cd5f8] text-sm"
+                      >
+                        Sign In
+                      </Link>
+                    </div>
+                  </form>
+                </Form>
+              </>
+            )}
           </div>
         </div>
       </div>

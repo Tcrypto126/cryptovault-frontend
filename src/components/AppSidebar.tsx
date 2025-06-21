@@ -134,12 +134,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <Link href="/">
                 <Image
-                  src="/assets/logo.svg"
+                  src="/assets/logo_text.png"
                   alt="logo"
-                  width={40}
-                  height={40}
+                  width={130}
+                  height={100}
                 />
-                <span className="text-base font-semibold">CryptoWallet</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
