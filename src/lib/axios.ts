@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseURL =
-  process.env.NEXT_PUBLIC_SERVER_URL || "http://85.208.197.156:5000";
+  process.env.NEXT_PUBLIC_SERVER_URL || "https://penguin-rare-willingly.ngrok-free.app";
 
 const instance = axios.create({
   baseURL,
