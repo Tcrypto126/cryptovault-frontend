@@ -2,7 +2,7 @@
 
 import { DataTable, schema } from "@/components/DataTableUserSupport";
 import { useState } from "react";
-import { SupportModal } from "@/components/Support";
+import { SupportModal } from "@/components/SupportUser";
 import { useSupportStore, Support } from "@/store";
 import { z } from "zod";
 

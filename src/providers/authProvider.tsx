@@ -209,7 +209,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     init();
-  });
+  }, []);
 
   const login = async (
     email: string,
