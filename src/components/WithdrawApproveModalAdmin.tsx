@@ -8,7 +8,6 @@ import {
 } from "@/api";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useNotification } from "@/providers/notificationProvider";
 import { IconLoader2 } from "@tabler/icons-react";
+import { useTransactionStore } from "@/store";
 
 export function WithdrawApproveModalAdmin({
   id,
@@ -31,7 +31,7 @@ export function WithdrawApproveModalAdmin({
 }) {
   const { toast } = useNotification();
   const [isApproveing, setIsApproveing] = useState(false);
-  const [allTransactions, setAllTransactions] = useState<any[]>([]);
+  const { setAllTransactions } = useTransactionStore();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   const approveWithdrawal = async () => {

@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useNotification } from "@/providers/notificationProvider";
 import { Switch } from "@/components/ui/switch";
 
 const SettingsPage = () => {
-  const { toast } = useNotification();
-  const [isWithdrawals, setIsWithdrawals] = useState(true);
-  const [isManualApproval, setIsManualApproval] = useState(true);
+  const [isWithdrawals, setIsWithdrawals] = useState<boolean>(true);
+  const [isManualApproval, setIsManualApproval] = useState<boolean>(true);
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">

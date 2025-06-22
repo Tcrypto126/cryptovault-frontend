@@ -252,21 +252,21 @@ const Home = () => {
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto"
+                className="w-auto m-auto"
               />
               <Image
                 src="/assets/home/card2.png"
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto w-auto h-auto"
+                className="w-auto m-auto"
               />
               <Image
                 src="/assets/home/card3.png"
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto"
+                className="w-auto m-auto"
               />
               <Image
                 src="/assets/home/card4.png"
@@ -280,14 +280,14 @@ const Home = () => {
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto w-auto h-auto"
+                className="m-auto w-auto"
               />
               <Image
                 src="/assets/home/card6.png"
                 alt="card"
                 width={411}
                 height={428}
-                className="m-auto"
+                className="w-auto m-auto"
               />
             </div>
           </div>

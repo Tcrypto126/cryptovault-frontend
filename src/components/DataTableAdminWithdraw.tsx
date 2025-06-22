@@ -6,7 +6,6 @@ import {
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconLoader2,
   IconSearch,
 } from "@tabler/icons-react";
 import {
@@ -19,7 +18,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Row,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -45,10 +43,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
+import { ArrowDownIcon } from "@/components/ui/icon";
 import StatusBadge from "./StatusBadge";
-import { useNotification } from "@/providers/notificationProvider";
-import { useTransactionStore } from "@/store/transactionStore";
 import { WithdrawApproveModalAdmin } from "./WithdrawApproveModalAdmin";
 import { NavUser } from "./NavUser";
 
@@ -91,9 +87,9 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row }) => (
+    cell: () => (
       <div className="flex items-center justify-start gap-1 ">
-        <ArrowUpIcon width="24" height="24" />
+        <ArrowDownIcon width="24" height="24" />
         Withdraw
       </div>
     ),
@@ -104,7 +100,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start ">
-          ${row.original.amount}
+          ${row.original.amount.toFixed(2)}
         </div>
       );
     },
@@ -140,12 +136,9 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
-  const [isApproveing, setIsApproveing] = React.useState(false);
-  const { setAllTransactions } = useTransactionStore();
-  const { toast } = useNotification();
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
-  const [data, setData] = React.useState(() => initialData);
+  const [data] = React.useState(() => initialData);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -434,7 +427,7 @@ export function DataTable({
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Approved")
-                  .map((row, index) => (
+                  .map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -579,7 +572,7 @@ export function DataTable({
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Pending")
-                  .map((row, index) => (
+                  .map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -724,7 +717,7 @@ export function DataTable({
                 table
                   .getRowModel()
                   .rows.filter((row) => row.original.status === "Failed")
-                  .map((row, index) => (
+                  .map((row) => (
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}

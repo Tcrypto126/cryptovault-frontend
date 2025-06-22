@@ -23,7 +23,7 @@ const Review = () => {
                 </div>
                 <div>
                     <p className="text-text text-[16px]">
-                        Testing out <span className="text-[#A78BFA]">@launchui</span>'s responsive design. That’s the template we’ve all been waiting for. My mobile-first heart is doing a happy dance.
+                        Testing out <span className="text-[#A78BFA]">@launchui</span>&apos; responsive design. That’s the template we’ve all been waiting for. My mobile-first heart is doing a happy dance.
                     </p>
                 </div>
             </div>

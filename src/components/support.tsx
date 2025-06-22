@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,16 +21,14 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 import { useNotification } from "@/providers/notificationProvider";
 import { getSupports, sendSupport } from "@/api";
-import { useSupportStore } from "@/store";
+import { Support, useSupportStore } from "@/store";
 
 const FormSchema = z.object({
   subject: z.string().nonempty({ message: "Subject is required" }),
@@ -58,7 +55,7 @@ export function SupportModal() {
       data,
       async () => {
         await getSupports(
-          (supports: any) => {
+          (supports: Support[]) => {
             setSupports(supports);
           },
           (message: string) => {

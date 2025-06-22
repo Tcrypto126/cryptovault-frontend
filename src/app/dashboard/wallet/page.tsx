@@ -1,35 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { IconWallet, IconLoader2, IconPlus } from "@tabler/icons-react";
+import { IconWallet, IconPlus } from "@tabler/icons-react";
 
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { IconArrowDown, DollarBagIcon } from "@/components/ui/icon";
+import { IconArrowDown } from "@/components/ui/icon";
 
 import { WithdrawModal } from "@/components/WithdrawModal";
 import StatusCode from "@/components/StatusBadge";
 import { DepositModal } from "@/components/DepositModal";
-import { useNotification } from "@/providers/notificationProvider";
 import { useUserStore } from "@/store/userStore";
 
 const WalletPage = () => {
   const { user } = useUserStore();
-  const { toast } = useNotification();
-  const [isDepositing, setIsDepositing] = useState(false);
-  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
-  const [progress, setProgress] = useState(60);
-
-  const handleDeposit = () => {
-    setIsDepositing(true);
-    setIsDepositModalOpen(true);
-    setTimeout(() => {
-      setIsDepositing(false);
-      setIsDepositModalOpen(false);
-    }, 3000);
-
-    toast("Deposit successful", "Success");
-  };
+  const progress = 60;
 
   return (
     <>
@@ -121,7 +104,6 @@ const WalletPage = () => {
             <h6 className="!text-[24px] text-center">Deposit More</h6>
           </div>
         </div>
-        {isDepositModalOpen && <DepositModal />}
       </div>
     </>
   );

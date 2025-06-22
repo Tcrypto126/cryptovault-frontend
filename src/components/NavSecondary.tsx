@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import * as React from "react";
 import { IconDotsVertical, type Icon } from "@tabler/icons-react";
 import { useRouter, usePathname } from "next/navigation";
@@ -23,7 +22,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   IconLogout,
-  IconDashboard,
   IconRosetteDiscountCheck,
   IconRosetteDiscountCheckOff,
 } from "@tabler/icons-react";

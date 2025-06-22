@@ -1,4 +1,5 @@
 import instance from "@/lib/axios";
+import { Support, Transaction, User } from "@/store";
 
 export const signup = async (
   email: string,
@@ -16,128 +17,84 @@ export const signup = async (
     } else {
       onError(response.data.message);
     }
-  } catch (error: any) {
-    console.error("error: ", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 // Get user
 export const getUser = async (
-  onSuccess: (user: any) => void,
+  onSuccess: (user: User) => void,
   onError: (message: string) => void
 ) => {
   try {
     const res = await instance.get(`/api/user/profile`);
     if (res.status === 200) {
       const { user } = res.data;
-      // const newUser: any = {
-      //   ...user,
-      //   transactions: user.receivedTransactions
-      //     .concat(user.sentTransactions)
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     ),
-      //   recentDeposit: user.receivedTransactions
-      //     ?.filter((transaction: any) => transaction.type === "DEPOSIT")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.amount,
-      //   recentWithdrawal: user.sentTransactions
-      //     ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.amount,
-      //   recentBonus: user.receivedTransactions
-      //     ?.filter((transaction: any) => transaction.type === "BONUS")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.amount,
-      //   recentWithdrawStatus: user.sentTransactions
-      //     ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.status,
-      // };
       onSuccess(user);
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error getting user:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 // Get users by admin
 export const getAllUsers = async (
-  onSuccess: (users: any) => void,
+  onSuccess: (users: User[]) => void,
   onError: (message: string) => void
 ) => {
   try {
     const res = await instance.get(`/api/user/all-user`);
     if (res.status === 200) {
       const { users } = res.data;
-      // const newUser: any = {
-      //   ...user,
-      //   transactions: user.receivedTransactions
-      //     .concat(user.sentTransactions)
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     ),
-      //   recentDeposit: user.receivedTransactions
-      //     ?.filter((transaction: any) => transaction.type === "DEPOSIT")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.amount,
-      //   recentWithdrawal: user.sentTransactions
-      //     ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.amount,
-      //   recentBonus: user.receivedTransactions
-      //     ?.filter((transaction: any) => transaction.type === "BONUS")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.amount,
-      //   recentWithdrawStatus: user.sentTransactions
-      //     ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
-      //     .sort(
-      //       (a: any, b: any) =>
-      //         new Date(b.created_at).getTime() -
-      //         new Date(a.created_at).getTime()
-      //     )[0]?.status,
-      // };
       onSuccess(users);
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error getting user:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 export const updateProfile = async (
-  data: any,
+  data: {
+    avatar: File | string;
+    first_name: string;
+    last_name: string;
+    username: string;
+  },
   onSuccess: () => void,
   onError: (message: string) => void
 ) => {
@@ -159,9 +116,18 @@ export const updateProfile = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error updating profile:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -181,9 +147,18 @@ export const updatePassword = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error updating password:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -215,9 +190,18 @@ export const updateKYC = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error updating KYC:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -236,9 +220,18 @@ export const forgotPassword = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error sending forgot password email:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -257,9 +250,18 @@ export const resetPassword = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error resetting password:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -279,9 +281,18 @@ export const deposit = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error depositing:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -301,9 +312,18 @@ export const withdraw = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error withdrawing:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -323,9 +343,18 @@ export const addBonus = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error adding bonus:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -346,57 +375,86 @@ export const sendBonus = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error sending bonus:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 // Get all transactions
 export const getTransactions = async (
-  onSuccess: (transactions: any) => void,
+  onSuccess: (transactions: Transaction[]) => void,
   onError: (message: string) => void
 ) => {
   try {
     const res = await instance.get("/api/transactions/get-transaction");
 
     if (res.status === 200) {
-      const transactions: any = res.data.transactions;
-      const newTransactions: any = transactions.sort(
-        (a: any, b: any) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      const transactions = res.data.transactions;
+      const newTransactions = transactions.sort(
+        (a: Transaction, b: Transaction) =>
+          new Date(b?.created_at || "").getTime() -
+          new Date(a?.created_at || "").getTime()
       );
       onSuccess(newTransactions);
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error getting all transactions:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 // Get all transactions by admin
 export const getAllTransactions = async (
-  onSuccess: (transactions: any) => void,
+  onSuccess: (transactions: Transaction[]) => void,
   onError: (message: string) => void
 ) => {
   try {
     const res = await instance.get("/api/transactions/all-transaction");
 
     if (res.status === 200) {
-      const transactions: any = res.data.transactions;
-      const newTransactions: any = transactions.sort(
-        (a: any, b: any) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      const transactions = res.data.transactions;
+      const newTransactions = transactions.sort(
+        (a: Transaction, b: Transaction) =>
+          new Date(b?.created_at || "").getTime() -
+          new Date(a?.created_at || "").getTime()
       );
       onSuccess(newTransactions);
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error getting all transactions:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -416,32 +474,51 @@ export const sendSupport = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error sending support:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 // Get support
 export const getSupports = async (
-  onSuccess: (supports: any) => void,
+  onSuccess: (supports: Support[]) => void,
   onError: (message: string) => void
 ) => {
   try {
     const res = await instance.get("/api/support/get-supports");
     if (res.status === 200) {
-      const supports: any = res.data.supports;
-      const newSupports: any = supports.sort(
-        (a: any, b: any) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      const supports = res.data.supports;
+      const newSupports = supports.sort(
+        (a: Support, b: Support) =>
+          new Date(b.updated_at || "").getTime() -
+          new Date(a.updated_at || "").getTime()
       );
       onSuccess(newSupports);
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error getting support:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -462,9 +539,18 @@ export const deleteSupport = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error deleting support:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -485,9 +571,18 @@ export const updateUserStatus = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error updating user status:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -510,9 +605,18 @@ export const approveWithdrawal = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error approving withdrawal:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -533,32 +637,51 @@ export const handleKYC = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error approving KYC:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
 // Get all supports by admin
 export const getAllSupports = async (
-  onSuccess: (supports: any) => void,
+  onSuccess: (supports: Support[]) => void,
   onError: (message: string) => void
 ) => {
   try {
     const res = await instance.get("/api/support/get-all-support");
     if (res.status === 200) {
-      const supports: any = res.data.supports;
-      const newSupports: any = supports.sort(
-        (a: any, b: any) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      const supports = res.data.supports;
+      const newSupports = supports.sort(
+        (a: Support, b: Support) =>
+          new Date(b.updated_at || "").getTime() -
+          new Date(a.updated_at || "").getTime()
       );
       onSuccess(newSupports);
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error getting all supports:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -583,9 +706,18 @@ export const updateSupport = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error updating support:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };
 
@@ -602,8 +734,17 @@ export const verifyEmail = async (
     } else {
       onError(res.data.message);
     }
-  } catch (error: any) {
-    console.error("Error verifying email:", error);
-    onError(error.response.data.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("error: ", error);
+      // Handle case where error.response may not exist
+      const message =
+        error instanceof Object && "response" in error
+          ? (error.response as { data: { message: string } }).data.message
+          : error.message;
+      onError(message);
+    } else {
+      onError("An unknown error occurred");
+    }
   }
 };

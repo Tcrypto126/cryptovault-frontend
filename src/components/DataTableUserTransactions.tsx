@@ -19,7 +19,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Row,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -53,7 +52,7 @@ export const schema = z.object({
   id: z.string(),
   header: z.string(),
   type: z.string(),
-  amount: z.string(),
+  amount: z.number(),
   status: z.string(),
   user: z.object({
     id: z.string(),
@@ -123,7 +122,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start">
-          ${row.original.amount}
+          ${row.original.amount.toFixed(2)}
         </div>
       );
     },
@@ -155,7 +154,7 @@ export function DataTable({
 }) {
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
-  const [data, setData] = React.useState(() => initialData);
+  const [data] = React.useState(() => initialData);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});

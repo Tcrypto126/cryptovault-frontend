@@ -48,7 +48,7 @@ export const ToogleIcon = ({ width, height, color = "#fff" }: IconProps) => {
   );
 };
 
-export const HomeIcon = ({ width, height, color = "fff" }: IconProps) => {
+export const HomeIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +75,7 @@ export const HomeIcon = ({ width, height, color = "fff" }: IconProps) => {
   );
 };
 
-export const DashboardIcon = ({ width, height, color = "fff" }: IconProps) => {
+export const DashboardIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +93,7 @@ export const DashboardIcon = ({ width, height, color = "fff" }: IconProps) => {
   );
 };
 
-export const FeaturesIcon = ({ width, height, color = "fff" }: IconProps) => {
+export const FeaturesIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -190,12 +190,12 @@ export const FeaturesIcon = ({ width, height, color = "fff" }: IconProps) => {
   );
 };
 
-export const SecurityIcon = ({ width, height, color = "fff" }: IconProps) => {
+export const SecurityIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
+      width={width}
+      height={height}
       viewBox="0 0 20 20"
       fill="none"
     >
@@ -207,7 +207,7 @@ export const SecurityIcon = ({ width, height, color = "fff" }: IconProps) => {
   );
 };
 
-export const SupportIcon = ({ width, height, color = "fff" }: IconProps) => {
+export const SupportIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +234,7 @@ export const SupportIcon = ({ width, height, color = "fff" }: IconProps) => {
   );
 };
 
-export const WorksIcon = ({ width, height, color = "fff" }: IconProps) => {
+export const WorksIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +261,7 @@ export const WorksIcon = ({ width, height, color = "fff" }: IconProps) => {
   );
 };
 
-export const IconEye = ({ width, height, color = "#fff" }: IconProps) => {
+export const IconEye = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +279,7 @@ export const IconEye = ({ width, height, color = "#fff" }: IconProps) => {
   );
 };
 
-export const IconEyeOff = ({ width, height, color = "#fff" }: IconProps) => {
+export const IconEyeOff = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -290,7 +290,7 @@ export const IconEyeOff = ({ width, height, color = "#fff" }: IconProps) => {
     >
       <path
         d="M14.6781 15.9727C13.359 16.8093 11.8286 17.2524 10.2666 17.2499C6.22259 17.2499 2.85809 14.3399 2.15234 10.4999C2.47487 8.75297 3.35357 7.1571 4.65734 5.95043L2.31059 3.60593L3.37184 2.54468L18.2211 17.3947L17.1598 18.4552L14.6773 15.9727H14.6781ZM5.71784 7.01243C4.6986 7.93912 3.98858 9.15652 3.68384 10.4999C3.91806 11.5248 4.38829 12.4808 5.0571 13.2919C5.7259 14.103 6.57481 14.7467 7.53626 15.1719C8.4977 15.5971 9.54513 15.792 10.5952 15.741C11.6452 15.6901 12.6688 15.3947 13.5846 14.8784L12.0636 13.3574C11.4161 13.7653 10.6492 13.941 9.88877 13.8558C9.1283 13.7705 8.41937 13.4294 7.87827 12.8882C7.33717 12.3471 6.99601 11.6382 6.91076 10.8777C6.82552 10.1173 7.00123 9.35041 7.40909 8.70293L5.71784 7.01243ZM10.9521 12.2459L8.52059 9.81443C8.38714 10.1541 8.35573 10.5254 8.43022 10.8827C8.50471 11.24 8.68186 11.5678 8.93993 11.8258C9.19801 12.0839 9.52579 12.2611 9.88309 12.3355C10.2404 12.41 10.6116 12.3786 10.9513 12.2452L10.9521 12.2459ZM16.8718 13.9439L15.7986 12.8714C16.3 12.1569 16.6569 11.3513 16.8493 10.4999C16.6455 9.60722 16.2623 8.76529 15.723 8.0253C15.1836 7.28531 14.4994 6.66272 13.712 6.19538C12.9246 5.72804 12.0503 5.4257 11.1424 5.30675C10.2345 5.1878 9.31185 5.25471 8.43059 5.50343L7.24709 4.31993C8.18234 3.95243 9.20159 3.74993 10.2666 3.74993C14.3106 3.74993 17.6751 6.65993 18.3808 10.4999C18.151 11.7492 17.6345 12.9281 16.8718 13.9439ZM10.0588 7.13093C10.5362 7.10143 11.0144 7.17373 11.4618 7.34304C11.9091 7.51235 12.3153 7.77481 12.6535 8.11302C12.9917 8.45122 13.2542 8.85745 13.4235 9.30477C13.5928 9.75209 13.6651 10.2303 13.6356 10.7077L10.0581 7.13093H10.0588Z"
-        fill="white"
+        fill="#fff"
         fillOpacity="0.6"
       />
     </svg>
@@ -377,7 +377,7 @@ export const DollarBagIcon = ({ width, height, color = "#fff" }: IconProps) => {
   );
 };
 
-export const ArrowUpIcon = ({ width, height, color = "#fff" }: IconProps) => {
+export const ArrowUpIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -400,7 +400,7 @@ export const ArrowUpIcon = ({ width, height, color = "#fff" }: IconProps) => {
   );
 };
 
-export const ArrowDownIcon = ({ width, height, color = "#fff" }: IconProps) => {
+export const ArrowDownIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -423,7 +423,7 @@ export const ArrowDownIcon = ({ width, height, color = "#fff" }: IconProps) => {
   );
 };
 
-export const UsersIcon = ({ width, height, color = "#fff" }: IconProps) => {
+export const UsersIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -454,11 +454,7 @@ export const UsersIcon = ({ width, height, color = "#fff" }: IconProps) => {
   );
 };
 
-export const TotalBalanceIcon = ({
-  width,
-  height,
-  color = "#fff",
-}: IconProps) => {
+export const TotalBalanceIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -479,7 +475,7 @@ export const TotalBalanceIcon = ({
   );
 };
 
-export const PeddingIcon = ({ width, height, color = "#fff" }: IconProps) => {
+export const PeddingIcon = ({ width, height }: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

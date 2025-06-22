@@ -6,8 +6,6 @@ import {
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-  IconCheck,
-  IconX,
   IconSearch,
 } from "@tabler/icons-react";
 import {
@@ -20,7 +18,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Row,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -46,7 +43,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUpIcon, ArrowDownIcon } from "./ui/icon";
 import StatusBadge from "./StatusBadge";
 import { NavUser } from "./NavUser";
 import { KYCapproveModal } from "./KYCapproveModal";
@@ -63,8 +59,8 @@ export const schema = z.object({
   submitted: z.string(),
   status: z.string(),
   verify: z.string(),
-  ipAddress: z.string(),
-  device: z.string(),
+  ipAddress: z.string().optional().nullable().default("192.168.125.1"),
+  device: z.string().optional().nullable().default("desktop"),
   documents: z.array(z.string()),
 });
 
@@ -124,12 +120,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           <h6 className="text-center !text-[14px] text-[#1FB356]">Admin</h6>
         ) : (
           <KYCapproveModal
-            id={row.original.id}
             fullName={row.original.user.name}
             email={row.original.user.email}
             dateOfSubmission={row.original.submitted}
-            ipAddress={row.original.ipAddress}
-            device={row.original.device}
+            ipAddress={row.original.ipAddress || "192.168.125.1"}
+            device={row.original.device || "desktop"}
             documents={row.original.documents}
           />
         )}
@@ -145,7 +140,7 @@ export function DataTable({
 }) {
   const [activeTab, setActiveTab] = React.useState("all");
   const [searchKey, setSearchKey] = React.useState("");
-  const [data, setData] = React.useState(() => initialData);
+  const [data] = React.useState(() => initialData);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});

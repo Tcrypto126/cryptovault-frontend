@@ -29,7 +29,7 @@ import {
 import { useNotification } from "@/providers/notificationProvider";
 import { useUserStore } from "@/store/userStore";
 import { getTransactions, withdraw } from "@/api";
-import { useTransactionStore } from "@/store/transactionStore";
+import { useTransactionStore, Transaction } from "@/store/transactionStore";
 import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
@@ -65,7 +65,7 @@ export function WithdrawModal() {
           recentWithdrawStatus: "PENDING",
         });
         await getTransactions(
-          (transactions: any) => {
+          (transactions: Transaction[]) => {
             setTransactions(transactions);
           },
           (message: string) => {

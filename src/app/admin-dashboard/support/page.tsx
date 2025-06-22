@@ -1,32 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { DataTable } from "@/components/DataTableAdminSupport";
-import { useSupportStore } from "@/store/supportStore";
+import { DataTable, schema } from "@/components/DataTableAdminSupport";
+import { useSupportStore, Support } from "@/store/supportStore";
+import { z } from "zod";
 
 const SupportPage = () => {
   const { allSupports } = useSupportStore();
 
-  const [tableData, setTableData] = useState<any[]>(
-    allSupports.map((support: any, index: number) => ({
-      id: support.id,
+  const [tableData] = useState<z.infer<typeof schema>[]>(
+    allSupports.map((support: Support, index: number) => ({
+      id: support.id || "",
       ticketId: `#T-1435${index + 1}`,
       user: {
-        id: support.user.id,
-        name: support.user.full_name,
-        email: support.user.email,
-        avatar: support.user.avatar,
+        id: support?.user?.id || "",
+        name: support?.user?.full_name || "",
+        email: support?.user?.email || "",
+        avatar: support?.user?.avatar || "",
       },
-      subject: support.subject,
+      subject: support.subject || "",
       status:
         support.status === "RESOLVED"
           ? "Resolved"
           : support.status === "ESCALATED"
           ? "Escalated"
           : "In Progress",
-      lastUpdated: support.updated_at.split(".")[0].replace("T", " "),
-      message: support.message,
-      reply: support.replyMessage,
+      lastUpdated: support?.updated_at?.split(".")[0].replace("T", " ") || "",
+      message: support.message || "",
+      reply: support.replyMessage || "",
     }))
   );
 

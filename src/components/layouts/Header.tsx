@@ -27,7 +27,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  IconDashboard,
   IconLogout,
   IconLayoutDashboard,
 } from "@tabler/icons-react";
@@ -87,7 +86,7 @@ const Header = () => {
               width={130}
               height={100}
               alt="logo"
-              className="cursor-pointer hidden lg:block"
+              className="w-auto  cursor-pointer hidden lg:block"
               onClick={() => {
                 router.push("/");
               }}

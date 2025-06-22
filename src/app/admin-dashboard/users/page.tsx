@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { DataTable } from "@/components/DataTableAdminUsers";
-import { useUserStore } from "@/store/userStore";
-
-// import data from "@/app/adminUsersData.json";
+import { DataTable, schema } from "@/components/DataTableAdminUsers";
+import { useUserStore, User } from "@/store/userStore";
+import { z } from "zod";
 
 const UsersPage = () => {
   const { users } = useUserStore();
 
-  const [tableData, setTableData] = useState<any[]>(
-    users?.map((user: any) => ({
-      id: user.id,
-      balance: user.balance,
+  const [tableData] = useState<z.infer<typeof schema>[]>(
+    users?.map((user: User) => ({
+      id: user.id || "",
+      balance: user.balance || 0,
       status:
         user.status === "ACTIVE"
           ? "Active"
@@ -28,13 +27,13 @@ const UsersPage = () => {
           ? "Rejected"
           : "Unverified",
       user: {
-        id: user.id,
-        name: user.full_name,
-        email: user.email,
+        id: user.id || "",
+        name: user.full_name || "",
+        email: user.email || "",
         avatar: user.avatar || "/assets/avatars/avatar-default.png",
-        role: user.role,
+        role: user.role || "",
       },
-      registered_at: user.created_at.split("T")[0],
+      registered_at: user?.created_at?.split(".")[0] || "",
     })) || []
   );
 

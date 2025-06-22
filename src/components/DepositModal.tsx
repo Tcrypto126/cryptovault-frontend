@@ -18,7 +18,7 @@ import { useNotification } from "@/providers/notificationProvider";
 import { IconLoader2 } from "@tabler/icons-react";
 import { deposit, getTransactions } from "@/api";
 import { useUserStore } from "@/store/userStore";
-import { useTransactionStore } from "@/store/transactionStore";
+import { Transaction, useTransactionStore } from "@/store/transactionStore";
 import { useRouter } from "next/navigation";
 
 export function DepositModal() {
@@ -42,7 +42,7 @@ export function DepositModal() {
           bonus: (user?.bonus || 0) + amount * 0.05,
         });
         await getTransactions(
-          (transactions: any) => {
+          (transactions: Transaction[]) => {
             setTransactions(transactions);
           },
           (message: string) => {

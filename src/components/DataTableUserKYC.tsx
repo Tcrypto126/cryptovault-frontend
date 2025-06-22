@@ -13,7 +13,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Row,
   SortingState,
   useReactTable,
   VisibilityState,
@@ -84,7 +83,6 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => (
       <div className="flex items-center justify-end gap-0">
         <KYCapproveModal
-          id={row.original.id}
           fullName={row.original.user.name}
           email={row.original.user.email}
           dateOfSubmission={row.original.submitted}
@@ -125,7 +123,7 @@ export function DataTable({
 }: {
   data: z.infer<typeof schema>[];
 }) {
-  const [data, setData] = React.useState(() => initialData);
+  const [data] = React.useState(() => initialData);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -190,7 +188,7 @@ export function DataTable({
         </TableHeader>
         <TableBody className="bg-[#40414933]">
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, index) => (
+            table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}

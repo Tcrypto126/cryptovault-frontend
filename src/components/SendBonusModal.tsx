@@ -30,7 +30,7 @@ import {
 import { useNotification } from "@/providers/notificationProvider";
 import { getTransactions, sendBonus } from "@/api";
 import { useUserStore } from "@/store/userStore";
-import { useTransactionStore } from "@/store/transactionStore";
+import { useTransactionStore, Transaction } from "@/store/transactionStore";
 import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
@@ -76,7 +76,7 @@ export function SendBonusModal() {
           bonus: (user?.bonus || 0) - data.amount,
         });
         await getTransactions(
-          (transactions: any) => {
+          (transactions: Transaction[]) => {
             setTransactions(transactions);
           },
           (message: string) => {
@@ -181,7 +181,7 @@ export function SendBonusModal() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Recipient's Email</FormLabel>
+                  <FormLabel>Recipient&apos;s Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"

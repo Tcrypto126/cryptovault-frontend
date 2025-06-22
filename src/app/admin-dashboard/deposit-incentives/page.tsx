@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { IconPlus } from "@tabler/icons-react";
-
 import { NewDepositIncentiveModal } from "@/components/NewDepositIncentiveModal";
 import { DataTable } from "@/components/DataTableAdminDeposit";
 

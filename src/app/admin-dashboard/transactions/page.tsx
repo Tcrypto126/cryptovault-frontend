@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { DataTable } from "@/components/DataTableAdminTransactions";
-import { useTransactionStore } from "@/store/transactionStore";
+import { DataTable, schema } from "@/components/DataTableAdminTransactions";
+import { useTransactionStore, Transaction } from "@/store";
+import { z } from "zod";
 
 const TransactionsPage = () => {
   const { allTransactions } = useTransactionStore();
 
-  const [tableData, setTableData] = useState<any[]>(
-    allTransactions.map((transaction: any) => ({
-      id: transaction.id,
-      timestamp: transaction.created_at.split(".")[0].replace("T", " "),
-      email:
-        transaction.sender?.email || transaction.recipient?.email || "Unknown",
+  const [tableData] = useState<z.infer<typeof schema>[]>(
+    allTransactions.map((transaction: Transaction) => ({
+      id: transaction.id || "",
+      timestamp: transaction.created_at?.split(".")[0].replace("T", " ") || "",
+      email: transaction.sender?.email || transaction.recipient?.email || "",
       type:
         transaction.type === "DEPOSIT"
           ? "Deposit"
@@ -21,7 +21,7 @@ const TransactionsPage = () => {
           : transaction.type === "TRANSFER"
           ? "BonusSent"
           : "BonusReceived",
-      amount: transaction.amount.toString(),
+      amount: transaction.amount || 0,
       status:
         transaction.status === "COMPLETED"
           ? "Success"
@@ -32,16 +32,14 @@ const TransactionsPage = () => {
           : "Pending",
       user: {
         id:
-          transaction.type === "TRANSFER"
-            ? transaction.recipient_id
-            : "Unknown",
+          transaction.type === "TRANSFER" ? transaction.recipient_id || "" : "",
         name:
           transaction.type === "TRANSFER"
-            ? transaction.recipient?.full_name || "Unknown"
+            ? transaction.recipient?.full_name || ""
             : "Platform",
         email:
           transaction.type === "TRANSFER"
-            ? transaction.recipient?.email || "Unknown"
+            ? transaction.recipient?.email || ""
             : "",
         avatar:
           transaction.type === "TRANSFER"

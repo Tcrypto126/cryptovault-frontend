@@ -1,28 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { DataTable } from "@/components/DataTableAdminWithdraw";
+import { DataTable, schema } from "@/components/DataTableAdminWithdraw";
 
-import { useTransactionStore } from "@/store/transactionStore";
+import { Transaction, useTransactionStore } from "@/store";
+import { z } from "zod";
 
 const WithdrawalRequestsPage = () => {
   const { allTransactions } = useTransactionStore();
 
-  const [tableData, setTableData] = useState<any[]>(
+  const [tableData] = useState<z.infer<typeof schema>[]>(
     allTransactions
-      .filter((transaction: any) => transaction.type === "WITHDRAWAL")
-      .map((transaction: any) => ({
-        id: transaction.id,
-        timestamp: transaction.created_at.split(".")[0].replace("T", " "),
+      .filter((transaction: Transaction) => transaction.type === "WITHDRAWAL")
+      .map((transaction: Transaction) => ({
+        id: transaction.id || "",
+        timestamp:
+          transaction.created_at?.split(".")[0].replace("T", " ") || "",
         user: {
-          id: transaction.sender?.id,
-          name: transaction.sender?.full_name,
-          email: transaction.sender?.email,
+          id: transaction.sender?.id || "",
+          name: transaction.sender?.full_name || "",
+          email: transaction.sender?.email || "",
           avatar:
             transaction.sender?.avatar || "/assets/avatars/avatar-default.png",
         },
         type: "Withdraw",
-        amount: transaction.amount,
+        amount: transaction.amount || 0,
         status:
           transaction.status === "PENDING"
             ? "Pending"

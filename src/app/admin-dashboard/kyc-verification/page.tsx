@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { DataTable } from "@/components/DataTableAdminKYC";
+import { DataTable, schema } from "@/components/DataTableAdminKYC";
 import { useUserStore } from "@/store/userStore";
+import { User } from "@/store/userStore";
+import { z } from "zod";
 
 const KYCverification = () => {
   const { users } = useUserStore();
 
-  const [tableData, setTableData] = useState<any[]>(
-    users?.map((user: any) => ({
-      id: user.id,
+  const [tableData] = useState<z.infer<typeof schema>[]>(
+    users?.map((user: User) => ({
+      id: user.id || "",
       user: {
-        id: user.id,
-        name: user.full_name,
-        email: user.email,
+        id: user.id || "",
+        name: user.full_name || "",
+        email: user.email || "",
         avatar: user.avatar || "/assets/avatars/avatar-default.png",
-        role: user.role,
+        role: user.role || "",
       },
-      submitted: user.updated_at.split(".")[0].replace("T", " "),
+      submitted: user.updated_at?.split(".")[0].replace("T", " ") || "",
       status:
         user.status === "ACTIVE"
           ? "Active"
@@ -32,7 +34,9 @@ const KYCverification = () => {
           : user.verify === "REJECTED"
           ? "Rejected"
           : "Unverified",
-      documents: [user.government_id, user.id_card],
+      ipAddress: "192.168.125.1",
+      device: "desktop",
+      documents: [user.government_id || "", user.id_card || ""],
     })) || []
   );
 

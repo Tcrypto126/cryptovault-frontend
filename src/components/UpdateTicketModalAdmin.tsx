@@ -28,7 +28,7 @@ import {
 import { useNotification } from "@/providers/notificationProvider";
 import { Textarea } from "./ui/textarea";
 import { getAllSupports, updateSupport } from "@/api";
-import { useSupportStore } from "@/store/supportStore";
+import { Support, useSupportStore } from "@/store/supportStore";
 
 const FormSchema = z.object({
   ticketId: z.string(),
@@ -83,7 +83,7 @@ export function UpdateTicketModal({
       "ESCALATED",
       () => {
         getAllSupports(
-          (supports: any) => {
+          (supports: Support[]) => {
             setAllSupports(supports);
           },
           (message: string) => {
@@ -110,7 +110,7 @@ export function UpdateTicketModal({
       "RESOLVED",
       () => {
         getAllSupports(
-          (supports: any) => {
+          (supports: Support[]) => {
             setAllSupports(supports);
           },
           (message: string) => {

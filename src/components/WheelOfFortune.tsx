@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import WheelOfFortune from "@armin-eslami/wheel-of-fortune";
 import { Button } from "./ui/button";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useUserStore } from "@/store/userStore";
 import { addBonus, getTransactions } from "@/api";
 import { useNotification } from "@/providers/notificationProvider";
-import { useTransactionStore } from "@/store/transactionStore";
+import { Transaction, useTransactionStore } from "@/store/transactionStore";
 
 type WheelSegment = {
   id: number;
@@ -77,7 +77,7 @@ function WheelOfFortune1({
           availableSpins: (user?.availableSpins || 0) - 1,
         });
         await getTransactions(
-          (transactions: any) => {
+          (transactions: Transaction[]) => {
             setTransactions(transactions);
           },
           (message: string) => {

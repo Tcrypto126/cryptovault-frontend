@@ -1,26 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { UsersIcon, TotalBalanceIcon, PeddingIcon } from "@/components/ui/icon";
 import { useUserStore } from "@/store/userStore";
 import { useTransactionStore } from "@/store";
-import { DataTable } from "@/components/DataTableAdminTransactions";
-
-// import data from "@/app/adminTransactionData.json";
+import { DataTable, schema } from "@/components/DataTableAdminTransactions";
+import { Transaction } from "@/store/transactionStore";
+import { z } from "zod";
 
 const Dashboard = () => {
-  const wheelRef = useRef<HTMLDivElement>(null);
   const { users } = useUserStore();
   const { allTransactions } = useTransactionStore();
   const [totalActiveUsers, setTotalActiveUsers] = useState<number>(0);
   const [totalAvailableBalance, setTotalAvailableBalance] = useState<number>(0);
 
-  const [tableData, setTableData] = useState<any[]>(
-    allTransactions.map((transaction: any) => ({
-      id: transaction.id,
-      timestamp: transaction.created_at.split(".")[0].replace("T", " "),
-      email:
-        transaction.sender?.email || transaction.recipient?.email || "Unknown",
+  const [tableData] = useState<z.infer<typeof schema>[]>(
+    allTransactions.map((transaction: Transaction) => ({
+      id: transaction.id || "",
+      timestamp: transaction.created_at?.split(".")[0].replace("T", " ") || "",
+      email: transaction.sender?.email || transaction.recipient?.email || "",
       type:
         transaction.type === "DEPOSIT"
           ? "Deposit"
@@ -29,7 +27,7 @@ const Dashboard = () => {
           : transaction.type === "TRANSFER"
           ? "BonusSent"
           : "BonusReceived",
-      amount: transaction.amount.toString(),
+      amount: transaction.amount || 0,
       status:
         transaction.status === "COMPLETED"
           ? "Success"
@@ -40,16 +38,14 @@ const Dashboard = () => {
           : "Pending",
       user: {
         id:
-          transaction.type === "TRANSFER"
-            ? transaction.recipient_id
-            : "Unknown",
+          transaction.type === "TRANSFER" ? transaction.recipient_id || "" : "",
         name:
           transaction.type === "TRANSFER"
-            ? transaction.recipient?.full_name || "Unknown"
+            ? transaction.recipient?.full_name || ""
             : "Platform",
         email:
           transaction.type === "TRANSFER"
-            ? transaction.recipient?.email || "Unknown"
+            ? transaction.recipient?.email || ""
             : "",
         avatar:
           transaction.type === "TRANSFER"
@@ -60,12 +56,10 @@ const Dashboard = () => {
     }))
   );
 
-  const [pendingApproval, setPendingApproval] = useState<number>(
-    allTransactions.filter(
-      (transaction) =>
-        transaction.status === "PENDING" && transaction.type === "WITHDRAWAL"
-    ).length
-  );
+  const pendingApproval = allTransactions.filter(
+    (transaction: Transaction) =>
+      transaction.status === "PENDING" && transaction.type === "WITHDRAWAL"
+  ).length;
 
   useEffect(() => {
     setTotalActiveUsers(

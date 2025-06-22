@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
@@ -33,7 +32,6 @@ const footerNavigation = {
 };
 
 const Footer = () => {
-  const router = useRouter();
 
   return (
     <>

@@ -28,7 +28,7 @@ import {
 import { useNotification } from "@/providers/notificationProvider";
 import { Textarea } from "./ui/textarea";
 import { getSupports, updateSupport } from "@/api";
-import { useSupportStore } from "@/store/supportStore";
+import { Support, useSupportStore } from "@/store/supportStore";
 
 const FormSchema = z.object({
   ticketId: z.string(),
@@ -84,7 +84,7 @@ export function UpdateTicketModalUser({
       "INPROGRESS",
       () => {
         getSupports(
-          (supports: any) => {
+          (supports: Support[]) => {
             setSupports(supports);
           },
           (message: string) => {

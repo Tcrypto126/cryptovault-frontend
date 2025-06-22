@@ -1,8 +1,9 @@
+import { User } from "@/store";
 import instance from "./axios";
 
 const verifyToken = async (
   token: string
-): Promise<{ isTokenValid: boolean; user: any }> => {
+): Promise<{ isTokenValid: boolean; user: User | null }> => {
   if (!token || token === "") {
     return { isTokenValid: false, user: null };
   }

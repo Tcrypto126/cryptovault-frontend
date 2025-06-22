@@ -1,32 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { Transaction } from "./transactionStore";
 
-interface Transaction {
-  id?: string;
-  amount?: number;
-  type?: "DEPOSIT" | "WITHDRAWAL" | "TRANSFER" | "BONUS";
-  status?: "PENDING" | "COMPLETED" | "FAILED" | "CANCELLED";
-  description?: string;
-  created_at?: Date;
-  updated_at?: Date;
-  sender_id?: string;
-  recipient_id?: string;
-
-  sender?: {
-    id?: string;
-    name?: string;
-    email?: string;
-    avatar?: string;
-  };
-  recipient?: {
-    id?: string;
-    name?: string;
-    email?: string;
-    avatar?: string;
-  };
-}
-
-interface User {
+export interface User {
   id?: string;
   avatar?: string;
   email?: string;
@@ -36,6 +12,8 @@ interface User {
   government_id?: string;
   id_card?: string;
   username?: string;
+  created_at?: string;
+  updated_at?: string;
   role?: "ADMIN" | "USER";
   status?: "ACTIVE" | "INACTIVE" | "FREEZE" | "SUSPENDED";
   verify?: "UNVERIFIED" | "VERIFIED" | "REJECTED";
@@ -49,6 +27,8 @@ interface User {
   recentBonus?: number;
 
   transactions?: Transaction[];
+  sentTransactions?: Transaction[];
+  receivedTransactions?: Transaction[];
 }
 
 interface UserState {

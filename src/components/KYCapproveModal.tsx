@@ -28,7 +28,7 @@ import {
 
 import { useNotification } from "@/providers/notificationProvider";
 import { handleKYC, getAllUsers } from "@/api";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore, User } from "@/store/userStore";
 
 const FormSchema = z.object({
   fullName: z.string().nonempty({ message: "Full name is required" }),
@@ -42,7 +42,6 @@ const FormSchema = z.object({
 });
 
 export function KYCapproveModal({
-  id,
   fullName,
   email,
   dateOfSubmission,
@@ -50,7 +49,6 @@ export function KYCapproveModal({
   device,
   documents,
 }: {
-  id: string;
   fullName: string;
   email: string;
   dateOfSubmission: string;
@@ -88,7 +86,7 @@ export function KYCapproveModal({
       type,
       () => {
         getAllUsers(
-          (users: any) => {
+          (users: User[]) => {
             setUsersData(users);
           },
           (message: string) => {
@@ -229,7 +227,7 @@ export function KYCapproveModal({
             <FormField
               control={form.control}
               name="documents"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Documents</FormLabel>
                   <FormControl>

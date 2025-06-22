@@ -4,7 +4,6 @@ import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useNotification } from "@/providers/notificationProvider";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,7 +24,6 @@ import Link from "next/link";
 import { IconLoader2 } from "@tabler/icons-react";
 
 import { useAuth } from "@/providers/authProvider";
-import instance from "@/lib/axios";
 
 const FormSchema = z.object({
   email: z
@@ -53,7 +50,6 @@ const FormSchema = z.object({
 });
 
 const SignIn = () => {
-  const { toast } = useNotification();
   const [isVisible, setIsVisible] = useState(true);
   const router = useRouter();
   const { login } = useAuth();

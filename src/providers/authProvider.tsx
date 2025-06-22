@@ -1,8 +1,15 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useSupportStore, useTransactionStore, useUserStore } from "@/store";
+import {
+  useSupportStore,
+  useTransactionStore,
+  useUserStore,
+  Transaction,
+  Support,
+} from "@/store";
+import { User } from "@/store/userStore";
 
 import { useNotification } from "./notificationProvider";
 import verifyToken from "@/lib/verifyToken";
@@ -15,13 +22,6 @@ import {
   getAllSupports,
 } from "@/api";
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: "ADMIN" | "USER";
-};
-
 type AuthContextType = {
   user: User | undefined;
   isAuthenticated: boolean;
@@ -32,7 +32,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { signout, setUserData, user, users, setUsersData } = useUserStore();
+  const { signout, setUserData, user, setUsersData } = useUserStore();
   const { setTransactions, setAllTransactions, signoutTransaction } =
     useTransactionStore();
   const { setSupports, setAllSupports, signoutSupport } = useSupportStore();
@@ -44,8 +44,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const init = async () => {
       try {
         const token: string | null = window.localStorage.getItem("token");
-        const { isTokenValid, user }: { isTokenValid: boolean; user: any } =
-          await verifyToken(token || "");
+        const {
+          isTokenValid,
+          user,
+        }: { isTokenValid: boolean; user: User | null } = await verifyToken(
+          token || ""
+        );
+        if (!user) {
+          return;
+        }
 
         if (user?.status === "SUSPENDED") {
           toast("Your account is suspended", "Warning");
@@ -68,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (isTokenValid) {
           await getTransactions(
-            (transactions: any) => {
+            (transactions: Transaction[]) => {
               setTransactions(transactions);
             },
             (message: string) => {
@@ -77,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           );
 
           await getSupports(
-            (supports: any) => {
+            (supports: Support[]) => {
               setSupports(supports);
             },
             (message: string) => {
@@ -85,9 +92,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           );
 
-          if (user.role === "ADMIN") {
+          if (user?.role === "ADMIN") {
             await getAllUsers(
-              (users: any) => {
+              (users: User[]) => {
                 setUsersData(users);
               },
               (message: string) => {
@@ -96,7 +103,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             );
 
             await getAllTransactions(
-              (transactions: any) => {
+              (transactions: Transaction[]) => {
                 setAllTransactions(transactions);
               },
               (message: string) => {
@@ -105,7 +112,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             );
 
             await getAllSupports(
-              (supports: any) => {
+              (supports: Support[]) => {
                 setAllSupports(supports);
               },
               (message: string) => {
@@ -114,42 +121,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             );
           }
 
-          const newUser: any = {
+          const newUser: User = {
             ...user,
             sentTransactions: [],
             receivedTransactions: [],
             recentDeposit: user.receivedTransactions
-              ?.filter((transaction: any) => transaction.type === "DEPOSIT")
+              ?.filter(
+                (transaction: Transaction) => transaction.type === "DEPOSIT"
+              )
               .sort(
-                (a: any, b: any) =>
-                  new Date(b.created_at).getTime() -
-                  new Date(a.created_at).getTime()
+                (a: Transaction, b: Transaction) =>
+                  new Date(b?.created_at || "").getTime() -
+                  new Date(a?.created_at || "").getTime()
               )[0]?.amount,
             recentWithdrawal: user.sentTransactions
-              ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+              ?.filter(
+                (transaction: Transaction) => transaction.type === "WITHDRAWAL"
+              )
               .sort(
-                (a: any, b: any) =>
-                  new Date(b.created_at).getTime() -
-                  new Date(a.created_at).getTime()
+                (a: Transaction, b: Transaction) =>
+                  new Date(b?.created_at || "").getTime() -
+                  new Date(a?.created_at || "").getTime()
               )[0]?.amount,
-            recentBonus: user.receivedTransactions
-              ?.filter((transaction: any) => transaction.type === "BONUS")
+            recentBonus: user?.receivedTransactions
+              ?.filter(
+                (transaction: Transaction) => transaction.type === "BONUS"
+              )
               .sort(
-                (a: any, b: any) =>
-                  new Date(b.created_at).getTime() -
-                  new Date(a.created_at).getTime()
+                (a: Transaction, b: Transaction) =>
+                  new Date(b?.created_at || "").getTime() -
+                  new Date(a?.created_at || "").getTime()
               )[0]?.amount,
-            recentWithdrawStatus: user.sentTransactions
-              ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+            recentWithdrawStatus: user?.sentTransactions
+              ?.filter(
+                (transaction: Transaction) => transaction.type === "WITHDRAWAL"
+              )
               .sort(
-                (a: any, b: any) =>
-                  new Date(b.created_at).getTime() -
-                  new Date(a.created_at).getTime()
+                (a: Transaction, b: Transaction) =>
+                  new Date(b?.created_at || "").getTime() -
+                  new Date(a?.created_at || "").getTime()
               )[0]?.status,
           };
           setUserData(newUser);
 
-          if (user.role === "USER" && pathname.includes("/admin-dashboard")) {
+          if (user?.role === "USER" && pathname.includes("/admin-dashboard")) {
             router.push("/dashboard");
           }
         } else {
@@ -178,8 +193,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // Redirect to signin for protected routes when no valid token
           router.push("/account/signin");
         }
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("error: ", error);
+          // Handle case where error.response may not exist
+          const message =
+            error instanceof Object && "response" in error
+              ? (error.response as { data: { message: string } }).data.message
+              : error.message;
+          toast(message, "Error");
+        } else {
+          toast("An unknown error occurred", "Error");
+        }
       }
     };
 
@@ -207,43 +232,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("token", token);
         instance.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-        const newUser: any = {
+        const newUser: User = {
           ...user,
           sentTransactions: [],
           receivedTransactions: [],
-          recentDeposit: user.receivedTransactions
-            ?.filter((transaction: any) => transaction.type === "DEPOSIT")
+          recentDeposit: user?.receivedTransactions
+            ?.filter(
+              (transaction: Transaction) => transaction.type === "DEPOSIT"
+            )
             .sort(
-              (a: any, b: any) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
+              (a: Transaction, b: Transaction) =>
+                new Date(b?.created_at || "").getTime() -
+                new Date(a?.created_at || "").getTime()
             )[0]?.amount,
-          recentWithdrawal: user.sentTransactions
-            ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+          recentWithdrawal: user?.sentTransactions
+            ?.filter(
+              (transaction: Transaction) => transaction.type === "WITHDRAWAL"
+            )
             .sort(
-              (a: any, b: any) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
+              (a: Transaction, b: Transaction) =>
+                new Date(b?.created_at || "").getTime() -
+                new Date(a?.created_at || "").getTime()
             )[0]?.amount,
-          recentBonus: user.receivedTransactions
-            ?.filter((transaction: any) => transaction.type === "BONUS")
+          recentBonus: user?.receivedTransactions
+            ?.filter((transaction: Transaction) => transaction.type === "BONUS")
             .sort(
-              (a: any, b: any) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
+              (a: Transaction, b: Transaction) =>
+                new Date(b?.created_at || "").getTime() -
+                new Date(a?.created_at || "").getTime()
             )[0]?.amount,
-          recentWithdrawStatus: user.sentTransactions
-            ?.filter((transaction: any) => transaction.type === "WITHDRAWAL")
+          recentWithdrawStatus: user?.sentTransactions
+            ?.filter(
+              (transaction: Transaction) => transaction.type === "WITHDRAWAL"
+            )
             .sort(
-              (a: any, b: any) =>
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
+              (a: Transaction, b: Transaction) =>
+                new Date(b?.created_at || "").getTime() -
+                new Date(a?.created_at || "").getTime()
             )[0]?.status,
         };
         setUserData(newUser);
 
         await getTransactions(
-          (transactions: any) => {
+          (transactions: Transaction[]) => {
             setTransactions(transactions);
           },
           (message: string) => {
@@ -251,9 +282,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         );
 
-        if (user.role === "ADMIN") {
+        if (user?.role === "ADMIN") {
           await getAllUsers(
-            (users: any) => {
+            (users: User[]) => {
               setUsersData(users);
             },
             (message: string) => {
@@ -262,7 +293,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           );
 
           await getAllTransactions(
-            (transactions: any) => {
+            (transactions: Transaction[]) => {
               setAllTransactions(transactions);
             },
             (message: string) => {
@@ -273,7 +304,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         toast("Logged in successfully", "Success");
 
-        if (user.role === "ADMIN") {
+        if (user?.role === "ADMIN") {
           router.push("/admin-dashboard");
         } else {
           router.push("/dashboard");
@@ -281,9 +312,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         toast(res.data.message, "Error");
       }
-    } catch (error: any) {
-      console.error("Error logging in:", error);
-      toast(error.response.data.message, "Error");
+    } catch (error) {
+      console.error("Error logging in: ", error);
+      if (error instanceof Error) {
+        console.error("error: ", error);
+        // Handle case where error.response may not exist
+        const message =
+          error instanceof Object && "response" in error
+            ? (error.response as { data: { message: string } }).data.message
+            : error.message;
+        toast(message, "Error");
+      } else {
+        toast("An unknown error occurred", "Error");
+      }
     }
   };
 
