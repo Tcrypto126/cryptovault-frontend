@@ -26,10 +26,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  IconLogout,
-  IconLayoutDashboard,
-} from "@tabler/icons-react";
+import { IconLogout, IconLayoutDashboard } from "@tabler/icons-react";
 
 import {
   HomeIcon,

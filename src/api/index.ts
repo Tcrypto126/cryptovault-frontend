@@ -40,7 +40,7 @@ export const getUser = async (
   try {
     const res = await instance.get(`/api/user/profile`);
     if (res.status === 200) {
-      const { user } = res.data;
+      const user: User = res.data.user;
       onSuccess(user);
     } else {
       onError(res.data.message);
@@ -68,7 +68,7 @@ export const getAllUsers = async (
   try {
     const res = await instance.get(`/api/user/all-user`);
     if (res.status === 200) {
-      const { users } = res.data;
+      const users: User[] = res.data.users;
       onSuccess(users);
     } else {
       onError(res.data.message);
@@ -399,7 +399,7 @@ export const getTransactions = async (
     const res = await instance.get("/api/transactions/get-transaction");
 
     if (res.status === 200) {
-      const transactions = res.data.transactions;
+      const transactions: Transaction[] = res.data.transactions;
       const newTransactions = transactions.sort(
         (a: Transaction, b: Transaction) =>
           new Date(b?.created_at || "").getTime() -
@@ -433,7 +433,7 @@ export const getAllTransactions = async (
     const res = await instance.get("/api/transactions/all-transaction");
 
     if (res.status === 200) {
-      const transactions = res.data.transactions;
+      const transactions: Transaction[] = res.data.transactions;
       const newTransactions = transactions.sort(
         (a: Transaction, b: Transaction) =>
           new Date(b?.created_at || "").getTime() -
@@ -497,7 +497,7 @@ export const getSupports = async (
   try {
     const res = await instance.get("/api/support/get-supports");
     if (res.status === 200) {
-      const supports = res.data.supports;
+      const supports: Support[] = res.data.supports;
       const newSupports = supports.sort(
         (a: Support, b: Support) =>
           new Date(b.updated_at || "").getTime() -
@@ -660,7 +660,7 @@ export const getAllSupports = async (
   try {
     const res = await instance.get("/api/support/get-all-support");
     if (res.status === 200) {
-      const supports = res.data.supports;
+      const supports: Support[] = res.data.supports;
       const newSupports = supports.sort(
         (a: Support, b: Support) =>
           new Date(b.updated_at || "").getTime() -

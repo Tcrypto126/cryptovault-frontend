@@ -50,9 +50,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }: { isTokenValid: boolean; user: User | null } = await verifyToken(
           token || ""
         );
-        if (!user) {
-          return;
-        }
 
         if (user?.status === "SUSPENDED") {
           toast("Your account is suspended", "Warning");
@@ -125,7 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             ...user,
             sentTransactions: [],
             receivedTransactions: [],
-            recentDeposit: user.receivedTransactions
+            recentDeposit: user?.receivedTransactions
               ?.filter(
                 (transaction: Transaction) => transaction.type === "DEPOSIT"
               )
@@ -134,7 +131,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                   new Date(b?.created_at || "").getTime() -
                   new Date(a?.created_at || "").getTime()
               )[0]?.amount,
-            recentWithdrawal: user.sentTransactions
+            recentWithdrawal: user?.sentTransactions
               ?.filter(
                 (transaction: Transaction) => transaction.type === "WITHDRAWAL"
               )
@@ -181,6 +178,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             "/account/signup",
             "/account/forgot-password",
             "/account/email-sents",
+            "/loading",
           ];
           if (
             publicRoutes.includes(pathname) ||

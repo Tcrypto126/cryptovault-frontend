@@ -186,8 +186,8 @@ nextjs-portal {
 .signup-button {
   @apply cursor-pointer text-[12px] text-white transition-all duration-300 rounded-full;
   width: 141px;
-  height: 52px;
-  border: 1px solid #f7f7f717;
+  height: 53px;
+  border: 3px solid #2c2c2cab;
   background-color: #ffffff0e;
   background-repeat: no-repeat;
   background-position: center;
@@ -196,7 +196,6 @@ nextjs-portal {
 .login-button {
   position: relative;
   z-index: 0;
-  border: 3px solid #2c2c2cc9;
   overflow: hidden;
 
   &::before {
@@ -216,10 +215,10 @@ nextjs-portal {
     content: "";
     position: absolute;
     z-index: -1;
-    left: 0.4px;
-    top: 0.5px;
-    width: calc(100% - 0.8px);
-    height: calc(100% - 0.8px);
+    left: 1px;
+    top: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
     border-radius: 50px;
     background-image: url("/assets/button/loginButtonBg.png");
     background-size: 125% 165%;
