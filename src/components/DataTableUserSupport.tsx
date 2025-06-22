@@ -256,17 +256,6 @@ export function DataTable({
           <TabsTrigger value="resolved">Resolved</TabsTrigger>
           <TabsTrigger value="escalated">Escalated</TabsTrigger>
         </TabsList>
-        {/* <div className="relative pr-1">
-          <IconSearch className="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Enter name or email"
-            onChange={(e) => {
-              setSearchKey(e.target.value);
-            }}
-            className="pl-8 w-44 sm:w-2xs h-9 border-border text-[14px] !bg-transparent hover:!bg-[#ffffff13] transition-all duration-200"
-          />
-        </div> */}
       </div>
       <TabsContent value="all" className="relative flex flex-col gap-4">
         <div className="rounded-[5px] overflow-auto">

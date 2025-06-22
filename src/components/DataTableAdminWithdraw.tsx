@@ -123,7 +123,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           <WithdrawApproveModalAdmin
             id={row.original.id}
             email={row.original.user.email}
-            amount={row.original.amount}
+            amount={Number(row.original.amount.toFixed(2))}
           />
         ) : null}
       </div>
