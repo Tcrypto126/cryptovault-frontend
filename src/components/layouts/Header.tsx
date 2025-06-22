@@ -86,7 +86,7 @@ const Header = () => {
               width={130}
               height={100}
               alt="logo"
-              className="w-auto  cursor-pointer hidden lg:block"
+              className="w-[150px]  cursor-pointer hidden lg:block"
               onClick={() => {
                 router.push("/");
               }}
