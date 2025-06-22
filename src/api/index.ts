@@ -399,12 +399,15 @@ export const getTransactions = async (
     const res = await instance.get("/api/transactions/get-transaction");
 
     if (res.status === 200) {
-      const transactions: Transaction[] = res.data.transactions;
-      const newTransactions = transactions.sort(
-        (a: Transaction, b: Transaction) =>
-          new Date(b?.created_at || "").getTime() -
-          new Date(a?.created_at || "").getTime()
-      );
+      const transactions: Transaction[] = res.data.transactions || [];
+      const newTransactions =
+        transactions.length > 0
+          ? transactions.sort(
+              (a: Transaction, b: Transaction) =>
+                new Date(b?.created_at || "").getTime() -
+                new Date(a?.created_at || "").getTime()
+            )
+          : [];
       onSuccess(newTransactions);
     } else {
       onError(res.data.message);
@@ -433,12 +436,15 @@ export const getAllTransactions = async (
     const res = await instance.get("/api/transactions/all-transaction");
 
     if (res.status === 200) {
-      const transactions: Transaction[] = res.data.transactions;
-      const newTransactions = transactions.sort(
-        (a: Transaction, b: Transaction) =>
-          new Date(b?.created_at || "").getTime() -
-          new Date(a?.created_at || "").getTime()
-      );
+      const transactions: Transaction[] = res.data.transactions || [];
+      const newTransactions =
+        transactions.length > 0
+          ? transactions.sort(
+              (a: Transaction, b: Transaction) =>
+                new Date(b?.created_at || "").getTime() -
+                new Date(a?.created_at || "").getTime()
+            )
+          : [];
       onSuccess(newTransactions);
     } else {
       onError(res.data.message);
@@ -497,12 +503,15 @@ export const getSupports = async (
   try {
     const res = await instance.get("/api/support/get-supports");
     if (res.status === 200) {
-      const supports: Support[] = res.data.supports;
-      const newSupports = supports.sort(
-        (a: Support, b: Support) =>
-          new Date(b.updated_at || "").getTime() -
-          new Date(a.updated_at || "").getTime()
-      );
+      const supports: Support[] = res.data.supports || [];
+      const newSupports =
+        supports.length > 0
+          ? supports.sort(
+              (a: Support, b: Support) =>
+                new Date(b.updated_at || "").getTime() -
+                new Date(a.updated_at || "").getTime()
+            )
+          : [];
       onSuccess(newSupports);
     } else {
       onError(res.data.message);
@@ -660,12 +669,15 @@ export const getAllSupports = async (
   try {
     const res = await instance.get("/api/support/get-all-support");
     if (res.status === 200) {
-      const supports: Support[] = res.data.supports;
-      const newSupports = supports.sort(
-        (a: Support, b: Support) =>
-          new Date(b.updated_at || "").getTime() -
-          new Date(a.updated_at || "").getTime()
-      );
+      const supports: Support[] = res.data.supports || [];
+      const newSupports =
+        supports.length > 0
+          ? supports.sort(
+              (a: Support, b: Support) =>
+                new Date(b.updated_at || "").getTime() -
+                new Date(a.updated_at || "").getTime()
+            )
+          : [];
       onSuccess(newSupports);
     } else {
       onError(res.data.message);
