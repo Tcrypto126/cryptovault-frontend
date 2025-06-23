@@ -410,7 +410,6 @@ export const getTransactions = async (
         "ngrok-skip-browser-warning": "true",
       },
     });
-    console.log("res: ", res.data);
     if (res.status === 200) {
       const transactions: Transaction[] = res.data.transactions || [];
       const newTransactions =
