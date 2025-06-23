@@ -38,7 +38,11 @@ export const getUser = async (
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get(`/api/user/profile`);
+    const res = await instance.get(`/api/user/profile`, {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
     if (res.status === 200) {
       const user: User = res.data.user;
       onSuccess(user);
@@ -66,7 +70,11 @@ export const getAllUsers = async (
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get(`/api/user/all-user`);
+    const res = await instance.get(`/api/user/all-user`, {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
     if (res.status === 200) {
       const users: User[] = res.data.users;
       onSuccess(users);
@@ -390,14 +398,19 @@ export const sendBonus = async (
   }
 };
 
-// Get all transactions
+// Get transactions
 export const getTransactions = async (
   onSuccess: (transactions: Transaction[]) => void,
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/transactions/get-transaction");
-
+    // Add explicit headers to handle CORS preflight
+    const res = await instance.get("/api/transactions/get-transaction", {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
+    console.log("res: ", res.data);
     if (res.status === 200) {
       const transactions: Transaction[] = res.data.transactions || [];
       const newTransactions =
@@ -433,7 +446,11 @@ export const getAllTransactions = async (
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/transactions/all-transaction");
+    const res = await instance.get("/api/transactions/all-transaction", {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
 
     if (res.status === 200) {
       const transactions: Transaction[] = res.data.transactions || [];
@@ -501,7 +518,11 @@ export const getSupports = async (
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/support/get-supports");
+    const res = await instance.get("/api/support/get-supports", {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
     if (res.status === 200) {
       const supports: Support[] = res.data.supports || [];
       const newSupports =
@@ -667,7 +688,11 @@ export const getAllSupports = async (
   onError: (message: string) => void
 ) => {
   try {
-    const res = await instance.get("/api/support/get-all-support");
+    const res = await instance.get("/api/support/get-all-support", {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
     if (res.status === 200) {
       const supports: Support[] = res.data.supports || [];
       const newSupports =

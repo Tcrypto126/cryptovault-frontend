@@ -13,12 +13,17 @@ const NotificationProvider = dynamic(
 const AuthProvider = dynamic(() => import("@/providers/authProvider"), {
   ssr: false,
 });
+const LoadingProvider = dynamic(() => import("@/providers/loadingProvider"), {
+  ssr: false,
+});
 
 const ThemeClient = ({ children }: Readonly<{ children: React.ReactNode }>) => {
   return (
     <ThemeProvider>
       <NotificationProvider>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <LoadingProvider>{children}</LoadingProvider>
+        </AuthProvider>
       </NotificationProvider>
     </ThemeProvider>
   );
