@@ -47,7 +47,11 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const menuItems = [
-    { title: "Home", link: "/#home", icon: <HomeIcon width="20" height="20" /> },
+    {
+      title: "Home",
+      link: "/#home",
+      icon: <HomeIcon width="20" height="20" />,
+    },
     {
       title: "Dashboard",
       link: user?.role === "ADMIN" ? "/admin-dashboard" : "/dashboard",
@@ -151,8 +155,10 @@ const Header = () => {
                       <Link
                         key={item.title}
                         href={item.link}
-                        onClick={(e) => {
-                          const sheetClose = document.querySelector('[data-slot="sheet-close"]') as HTMLButtonElement;
+                        onClick={() => {
+                          const sheetClose = document.querySelector(
+                            '[data-slot="sheet-close"]'
+                          ) as HTMLButtonElement;
                           if (sheetClose) {
                             sheetClose.click();
                           }
