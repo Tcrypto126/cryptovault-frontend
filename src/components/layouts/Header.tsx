@@ -151,6 +151,12 @@ const Header = () => {
                       <Link
                         key={item.title}
                         href={item.link}
+                        onClick={(e) => {
+                          const sheetClose = document.querySelector('[data-slot="sheet-close"]') as HTMLButtonElement;
+                          if (sheetClose) {
+                            sheetClose.click();
+                          }
+                        }}
                         className="py-2 px-4 flex items-center gap-4 rounded-[8px] hover:bg-gradient-to-b from-[#9387E3] to-[#6C5DD3] transition-all duration-200 hover:scale-105"
                       >
                         {item.icon}

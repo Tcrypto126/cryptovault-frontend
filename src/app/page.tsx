@@ -86,7 +86,10 @@ const Home = () => {
       </div>
 
       <div className="w-full relative z-20">
-        <div className="max-w-[1440px] m-auto px-2.5 lg:px-20 py-[92px]" id="home">
+        <div
+          className="max-w-[1440px] m-auto px-2.5 lg:px-20 py-[92px]"
+          id="home"
+        >
           <div className="flex flex-col md:flex-row select-none">
             <div className="flex-1 py-6 md:py-14 md:pl-5 z-20">
               <Button className="border-border bg-[#0A0D1F] hover:bg-[#0A0D1F] border-[1px] rounded-full text-[14px] text-white !px-4 !py-2">
@@ -166,79 +169,175 @@ const Home = () => {
 
           <div className="py-6 md:py-10 select-none" id="features">
             <h3 className="text-center">Empowering the Future of Finance</h3>
-            <div className="grid grid-cols-4 md:grid-cols-6 gap-6 mt-4 md:mt-12">
-              <Image
-                src="/assets/home/coin-brand-1.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-2.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-3.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-4.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-5.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-6.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-4.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-6.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-5.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-3.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-2.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
-              <Image
-                src="/assets/home/coin-brand-1.png"
-                alt="coin"
-                width={151}
-                height={47}
-              />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 mt-4 md:mt-12">
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-1.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-2.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-3.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-4.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-5.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-6.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-4.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-6.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-5.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-3.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-2.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/coin-brand-1.png"
+                  alt="coin"
+                  width={151}
+                  height={47}
+                  className="w-full max-w-[151px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
             </div>
           </div>
 
@@ -248,49 +347,91 @@ const Home = () => {
               Built for real people. Trusted by thousands. Designed for the
               future.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4 md:mt-10">
-              <Image
-                src="/assets/home/card1.png"
-                alt="card"
-                width={411}
-                height={428}
-                className="w-auto m-auto"
-              />
-              <Image
-                src="/assets/home/card2.png"
-                alt="card"
-                width={411}
-                height={428}
-                className="w-auto m-auto"
-              />
-              <Image
-                src="/assets/home/card3.png"
-                alt="card"
-                width={411}
-                height={428}
-                className="w-auto m-auto"
-              />
-              <Image
-                src="/assets/home/card4.png"
-                alt="card"
-                width={411}
-                height={428}
-                className="m-auto"
-              />
-              <Image
-                src="/assets/home/card5.png"
-                alt="card"
-                width={411}
-                height={428}
-                className="m-auto w-auto"
-              />
-              <Image
-                src="/assets/home/card6.png"
-                alt="card"
-                width={411}
-                height={428}
-                className="w-auto m-auto"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-10">
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/card1.png"
+                  alt="card"
+                  width={411}
+                  height={428}
+                  className="w-full max-w-[411px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/card2.png"
+                  alt="card"
+                  width={411}
+                  height={428}
+                  className="w-full max-w-[411px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/card3.png"
+                  alt="card"
+                  width={411}
+                  height={428}
+                  className="w-full max-w-[411px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/card4.png"
+                  alt="card"
+                  width={411}
+                  height={428}
+                  className="w-full max-w-[411px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/card5.png"
+                  alt="card"
+                  width={411}
+                  height={428}
+                  className="w-full max-w-[411px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <Image
+                  src="/assets/home/card6.png"
+                  alt="card"
+                  width={411}
+                  height={428}
+                  className="w-full max-w-[411px] h-auto object-contain"
+                  style={{
+                    display: "block",
+                    maxWidth: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
             </div>
           </div>
 

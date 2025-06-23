@@ -227,7 +227,7 @@ export function SendBonusModal() {
                       >
                         Max
                       </Button>
-                    </div>
+                    </div>                    
                   </FormControl>
                   {/* <FormMessage /> */}
                   <span className="text-[14px]">
