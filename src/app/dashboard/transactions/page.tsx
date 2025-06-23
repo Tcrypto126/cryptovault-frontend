@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Transaction, useTransactionStore } from "@/store";
 import { useUserStore } from "@/store";
 import { z } from "zod";
+import { formatLargeNumber } from "@/lib/utils";
 
 const TransactionsPage = () => {
   const { transactions } = useTransactionStore();
@@ -24,7 +25,7 @@ const TransactionsPage = () => {
             transaction.sender_id === user?.id
           ? "BonusSent"
           : "BonusReceived",
-      amount: transaction.amount || 0,
+      amount: formatLargeNumber(transaction.amount || 0),
       status:
         transaction.status === "COMPLETED"
           ? "Success"

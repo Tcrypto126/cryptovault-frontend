@@ -7,6 +7,7 @@ import { useTransactionStore } from "@/store";
 import { DataTable, schema } from "@/components/DataTableAdminTransactions";
 import { Transaction } from "@/store/transactionStore";
 import { z } from "zod";
+import { formatLargeNumber } from "@/lib/utils";
 
 const Dashboard = () => {
   const { users } = useUserStore();
@@ -27,7 +28,7 @@ const Dashboard = () => {
           : transaction.type === "TRANSFER"
           ? "BonusSent"
           : "BonusReceived",
-      amount: transaction.amount || 0,
+      amount: formatLargeNumber(transaction.amount || 0),
       status:
         transaction.status === "COMPLETED"
           ? "Success"

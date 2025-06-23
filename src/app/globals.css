@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @font-face {
   font-family: "Satoshi";
   src: url("./fonts/Satoshi-Regular.woff2") format("woff2"),

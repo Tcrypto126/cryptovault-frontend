@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DataTable, schema } from "@/components/DataTableAdminUsers";
 import { useUserStore, User } from "@/store/userStore";
 import { z } from "zod";
+import { formatLargeNumber } from "@/lib/utils";
 
 const UsersPage = () => {
   const { users } = useUserStore();
@@ -11,7 +12,7 @@ const UsersPage = () => {
   const [tableData] = useState<z.infer<typeof schema>[]>(
     users?.map((user: User) => ({
       id: user.id || "",
-      balance: user.balance || 0,
+      balance: formatLargeNumber(user.balance || 0),
       status:
         user.status === "ACTIVE"
           ? "Active"

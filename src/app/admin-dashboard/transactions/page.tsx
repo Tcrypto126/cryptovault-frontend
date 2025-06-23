@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DataTable, schema } from "@/components/DataTableAdminTransactions";
 import { useTransactionStore, Transaction } from "@/store";
 import { z } from "zod";
+import { formatLargeNumber } from "@/lib/utils";
 
 const TransactionsPage = () => {
   const { allTransactions } = useTransactionStore();
@@ -21,7 +22,7 @@ const TransactionsPage = () => {
           : transaction.type === "TRANSFER"
           ? "BonusSent"
           : "BonusReceived",
-      amount: transaction.amount || 0,
+      amount: formatLargeNumber(transaction.amount || 0),
       status:
         transaction.status === "COMPLETED"
           ? "Success"

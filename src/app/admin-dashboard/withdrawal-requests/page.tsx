@@ -5,6 +5,7 @@ import { DataTable, schema } from "@/components/DataTableAdminWithdraw";
 
 import { Transaction, useTransactionStore } from "@/store";
 import { z } from "zod";
+import { formatLargeNumber } from "@/lib/utils";
 
 const WithdrawalRequestsPage = () => {
   const { allTransactions } = useTransactionStore();
@@ -24,7 +25,7 @@ const WithdrawalRequestsPage = () => {
             transaction.sender?.avatar || "/assets/avatars/avatar-default.png",
         },
         type: "Withdraw",
-        amount: transaction.amount || 0,
+        amount: formatLargeNumber(transaction.amount || 0),
         status:
           transaction.status === "PENDING"
             ? "Pending"

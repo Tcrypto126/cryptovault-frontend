@@ -20,6 +20,7 @@ import { useNotification } from "@/providers/notificationProvider";
 import { useTransactionStore, useUserStore, Transaction } from "@/store";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { formatLargeNumber } from "@/lib/utils";
 
 const Dashboard = () => {
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -46,7 +47,7 @@ const Dashboard = () => {
             transaction.sender_id === user?.id
           ? "BonusSent"
           : "BonusReceived",
-      amount: transaction.amount || 0,
+      amount: formatLargeNumber(transaction.amount || 0),
       status:
         transaction.status === "COMPLETED"
           ? "Success"
@@ -225,7 +226,7 @@ const Dashboard = () => {
               <IconArrowDown width="24" height="24" color="#838799" />
             </div>
           </div>
-          <h3 className="!text-[24px]">${user?.balance?.toFixed(2) || 0}</h3>
+          <h3 className="!text-[24px]">${formatLargeNumber(user?.balance || 0)}</h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
             <h6 className="!text-[14px]">USD</h6>
@@ -234,7 +235,7 @@ const Dashboard = () => {
             <h6 className="!text-[14px] text-[#838799]">Profit Recently</h6>
             <div className="flex justify-between items-center gap-2">
               <h5 className="text-[#1FB356] !font-bold">
-                +${user?.recentDeposit?.toFixed(2) || 0}
+                +${formatLargeNumber(user?.recentDeposit || 0)}
               </h5>
               <h5 className="text-[#1FB356] !font-bold">
                 +
@@ -264,7 +265,7 @@ const Dashboard = () => {
             </div>
           </div>
           <h3 className="!text-[24px]">
-            ${(user?.balance || 0) > 1500 ? (user?.balance || 0).toFixed(2) : 0}
+            ${(user?.balance || 0) > 1500 ? formatLargeNumber(user?.balance || 0) : 0}
           </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
@@ -276,7 +277,7 @@ const Dashboard = () => {
             </h6>
             <div className="flex justify-between items-center gap-2">
               <h5 className="text-[#1FB356] !font-bold">
-                +${user?.recentWithdrawal?.toFixed(2) || 0}
+                +${formatLargeNumber(user?.recentWithdrawal || 0)}
               </h5>
               <StatusCode
                 status={
@@ -307,7 +308,7 @@ const Dashboard = () => {
             </div>
           </div>
           <h3 className="!text-[24px] !text-[#69CC8E]">
-            ${user?.bonus?.toFixed(2) || 0}
+            ${formatLargeNumber(user?.bonus || 0)}
           </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} className="bg-[#1FB356]" />
@@ -317,7 +318,7 @@ const Dashboard = () => {
             <h6 className="!text-[14px] text-[#838799]">Last Earned Bonus</h6>
             <div className="flex justify-between items-center gap-2">
               <h5 className="text-[#1FB356] !font-bold">
-                +${user?.recentBonus?.toFixed(2) || 0}
+                +${formatLargeNumber(user?.recentBonus || 0)}
               </h5>
             </div>
           </div>

@@ -97,7 +97,7 @@ const ResetPassword = () => {
           </div>
           <div className="flex-1 w-full md:max-w-[500px] flex flex-col gap-5 md:gap-10 p-4 md:p-12 bg-[#ffffff1e] rounded-2xl">
             <Image
-              src="/assets/logo.svg"
+              src="/assets/logo.png"
               width={60}
               height={60}
               alt="logo"

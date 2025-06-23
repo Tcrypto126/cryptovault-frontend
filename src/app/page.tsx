@@ -13,8 +13,10 @@ import EmblaCarousel from "@/components/EmblaCarousel";
 import { AccordionDemo } from "@/components/Faq";
 
 import "./css/embla.css";
+import { useRouter } from "next/navigation";
 
 const Home = () => {
+  const router = useRouter();
   const OPTIONS: EmblaOptionsType = {
     dragFree: true,
     loop: true,
@@ -36,56 +38,56 @@ const Home = () => {
         alt="stars"
         width={2880}
         height={3105}
-        className="absolute top-0 left-0 lg:w-full z-10"
+        className="absolute top-0 left-0 lg:w-full z-10 select-none"
       />
       <Image
         src="/assets/home/light.svg"
         alt="light"
         width={403}
         height={476}
-        className="absolute top-0 left-0 z-10"
+        className="absolute top-0 left-0 z-10 select-none"
       />
       <Image
         src="/assets/home/light-top.png"
         alt="light-top"
         width={806}
         height={434}
-        className="absolute top-0 right-[16%]"
+        className="absolute top-0 right-[16%] select-none"
       />
-      <div className="absolute top-[1500px] left-0 w-full">
+      <div className="absolute top-[1500px] left-0 w-full select-none">
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
-          className="w-full"
+          className="w-full select-none"
         />
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
-          className="w-full"
+          className="w-full select-none"
         />
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
-          className="w-full"
+          className="w-full select-none"
         />
         <Image
           src="/assets/home/stars.svg"
           alt="stars"
           width={2880}
           height={3105}
-          className="w-full"
+          className="w-full select-none"
         />
       </div>
 
       <div className="w-full relative z-20">
-        <div className="max-w-[1440px] m-auto px-2.5 lg:px-20 py-[92px]">
-          <div className="flex flex-col md:flex-row">
+        <div className="max-w-[1440px] m-auto px-2.5 lg:px-20 py-[92px]" id="home">
+          <div className="flex flex-col md:flex-row select-none">
             <div className="flex-1 py-6 md:py-14 md:pl-5 z-20">
               <Button className="border-border bg-[#0A0D1F] hover:bg-[#0A0D1F] border-[1px] rounded-full text-[14px] text-white !px-4 !py-2">
                 Flexible Plans for You
@@ -143,7 +145,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="relative -mt-[140px]">
+          <div className="relative -mt-[140px] select-none">
             <Image
               src="/assets/home/dashboard.png"
               width={1284}
@@ -162,7 +164,7 @@ const Home = () => {
             />
           </div>
 
-          <div className="py-6 md:py-10">
+          <div className="py-6 md:py-10 select-none" id="features">
             <h3 className="text-center">Empowering the Future of Finance</h3>
             <div className="grid grid-cols-4 md:grid-cols-6 gap-6 mt-4 md:mt-12">
               <Image
@@ -240,7 +242,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="py-6 md:py-10">
+          <div className="py-6 md:py-10 select-none" id="security">
             <h3 className="text-center">Why Choose Our Wallet?</h3>
             <p className="mt-3 text-center">
               Built for real people. Trusted by thousands. Designed for the
@@ -292,7 +294,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="py-6 md:py-10">
+          <div className="py-6 md:py-10 select-none" id="works">
             <h3 className="text-center">How It Works</h3>
             <p className="mt-3 text-center">
               Built for real people. Trusted by thousands. Designed for the
@@ -404,7 +406,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="py-6 md:py-10">
+          <div className="py-6 md:py-10 select-none">
             <h3 className="text-center">
               Trusted by Thousands Around the World
             </h3>
@@ -443,7 +445,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-col items-center px-2 sm:px-12 py-16 sm:py-12 rounded-2xl border-border border-[1px] bg-[url('/assets/home/deposit_bg.png')] bg-cover bg-center bg-no-repeat">
+          <div className="w-full flex flex-col select-none items-center px-2 sm:px-12 py-16 sm:py-12 rounded-2xl border-border border-[1px] bg-[url('/assets/home/deposit_bg.png')] bg-cover bg-center bg-no-repeat">
             <Image
               src="/assets/home/coin_group.png"
               alt="coin-group"
@@ -454,10 +456,15 @@ const Home = () => {
               Deposit $500+ and Get $100 Instantly
             </h1>
             <h4 className="mt-4 text-center">Hurry — offer ends Sept 30th!</h4>
-            <Button className="login-button mt-7">Deposit Now</Button>
+            <Button
+              className="login-button mt-7"
+              onClick={() => router.push("/dashboard")}
+            >
+              Deposit Now
+            </Button>
           </div>
 
-          <div className="py-6 md:py-10">
+          <div className="py-6 md:py-10" id="faq">
             <h3 className="text-center">Frequently Asked Questions</h3>
             <div className="flex justify-center mt-10">
               <AccordionDemo />

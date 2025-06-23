@@ -54,7 +54,7 @@ export const schema = z.object({
   timestamp: z.string(),
   email: z.string().email(),
   type: z.string(),
-  amount: z.number(),
+  amount: z.string(),
   status: z.string(),
   user: z.object({
     id: z.string(),
@@ -123,7 +123,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start ">
-          ${row.original.amount.toFixed(2)}
+          ${row.original.amount}
         </div>
       );
     },

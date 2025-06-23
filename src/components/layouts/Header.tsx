@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -43,9 +44,10 @@ const Header = () => {
   const router = useRouter();
   const { logout } = useAuth();
   const { user } = useUserStore();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const menuItems = [
-    { title: "Home", link: "/", icon: <HomeIcon width="20" height="20" /> },
+    { title: "Home", link: "/#home", icon: <HomeIcon width="20" height="20" /> },
     {
       title: "Dashboard",
       link: user?.role === "ADMIN" ? "/admin-dashboard" : "/dashboard",
@@ -53,31 +55,43 @@ const Header = () => {
     },
     {
       title: "Features",
-      link: "/features",
+      link: "/#features",
       icon: <FeaturesIcon width="20" height="20" />,
     },
     {
       title: "Security",
-      link: "/security",
+      link: "/#security",
       icon: <SecurityIcon width="20" height="20" />,
     },
     {
-      title: "Support",
-      link: "/support",
-      icon: <SupportIcon width="20" height="20" />,
-    },
-    {
       title: "Works",
-      link: "/works",
+      link: "/#works",
       icon: <WorksIcon width="20" height="20" />,
     },
+    {
+      title: "Support",
+      link: "/#faq",
+      icon: <SupportIcon width="20" height="20" />,
+    },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
       <div className="fixed w-full z-50">
-        <div className="max-w-[1440px] h-[92px] m-auto px-2.5 lg:px-20 pt-4">
-          <div className="w-full flex items-center justify-between gap-2">
+        <div className="max-w-[1440px] h-[92px] m-auto px-2.5 lg:px-15 pt-4 ">
+          <div
+            className={`w-full flex items-center justify-between gap-2 px-5 py-2 rounded-full transition-all duration-300 ${
+              isScrolled ? "bg-[#2f2f539a] backdrop-blur-sm" : "bg-transparent"
+            }`}
+          >
             <Image
               src="/assets/logo_text.png"
               width={130}

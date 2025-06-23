@@ -9,6 +9,7 @@ import { WithdrawModal } from "@/components/WithdrawModal";
 import StatusCode from "@/components/StatusBadge";
 import { DepositModal } from "@/components/DepositModal";
 import { useUserStore } from "@/store/userStore";
+import { formatLargeNumber } from "@/lib/utils";
 
 const WalletPage = () => {
   const { user } = useUserStore();
@@ -30,7 +31,9 @@ const WalletPage = () => {
                 <IconArrowDown width="24" height="24" color="#838799" />
               </div>
             </div>
-            <h3 className="!text-[24px]">${user?.balance?.toFixed(2) || 0}</h3>
+            <h3 className="!text-[24px]">
+              ${formatLargeNumber(user?.balance || 0)}
+            </h3>
             <div className="flex flex-col gap-1">
               <Progress value={progress} />
               <h6 className="!text-[14px]">USD</h6>
@@ -39,7 +42,7 @@ const WalletPage = () => {
               <h6 className="!text-[14px] text-[#838799]">Profit Today</h6>
               <div className="flex justify-between items-center gap-2">
                 <h5 className="text-[#1FB356] !font-bold">
-                  +${user?.recentDeposit?.toFixed(2) || 0}
+                  +${formatLargeNumber(user?.recentDeposit || 0)}
                 </h5>
                 <h5 className="text-[#1FB356] !font-bold">
                   +
@@ -69,7 +72,7 @@ const WalletPage = () => {
             <h3 className="!text-[24px]">
               $
               {(user?.balance || 0) > 1500
-                ? (user?.balance || 0).toFixed(2)
+                ? formatLargeNumber(user?.balance || 0)
                 : 0}
             </h3>
             <div className="flex flex-col gap-1">
@@ -82,7 +85,7 @@ const WalletPage = () => {
               </h6>
               <div className="flex justify-between items-center gap-2">
                 <h5 className="text-[#1FB356] !font-bold">
-                  +${user?.recentWithdrawal?.toFixed(2) || 0}
+                  +${formatLargeNumber(user?.recentWithdrawal || 0)}
                 </h5>
                 <StatusCode
                   status={

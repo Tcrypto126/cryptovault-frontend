@@ -625,7 +625,7 @@ const SettingsPage = () => {
                       <FormLabel>Phone Number</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter your phone_number number"
+                          placeholder="Enter your phone number"
                           {...field}
                         />
                       </FormControl>

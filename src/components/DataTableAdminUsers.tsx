@@ -66,7 +66,7 @@ export const schema = z.object({
     avatar: z.string(),
     role: z.string(),
   }),
-  balance: z.number(),
+  balance: z.string(),
   status: z.string(),
   verify: z.string(),
   registered_at: z.string(),

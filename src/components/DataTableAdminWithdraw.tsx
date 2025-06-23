@@ -52,7 +52,7 @@ export const schema = z.object({
   id: z.string(),
   timestamp: z.string(),
   type: z.string(),
-  amount: z.number(),
+  amount: z.string(),
   status: z.string(),
   user: z.object({
     id: z.string(),
@@ -100,7 +100,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center justify-start ">
-          ${row.original.amount.toFixed(2)}
+          ${row.original.amount}
         </div>
       );
     },
@@ -123,7 +123,15 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           <WithdrawApproveModalAdmin
             id={row.original.id}
             email={row.original.user.email}
-            amount={Number(row.original.amount.toFixed(2))}
+            amount={
+              row.original.amount.includes("K")
+                ? Number(row.original.amount.replace("K", "")) * 1000
+                : row.original.amount.includes("M")
+                ? Number(row.original.amount.replace("M", "")) * 1000000
+                : row.original.amount.includes("B")
+                ? Number(row.original.amount.replace("B", "")) * 1000000000
+                : Number(row.original.amount)
+            }
           />
         ) : null}
       </div>
