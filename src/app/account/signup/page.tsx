@@ -161,9 +161,8 @@ const SignUp = () => {
                                 placeholder="Enter your password"
                                 {...field}
                               />
-                              <Button
-                                type="button"
-                                className="!p-0 !bg-transparent absolute right-2 top-0 h-full cursor-pointer"
+                              <div
+                                className="!bg-transparent absolute right-2 top-0 h-full flex items-center cursor-pointer"
                                 onClick={() => {
                                   setIsVisible(!isVisible);
                                 }}
@@ -173,7 +172,7 @@ const SignUp = () => {
                                 ) : (
                                   <IconEyeOff width="24" height="24" />
                                 )}
-                              </Button>
+                              </div>
                             </div>
                           </FormControl>
                           <FormMessage />
@@ -193,9 +192,8 @@ const SignUp = () => {
                                 placeholder="Enter your password"
                                 {...field}
                               />
-                              <Button
-                                type="button"
-                                className="!p-0 !bg-transparent absolute right-2 top-0 h-full cursor-pointer"
+                              <div
+                                className="!bg-transparent absolute right-2 top-0 h-full flex items-center cursor-pointer"
                                 onClick={() => {
                                   setIsVisible2(!isVisible2);
                                 }}
@@ -205,7 +203,7 @@ const SignUp = () => {
                                 ) : (
                                   <IconEyeOff width="24" height="24" />
                                 )}
-                              </Button>
+                              </div>
                             </div>
                           </FormControl>
                           <FormMessage />

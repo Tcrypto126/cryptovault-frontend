@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 
 import { useUserStore } from "@/store";
 import { useNotification } from "@/providers/notificationProvider";
-import { updateKYC, updatePassword, updateProfile } from "@/api";
+import { getUser, updateKYC, updatePassword, updateProfile } from "@/api";
 
 const FormSchema1 = z.object({
   avatar: z.union([z.instanceof(File), z.string()]),
@@ -110,7 +110,7 @@ const FormSchema3 = z.object({
 const SettingsPage = () => {
   const { toast } = useNotification();
   const [activeTab, setActiveTab] = useState("userSettings");
-  const { user } = useUserStore();
+  const { user, setUserData } = useUserStore();
 
   const form1 = useForm<z.infer<typeof FormSchema1>>({
     resolver: zodResolver(FormSchema1),
@@ -174,7 +174,15 @@ const SettingsPage = () => {
         last_name: data.last_name,
         username: data.username,
       },
-      () => {
+      async () => {
+        await getUser(
+          (user) => {
+            setUserData(user);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
         toast("Profile updated successfully", "Success");
       },
       (message: string) => {
@@ -198,7 +206,15 @@ const SettingsPage = () => {
   async function onSubmit3(data: z.infer<typeof FormSchema3>) {
     await updateKYC(
       data,
-      () => {
+      async () => {
+        await getUser(
+          (user) => {
+            setUserData(user);
+          },
+          (message: string) => {
+            toast(message, "Error");
+          }
+        );
         toast("KYC submitted successfully", "Success");
       },
       (message: string) => {

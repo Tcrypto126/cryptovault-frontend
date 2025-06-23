@@ -171,13 +171,33 @@ export function WithdrawModal() {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      inputMode="decimal"
-                      placeholder="Enter your Amount to withdraw"
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                      value={field.value}
-                    />
+                    <div className="relative">
+                      <Input
+                        type="number"
+                        inputMode="decimal"
+                        placeholder="Enter your Amount to withdraw"
+                        onChange={(e) => {
+                          const value =
+                            e.target.value === "" ? "" : Number(e.target.value);
+                          if (typeof value === "number" && value >= 0) {
+                            field.onChange(value);
+                          } else if (value === "") {
+                            field.onChange("");
+                          }
+                        }}
+                        value={field.value === 0 ? "" : field.value}
+                        min="0"
+                        className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none pr-16"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="absolute right-[10px] top-[20%] h-[60%] px-2 text-sm cursor-pointer"
+                        onClick={() => field.onChange(user?.balance || 0)}
+                      >
+                        Max
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                   <span className="text-[14px]">
