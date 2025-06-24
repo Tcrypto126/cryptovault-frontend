@@ -226,7 +226,9 @@ const Dashboard = () => {
               <IconArrowDown width="24" height="24" color="#838799" />
             </div>
           </div>
-          <h3 className="!text-[24px]">${formatLargeNumber(user?.balance || 0)}</h3>
+          <h3 className="!text-[24px]">
+            ${formatLargeNumber(user?.balance || 0)}
+          </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
             <h6 className="!text-[14px]">USD</h6>
@@ -265,7 +267,10 @@ const Dashboard = () => {
             </div>
           </div>
           <h3 className="!text-[24px]">
-            ${(user?.balance || 0) > 1500 ? formatLargeNumber(user?.balance || 0) : 0}
+            $
+            {(user?.balance || 0) > 1500
+              ? formatLargeNumber(user?.balance || 0)
+              : 0}
           </h3>
           <div className="flex flex-col gap-1">
             <Progress value={progress} />
@@ -339,7 +344,6 @@ const Dashboard = () => {
           onClick={handleSpinOutSideClick}
         >
           {spinningEnd && <Firework />}
-          {/* <Firework /> */}
           <div
             className="max-w-[500px] w-full z-60"
             ref={processing ? null : wheelRef}
