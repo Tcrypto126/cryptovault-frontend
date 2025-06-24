@@ -3,7 +3,8 @@
   /* max-width: 48rem; */
   margin: auto;
   --slide-height: 11rem;
-  --slide-spacing: 1rem;
+  --slide-spacing: 0rem;
+  --slide-margin: 0px;
   --slide-size: 421px;
 }
 .embla__viewport_1 {
@@ -40,12 +41,17 @@
   flex: 0 0 var(--slide-size);
   min-width: 0;
   /* padding-left: var(--slide-spacing); */
-  margin-left: 19px;
+  padding-left: 24px;
+  margin-left: var(--slide-margin);
   direction: ltr;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-perspective: 1000px;
   perspective: 1000px;
+}
+
+.embla__viewport_2 .embla__slide {
+  padding-right: 0px !important;
 }
 
 .embla__slide__number {

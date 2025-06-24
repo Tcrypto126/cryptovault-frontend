@@ -26,21 +26,11 @@ const EmblaCarousel = (props: PropType) => {
         ref={emblaRef}
       >
         <div className="embla__container">
-          <div className="embla__slide">
-            <Review />
-          </div>
-          <div className="embla__slide">
-            <Review />
-          </div>
-          <div className="embla__slide">
-            <Review />
-          </div>
-          <div className="embla__slide">
-            <Review />
-          </div>
-          <div className="embla__slide">
-            <Review />
-          </div>
+          {props.slides.map((_, index) => (
+            <div key={index} className="embla__slide">
+              <Review />
+            </div>
+          ))}
         </div>
       </div>
     </div>

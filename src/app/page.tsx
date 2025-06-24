@@ -6,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { EmblaOptionsType } from "embla-carousel";
 import { ArrowRightIcon } from "@/components/ui/icon";
+import {
+  IconMoodSmile,
+  IconGift,
+  IconCreditCardPay,
+  IconChartBar,
+  IconBrandMessenger,
+  IconReportMedical,
+} from "@tabler/icons-react";
 
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
@@ -348,93 +356,144 @@ const Home = () => {
               future.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-10">
-              <div className="flex justify-center items-center">
+              <div className="relative w-full bg-[#0B0026] rounded-[20px] overflow-hidden border-[1px] border-[#868585]">
+                <div className="absolute inset-0 shadow-[inset_0px_0px_20px_#ffffff75] rounded-[20px] pointer-events-none z-10"></div>
                 <Image
                   src="/assets/home/card1.png"
                   alt="card"
                   width={411}
-                  height={428}
-                  className="w-full max-w-[411px] h-auto object-contain"
-                  style={{
-                    display: "block",
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
+                  height={294}
+                  className="w-full h-auto object-cover"
                 />
+                <div className="flex flex-col gap-2 p-6 md:px-7 md:pt-7 md:pb-6">
+                  <div className="flex items-center gap-2">
+                    <IconMoodSmile width="24" height="24" color="#ffffff" />
+                    <h4 className="!font-[700] text-[#fff]">
+                      Multi-Asset Support
+                    </h4>
+                  </div>
+                  <p className="text-[#B5B5B5] !text-[12px] md:!text-[14px] !font-[500]">
+                    Manage USD, BTC, ETH, and USDT — all from one secure wallet.
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="relative w-full bg-[#0B0026] rounded-[20px] overflow-hidden border-[1px] border-[#868585]">
+                <div className="absolute inset-0 shadow-[inset_0px_0px_20px_#ffffff75] rounded-[20px] pointer-events-none z-10"></div>
                 <Image
                   src="/assets/home/card2.png"
                   alt="card"
                   width={411}
-                  height={428}
-                  className="w-full max-w-[411px] h-auto object-contain"
-                  style={{
-                    display: "block",
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
+                  height={294}
+                  className="w-full h-auto object-cover"
                 />
+                <div className="flex flex-col gap-2 p-6 md:px-7 md:pt-7 md:pb-6">
+                  <div className="flex items-center gap-2">
+                    <IconGift width="24" height="24" color="#ffffff" />
+                    <h4 className="!font-[700] text-[#fff]">
+                      5% Deposit Bonuses
+                    </h4>
+                  </div>
+                  <p className="text-[#B5B5B5] !text-[12px] md:!text-[14px] !font-[500]">
+                    Earn instant rewards when you fund your wallet with crypto
+                    or fiat.
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="relative w-full bg-[#0B0026] rounded-[20px] overflow-hidden border-[1px] border-[#868585]">
+                <div className="absolute inset-0 shadow-[inset_0px_0px_20px_#ffffff75] rounded-[20px] pointer-events-none z-10"></div>
                 <Image
                   src="/assets/home/card3.png"
                   alt="card"
                   width={411}
-                  height={428}
-                  className="w-full max-w-[411px] h-auto object-contain"
-                  style={{
-                    display: "block",
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
+                  height={294}
+                  className="w-full h-auto object-cover"
                 />
+                <div className="flex flex-col gap-2 p-6 md:px-7 md:pt-7 md:pb-6">
+                  <div className="flex items-center gap-2">
+                    <IconCreditCardPay width="24" height="24" color="#ffffff" />
+                    <h4 className="!font-[700] text-[#fff]">
+                      Multi-Asset Support
+                    </h4>
+                  </div>
+                  <p className="text-[#B5B5B5] !text-[12px] md:!text-[14px] !font-[500]">
+                    Manage USD, BTC, ETH, and USDT — all from one secure wallet.
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="relative w-full bg-[#0B0026] rounded-[20px] overflow-hidden border-[1px] border-[#868585]">
+                <div className="absolute inset-0 shadow-[inset_0px_0px_20px_#ffffff75] rounded-[20px] pointer-events-none z-10"></div>
                 <Image
                   src="/assets/home/card4.png"
                   alt="card"
                   width={411}
-                  height={428}
-                  className="w-full max-w-[411px] h-auto object-contain"
-                  style={{
-                    display: "block",
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
+                  height={294}
+                  className="w-full h-auto object-cover"
                 />
+                <div className="flex flex-col gap-2 p-6 md:px-7 md:pt-7 md:pb-6">
+                  <div className="flex items-center gap-2">
+                    <IconChartBar width="24" height="24" color="#ffffff" />
+                    <h4 className="!font-[700] text-[#fff]">
+                      Secure Custodianship
+                    </h4>
+                  </div>
+                  <p className="text-[#B5B5B5] !text-[12px] md:!text-[14px] !font-[500]">
+                    Your funds are insured and stored in multi-sig,
+                    institution-grade wallets.
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="relative w-full bg-[#0B0026] rounded-[20px] overflow-hidden border-[1px] border-[#868585]">
+                <div className="absolute inset-0 shadow-[inset_0px_0px_20px_#ffffff75] rounded-[20px] pointer-events-none z-10"></div>
                 <Image
                   src="/assets/home/card5.png"
                   alt="card"
                   width={411}
-                  height={428}
-                  className="w-full max-w-[411px] h-auto object-contain"
-                  style={{
-                    display: "block",
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
+                  height={294}
+                  className="w-full h-auto object-cover"
                 />
+                <div className="flex flex-col gap-2 p-6 md:px-7 md:pt-7 md:pb-6">
+                  <div className="flex items-center gap-2">
+                    <IconBrandMessenger
+                      width="24"
+                      height="24"
+                      color="#ffffff"
+                    />
+                    <h4 className="!font-[700] text-[#fff]">
+                      Integrated Visa Card
+                    </h4>
+                  </div>
+                  <p className="text-[#B5B5B5] !text-[12px] md:!text-[14px] !font-[500]">
+                    Spend crypto like cash anywhere Visa is accepted — online or
+                    in-store.
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="relative w-full bg-[#0B0026] rounded-[20px] overflow-hidden border-[1px] border-[#868585]">
+                <div className="absolute inset-0 shadow-[inset_0px_0px_20px_#ffffff75] rounded-[20px] pointer-events-none z-10"></div>
                 <Image
                   src="/assets/home/card6.png"
                   alt="card"
                   width={411}
-                  height={428}
-                  className="w-full max-w-[411px] h-auto object-contain"
-                  style={{
-                    display: "block",
-                    maxWidth: "100%",
-                    height: "auto",
-                  }}
+                  height={294}
+                  className="w-full h-auto object-cover"
                 />
+                <div className="flex flex-col gap-2 p-6 md:px-7 md:pt-7 md:pb-6">
+                  <div className="flex items-center gap-2">
+                    <IconReportMedical width="24" height="24" color="#ffffff" />
+                    <h4 className="!font-[700] text-[#fff]">
+                      Smart Support Dashboard
+                    </h4>
+                  </div>
+                  <p className="text-[#B5B5B5] !text-[12px] md:!text-[14px] !font-[500]">
+                    In-app help center, live chat, and instant ticket tracking
+                    at your fingertips.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-
+          
+          {/* how it works */}
           <div className="py-6 md:py-10 select-none" id="works">
             <h3 className="text-center">How It Works</h3>
             <p className="mt-3 text-center">
@@ -547,7 +606,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="py-6 md:py-10 select-none">
+          <div className="py-6 md:py-10">
             <h3 className="text-center">
               Trusted by Thousands Around the World
             </h3>
