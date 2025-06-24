@@ -338,8 +338,8 @@ const Dashboard = () => {
           className="fixed top-0 left-0 w-full h-full z-50 bg-[#000000c4] flex items-center justify-center"
           onClick={handleSpinOutSideClick}
         >
-          {/* {spinningEnd && <Firework />} */}
-          <Firework />
+          {spinningEnd && <Firework />}
+          {/* <Firework /> */}
           <div
             className="max-w-[500px] w-full z-60"
             ref={processing ? null : wheelRef}

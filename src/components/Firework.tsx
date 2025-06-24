@@ -43,7 +43,7 @@ const Firework = () => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full">
-      <div ref={containerRef} className="firewall w-full h-full" />;
+      <div ref={containerRef} className="w-full h-full" />;
     </div>
   );
 };
