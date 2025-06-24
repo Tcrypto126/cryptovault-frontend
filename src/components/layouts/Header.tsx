@@ -143,7 +143,7 @@ const Header = () => {
                   <SheetHeader className="z-20">
                     <SheetTitle className="flex justify-center">
                       <Image
-                        src="/assets/logo.svg"
+                        src="/assets/logo.png"
                         width={54}
                         height={54}
                         alt="logo"
@@ -155,7 +155,9 @@ const Header = () => {
                       <Link
                         key={item.title}
                         href={item.link}
-                        onClick={() => {
+                        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                          e.preventDefault();
+                          router.push(item.link);
                           const sheetClose = document.querySelector(
                             '[data-slot="sheet-close"]'
                           ) as HTMLButtonElement;

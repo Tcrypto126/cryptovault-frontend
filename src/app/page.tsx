@@ -349,6 +349,7 @@ const Home = () => {
             </div>
           </div>
 
+          {/* why choose our wallet */}
           <div className="py-6 md:py-10 select-none" id="security">
             <h3 className="text-center">Why Choose Our Wallet?</h3>
             <p className="mt-3 text-center">
@@ -492,7 +493,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          
+
           {/* how it works */}
           <div className="py-6 md:py-10 select-none" id="works">
             <h3 className="text-center">How It Works</h3>
@@ -606,7 +607,8 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="py-6 md:py-10">
+          {/* review */}
+          <div className="py-6 md:py-10 select-none">
             <h3 className="text-center">
               Trusted by Thousands Around the World
             </h3>
@@ -645,6 +647,7 @@ const Home = () => {
             </div>
           </div>
 
+          {/* deposit */}
           <div className="w-full flex flex-col select-none items-center px-2 sm:px-12 py-16 sm:py-12 rounded-2xl border-border border-[1px] bg-[url('/assets/home/deposit_bg.png')] bg-cover bg-center bg-no-repeat">
             <Image
               src="/assets/home/coin_group.png"
